@@ -1,0 +1,17 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    name: oneit_server
+  profiles:
+    active: local
+
+springdoc:
+  swagger-ui:
+    path: /api-swagger  # swagger-ui 접속 주소
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+  paths-to-match:
+    - /api/** # swagger-ui에 표시할 api의 엔드포인트 패턴
