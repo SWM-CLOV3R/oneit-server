@@ -25,6 +25,6 @@ Build
 4. 빌드 파일 artifacture 업로드
 
 Deploy
-1. 빌드 파일 artufacture 다운로드
+1. 빌드 파일 artifacture 다운로드
 2. 빌드 파일 실행
 
