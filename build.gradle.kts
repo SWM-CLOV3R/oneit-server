@@ -24,9 +24,11 @@ repositories {
 }
 
 dependencies {
+    implementation("com.mysql:mysql-connector-j")       // from mysql ver 8.0.31
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
