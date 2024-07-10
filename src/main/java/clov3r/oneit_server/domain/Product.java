@@ -34,4 +34,6 @@ public class Product {
     @Column(name = "category_idx")
     private Long categoryIdx;
 
+    private String gender;  // FEMALE, MALE, UNISEX
+
 }

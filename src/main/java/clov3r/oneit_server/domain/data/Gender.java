@@ -13,4 +13,10 @@ public enum Gender {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
 }
