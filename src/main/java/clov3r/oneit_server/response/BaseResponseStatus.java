@@ -4,15 +4,15 @@ import lombok.Getter;
 @Getter
 public enum BaseResponseStatus {
     /**
-     * 200 :요청 성공
+     * 1000 :요청 성공
      */
-    SUCCESS(true, 200, "요청에 성공하였습니다."),
+    SUCCESS(true, 1000, "요청에 성공하였습니다."),
 
 
     /**
      * 2000 : Request오류
      */
-    REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
+    REQUEST_ERROR(false, 2000, "입력값이 잘못되었습니다."),
 
     /**
      * 4000 : Database, Server오류
