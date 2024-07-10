@@ -13,12 +13,5 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    @Transactional
-    public Long createProduct(Product product) {
-        System.out.println("product name = " + product.getName());
-        productRepository.save(product);
-        return product.getIdx();
-
-    }
 
 }
