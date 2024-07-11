@@ -26,6 +26,11 @@ public class KeywordRepository {
                         "where pk.product.idx = :productIdx", Keyword.class)
                 .setParameter("productIdx", productIdx)
                 .getResultList();
+    }
 
+    public Boolean existsByKeyword(String keyword) {
+        return em.createQuery("select count(k) > 0 from Keyword k where k.keyword = :keyword", Boolean.class)
+                .setParameter("keyword", keyword)
+                .getSingleResult();
     }
 }

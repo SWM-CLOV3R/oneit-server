@@ -18,4 +18,13 @@ public class KeywordService {
         return keywordByProductIdx;
     }
 
+    public Boolean existsByKeyword(List<String> keywords) {
+        for (String keyword : keywords) {
+            if (keywordRepository.existsByKeyword(keyword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

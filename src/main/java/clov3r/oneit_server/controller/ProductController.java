@@ -44,6 +44,12 @@ public class ProductController {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         // check keywords
+        if (productSearch.getKeywords() == null) {
+            productSearch.setKeywords(new ArrayList<>());
+        }
+        if (keywordService.existsByKeyword(productSearch.getKeywords())) {
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
 
         List<Product> products = productRepository.filterProducts(productSearch);
         List<ProductDTO> productDTOs = products.stream()
