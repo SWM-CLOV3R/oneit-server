@@ -20,9 +20,11 @@ public class KeywordRepository {
                 .getResultList();
     }
 
-    public List<Keyword> findKeywordByIdx(List<Long> keywordIdxs) {
-        return em.createQuery("select k from Keyword k where k.idx in :keywordIdxs", Keyword.class)
-                .setParameter("keywordIdxs", keywordIdxs)
+    public List<Keyword> findKeywordByProductIdx(Long productIdx) {
+        return em.createQuery("select k from Keyword k " +
+                        "join ProductKeyword pk on k.idx = pk.keyword.idx " +
+                        "where pk.product.idx = :productIdx", Keyword.class)
+                .setParameter("productIdx", productIdx)
                 .getResultList();
 
     }

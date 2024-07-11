@@ -1,19 +1,13 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.controller.ProductController;
-import clov3r.oneit_server.domain.Keyword;
 import clov3r.oneit_server.domain.Product;
 import clov3r.oneit_server.domain.data.Gender;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.valves.HealthCheckValve;
-import org.springdoc.core.utils.PropertyResolverUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -22,7 +16,6 @@ public class ProductRepository {
 
     private final EntityManager em;
     private final KeywordRepository keywordRepository;
-    private final PropertyResolverUtils propertyResolverUtils;
 
     public List<Product> filterProducts(ProductSearch productSearch) {
         // First Query: Filter by price and gender
@@ -64,12 +57,6 @@ public class ProductRepository {
 
         List<Long> productIds = products.stream().map(Product::getIdx).collect(Collectors.toList());
         List<Long> keywordIdxList = getKeywordIdxList(keywords);
-        for (Product product : products) {
-            System.out.println("Product ID: " + product.getIdx());
-        }
-        for (Long keywordIdx : keywordIdxList) {
-            System.out.println("Keyword ID: " + keywordIdx);
-        }
 
         if (keywordIdxList.isEmpty()) {
             return products; // No matching keywords found
@@ -85,19 +72,11 @@ public class ProductRepository {
         query.setParameter("productIds", productIds);
         query.setParameter("keywordIdxList", keywordIdxList);
         query.setParameter("keywordCount", (long) keywords.size());
-        List<Product> resultProducts = query.getResultList();
-        for (Product product : resultProducts) {
-            System.out.println("Product ID: " + product.getIdx());
-        }
-        return resultProducts;
+        return query.getResultList();
     }
 
-    // Method to get keyword IDs from keyword strings
     private List<Long> getKeywordIdxList(List<String> keywords) {
-        // Assuming there's a method in KeywordRepository or similar to fetch IDs by keyword strings
-        // KeywordRepository keywordRepository = ...;
          return keywordRepository.findIdsByKeywords(keywords);
-//        return keywords.stream().map(this::findKeywordIdByString).collect(Collectors.toList());
     }
 
 }
