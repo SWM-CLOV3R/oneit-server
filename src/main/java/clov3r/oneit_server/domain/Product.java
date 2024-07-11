@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @RequiredArgsConstructor
 @Getter
@@ -33,6 +36,9 @@ public class Product {
 
     @Column(name = "category_idx")
     private Long categoryIdx;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductKeyword> productKeywords = new ArrayList<>();
 
     private String gender;  // FEMALE, MALE, UNISEX
 

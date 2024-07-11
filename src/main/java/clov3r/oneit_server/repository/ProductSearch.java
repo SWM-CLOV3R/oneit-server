@@ -2,6 +2,8 @@ package clov3r.oneit_server.repository;
 
 import clov3r.oneit_server.domain.Keyword;
 import clov3r.oneit_server.domain.data.Gender;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +17,7 @@ public class ProductSearch {
     private int age;
     private int minPrice;
     private int maxPrice;
-    private List<Keyword> keywords = new ArrayList<>();
+    private List<String> keywords = new ArrayList<>();
+
 }
 

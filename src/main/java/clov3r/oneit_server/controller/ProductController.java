@@ -1,5 +1,6 @@
 package clov3r.oneit_server.controller;
 
+import clov3r.oneit_server.domain.Keyword;
 import clov3r.oneit_server.domain.Product;
 import clov3r.oneit_server.domain.data.Gender;
 import clov3r.oneit_server.repository.ProductRepository;
@@ -7,6 +8,7 @@ import clov3r.oneit_server.repository.ProductSearch;
 import clov3r.oneit_server.response.BaseResponse;
 import clov3r.oneit_server.response.BaseResponseStatus;
 import clov3r.oneit_server.service.ProductService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static clov3r.oneit_server.response.BaseResponseStatus.REQUEST_ERROR;
