@@ -47,9 +47,12 @@ public class ProductController {
         if (productSearch.getKeywords() == null) {
             productSearch.setKeywords(new ArrayList<>());
         }
-        if (keywordService.existsByKeyword(productSearch.getKeywords())) {
+        if (!keywordService.existsByKeyword(productSearch.getKeywords())) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
+        // validate redundant keywords
+        List<String> keywords = productSearch.getKeywords().stream().distinct().toList();
+        productSearch.setKeywords(keywords);
 
         List<Product> products = productRepository.filterProducts(productSearch);
         List<ProductDTO> productDTOs = products.stream()
