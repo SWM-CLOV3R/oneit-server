@@ -6,6 +6,13 @@ spring:
     name: oneit_server
   profiles:
     active: local
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
 
 springdoc:
   swagger-ui:
@@ -15,3 +22,7 @@ springdoc:
     operations-sorter: method
   paths-to-match:
     - /api/** # swagger-ui에 표시할 api의 엔드포인트 패턴
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure.logging: ERROR

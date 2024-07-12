@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: oneit_server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/${LOCAL_DATABASE}?
+    username: ${LOCAL_USER}
+    password: ${LOCAL_PASSWORD}

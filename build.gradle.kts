@@ -24,14 +24,15 @@ repositories {
 }
 
 dependencies {
+    implementation("com.mysql:mysql-connector-j")       // from mysql ver 8.0.31
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    runtimeOnly("com.mysql:mysql-connector-j")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }
 
