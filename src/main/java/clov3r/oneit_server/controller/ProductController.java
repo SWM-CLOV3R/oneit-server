@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-import static clov3r.oneit_server.response.BaseResponseStatus.REQUEST_ERROR;
+import static clov3r.oneit_server.response.BaseResponseStatus.*;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -36,19 +36,19 @@ public class ProductController {
 
         // check gender
         if (!Gender.isValid(productSearch.getGender())) {
-            return new BaseResponse<>(REQUEST_ERROR);
+            return new BaseResponse<>(REQUEST_GENDER_ERROR);
         }
         // check age
         // check price
         if (productSearch.getMinPrice() <0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
-            return new BaseResponse<>(REQUEST_ERROR);
+            return new BaseResponse<>(REQUEST_PRICE_ERROR);
         }
         // check keywords
         if (productSearch.getKeywords() == null) {
             productSearch.setKeywords(new ArrayList<>());
         }
         if (!keywordService.existsByKeyword(productSearch.getKeywords())) {
-            return new BaseResponse<>(REQUEST_ERROR);
+            return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
         }
         // validate redundant keywords
         List<String> keywords = productSearch.getKeywords().stream().distinct().toList();
