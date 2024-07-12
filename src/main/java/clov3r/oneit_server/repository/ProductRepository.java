@@ -32,6 +32,15 @@ public class ProductRepository {
         return initialFilteredProducts;
     }
 
+    public List<Product> filterProductsByPrice(ProductSearch productSearch) {
+        // Filter by price
+        String jpql = "select p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
+        TypedQuery<Product> query = em.createQuery(jpql, Product.class);
+        query.setParameter("minPrice", productSearch.getMinPrice());
+        query.setParameter("maxPrice", productSearch.getMaxPrice());
+
+        return query.getResultList();
+    }
 
     private String buildInitialQuery(ProductSearch productSearch) {
         String jpql = "select p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
