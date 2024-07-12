@@ -50,6 +50,10 @@ jobs:
     
       # LIGHTSAIL 배포
       - name: Deploy to LIGHTSAIL
+        env:
+          RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
+          RDS_USER: ${{ secrets.RDS_USER }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
         run: |
           echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
