@@ -5,7 +5,7 @@ spring:
   application:
     name: oneit_server
   profiles:
-    active: local
+    active: ${ACTIVE_ENV}
   jpa:
     show-sql: false
     hibernate:
