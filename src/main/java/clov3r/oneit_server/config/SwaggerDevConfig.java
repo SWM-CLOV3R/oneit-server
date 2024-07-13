@@ -6,13 +6,14 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import io.swagger.v3.oas.models.servers.Server;
 
-import java.util.Arrays;
+
 import java.util.Collections;
 
 @Configuration
-@Profile("local")
-public class SwaggerConfig {
+@Profile("dev")
+public class SwaggerDevConfig {
     private Info apiInfo() {
         return new Info()
                 .title("One!t API") // Title of the API
@@ -23,7 +24,9 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .components(new Components())
-                .info(apiInfo());
+                .info(apiInfo())
+                .servers(Collections.singletonList(
+                        new Server().url("https://api.oneit.gift")
+                ));
     }
-
 }
