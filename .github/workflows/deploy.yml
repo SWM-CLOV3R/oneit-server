@@ -51,11 +51,11 @@ jobs:
       # LIGHTSAIL 배포
       - name: Deploy to LIGHTSAIL
         env:
-          ACTIVE_ENV: "$ {{ secrets.ACTIVE_ENV }}"
+          ACTIVE_ENV: "${{ secrets.ACTIVE_ENV }}"
           RDS_ENDPOINT: "${{ secrets.RDS_ENDPOINT }}"
           RDS_USER: "${{ secrets.RDS_USER }}"
           RDS_PASSWORD: "${{ secrets.RDS_PASSWORD }}"
-          DEV_DATABASE: "$ {{ secrets.DEV_DATABASE }}"
+          DEV_DATABASE: "${{ secrets.DEV_DATABASE }}"
         run: |
           echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
