@@ -2,6 +2,7 @@ package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.domain.Keyword;
 import clov3r.oneit_server.domain.Product;
+import clov3r.oneit_server.domain.collectioin.MatchedProduct;
 import clov3r.oneit_server.domain.data.Gender;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.repository.ProductSearch;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static clov3r.oneit_server.response.BaseResponseStatus.*;
@@ -37,31 +39,35 @@ public class ProductController {
     private final ProductRepository productRepository;
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
-    @Operation(summary = "성별, 가격, 키워드 필터링 API", description = "성별, 가격, 키워드에 해당하는 상품 리스트를 추출합니다. (현재 서버 DB에 키워드 데이터가 아직 없어 4000번대 에러가 나옴)")
+    @Operation(
+            summary = "성별, 가격, 키워드 필터링 API",
+            description = "성별, 가격, 키워드에 해당하는 상품 리스트를 추출합니다. " +
+                    "키워드 일치 개수가 많은 순서대로 출력되며 키워드 매칭 개수가 0인 경우 제외됩니다. " +
+                    "개수가 5개 미만인 경우 그대로 출력됩니다. ")
     @PostMapping("/api/v1/product/result")
-    public BaseResponse<List<ProductDTO>> extractProduct(@RequestBody ProductSearch productSearch) {
+    public BaseResponse<List<ProductDTO>> extractProducts(@RequestBody ProductSearch productSearch) {
 
         // check gender
         if (!Gender.isValid(productSearch.getGender())) {
             return new BaseResponse<>(REQUEST_GENDER_ERROR);
         }
-        // check age
         // check price
         if (productSearch.getMinPrice() <0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
             return new BaseResponse<>(REQUEST_PRICE_ERROR);
         }
         // check keywords
         if (productSearch.getKeywords() == null) {
-            productSearch.setKeywords(new ArrayList<>());
+            return new BaseResponse<>(REQUEST_ERROR);
         }
-        if (!keywordService.existsByKeyword(productSearch.getKeywords())) {
+        if (!keywordService.existsByKeyword(productSearch.getKeywords().values().stream().toList())) {
             return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
         }
-        // validate redundant keywords
-        List<String> keywords = productSearch.getKeywords().stream().distinct().toList();
-        productSearch.setKeywords(keywords);
 
-        List<Product> products = productRepository.filterProducts(productSearch);
+        List<Product> products = productService.filterProducts(productSearch);
+        // max 5 products
+        if (products.size() > 5) {
+            products = products.subList(0, 5);
+        }
         List<ProductDTO> productDTOs = products.stream()
                 .map(product -> new ProductDTO(product, keywordService.getKeywordsByIdx(product.getIdx())))
                 .toList();
@@ -70,14 +76,14 @@ public class ProductController {
     }
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
-    @Operation(summary = "가격 필터링", description = "가격대로 상품을 필터링하고 랜덤으로 5개의 상품을 반환합니다. 결과 제품개수가 5개 미만일 경우 결과 개수 그대로 반환합니다. (키워드 선정하기 전 프론트 연동 테스트용 API 입니다. 가격 정보 이외에는 디폴값으로 요청해도 동작합니다.)")
+    @Operation(summary = "가격 필터링", description = "가격대로 상품을 필터링하고 랜덤으로 5개의 상품을 반환합니다. 결과 제품개수가 5개 미만일 경우 결과 개수 그대로 반환합니다. (키워드 선정하기 전 프론트 연동 테스트용 API 입니다. 성별, 나이는 디폴값으로 요청해도 동작합니다. 가격은 0 <= min < max 이어야 하고, keywords 의 key값은 질문의 번호, 즉 integer 값이어야 합니다.)")
     @PostMapping("/api/v1/product/result/price")
     public BaseResponse<List<ProductDTO>> extractProductByPrice(@RequestBody ProductSearch productSearch) {
-        // check price
+
+        // 1. check price
         if (productSearch.getMinPrice() <0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
             return new BaseResponse<>(REQUEST_PRICE_ERROR);
         }
-
         // filter products by price
         List<Product> products = productRepository.filterProductsByPrice(productSearch);
 
