@@ -16,10 +16,6 @@ public class Keyword {
     @Column(name = "keyword_idx")
     private Long idx;
 
-    @JsonIgnore
-    @Column(name = "product_idx")
-    private Long productIdx;
-
     private String keyword;
 
     @Column(name = "keyword_description")

@@ -1,11 +1,18 @@
 package clov3r.oneit_server.repository;
 
 import clov3r.oneit_server.domain.Keyword;
+import clov3r.oneit_server.domain.Product;
+import clov3r.oneit_server.domain.collectioin.MatchedProduct;
+import clov3r.oneit_server.domain.collectioin.QuestionCategory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,9 +35,32 @@ public class KeywordRepository {
                 .getResultList();
     }
 
+    /**
+     * 키워드가 존재하는지 확인
+     * @param keyword
+     * @return
+     */
     public Boolean existsByKeyword(String keyword) {
         return em.createQuery("select count(k) > 0 from Keyword k where k.keyword = :keyword", Boolean.class)
                 .setParameter("keyword", keyword)
                 .getSingleResult();
+    }
+
+
+    /**
+     * 키워드 String 리스트를 받아서 해당 키워드들의 idx 리스트를 반환
+     * @param keywordList
+     * @return List<Long>
+     */
+    List<Long> getKeywordIdxList(List<String> keywordList) {
+        // only using keyword string from hash value to extract keyword idx list
+        return em.createQuery("select k.idx from Keyword k where k.keyword in :keywordList", Long.class)
+                .setParameter("keywordList", keywordList)
+                .getResultList();}
+
+    public List<Long> getProductKeywordIdxList(Long productIdx) {
+        return em.createQuery("select pk.keyword.idx from ProductKeyword pk where pk.product.idx = :productIdx", Long.class)
+                .setParameter("productIdx", productIdx)
+                .getResultList();
     }
 }

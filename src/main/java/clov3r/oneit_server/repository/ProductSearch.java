@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.spi.LocaleNameProvider;
 
 @Getter
 @Setter
@@ -17,7 +19,12 @@ public class ProductSearch {
     private int age;
     private int minPrice;
     private int maxPrice;
-    private List<String> keywords = new ArrayList<>();
+    private HashMap<Integer, String> keywords = new HashMap<>();
+
+    // add keywords
+    public void addKeywords(HashMap<Integer, String> keywords) {
+        this.keywords.putAll(keywords);
+    }
 
 }
 

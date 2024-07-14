@@ -5,6 +5,7 @@ import clov3r.oneit_server.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -19,12 +20,12 @@ public class KeywordService {
     }
 
     public Boolean existsByKeyword(List<String> keywords) {
+        // Check if any of the keywords exist in the database
         for (String keyword : keywords) {
-            if (keywordRepository.existsByKeyword(keyword)) {
-                return true;
+            if (!keywordRepository.existsByKeyword(keyword)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
-
 }
