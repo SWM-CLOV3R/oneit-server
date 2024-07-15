@@ -1,6 +1,7 @@
 package clov3r.oneit_server.repository;
 
 import clov3r.oneit_server.domain.Product;
+import clov3r.oneit_server.domain.collectioin.KeyValue;
 import clov3r.oneit_server.domain.collectioin.MatchedProduct;
 import clov3r.oneit_server.domain.collectioin.QuestionCategory;
 import clov3r.oneit_server.domain.data.Gender;
@@ -9,10 +10,7 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -21,6 +19,7 @@ public class ProductRepository {
 
     private final EntityManager em;
     private final KeywordRepository keywordRepository;
+    private final CategoryRepository categoryRepository;
 
     // save Product
 
@@ -31,20 +30,32 @@ public class ProductRepository {
      */
     public List<Product> filterProductsByPriceAndGender(ProductSearch productSearch) {
         // First Query: Filter by price and gender
-        String jpql = "select p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
-        if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
-            jpql += " and p.gender <> :excludedGender";
-        }
+        String jpql = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
 
-        TypedQuery<Product> query = em.createQuery(jpql, Product.class);
+        String jpqlTest = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice" +
+                " and p.gender <> :excludedGender";
+//
+//        if (!productSearch.getGender().equals(Gender.UNISEX)) {
+//            jpql += " and p.gender <> :excludedGender";
+//        }
+
+        TypedQuery<Product> query = em.createQuery(jpqlTest, Product.class);
         query.setParameter("minPrice", productSearch.getMinPrice());
-        query.setParameter("maxPrice", productSearch.getMaxPrice());
-        if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
-            String excludedGender = productSearch.getGender().equals(Gender.MALE.toString()) ? Gender.FEMALE.toString() : Gender.MALE.toString();
-            query.setParameter("excludedGender", excludedGender);
-        }
 
-        return query.getResultList();
+        query.setParameter("maxPrice", productSearch.getMaxPrice());
+        query.setParameter("excludedGender", Gender.MALE);
+
+//        if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
+//            Gender excludedGender = productSearch.getGender().equals(Gender.MALE) ? Gender.FEMALE : Gender.MALE;
+//            query.setParameter("excludedGender", excludedGender);
+//            System.out.println("excludedGender = " + excludedGender);
+//        }
+
+        List<Product> resultList = query.getResultList();
+        Set<Product> uniqueProducts = new HashSet<>(resultList);
+        // Convert the Set back to a List if needed
+        List<Product> uniqueProductList = new ArrayList<>(uniqueProducts);
+        return uniqueProductList;
     }
 
     /**
@@ -79,7 +90,7 @@ public class ProductRepository {
 
         // product idx list and keyword idx list
         List<Long> productIdxList = products.stream().map(Product::getIdx).toList();
-        List<Long> keywordIdxList = keywordRepository.getKeywordIdxList(new ArrayList<>(keywords.values()));
+        List<Long> keywordIdxList = keywordRepository.getKeywordIdxList(keywords.values().stream().toList());
 
         // if match product keyword, add 1 scores
         // count matched keywords with keywordList per products
@@ -105,6 +116,53 @@ public class ProductRepository {
         List<Product> matchedProducts = findProductsByIdxOrdered(matchedProductIdxList);
 
         return matchedProducts;
+    }
+
+    public List<Product> filterProductsByCategoryAndKeywords(List<Product> initialFilteredProducts, ProductSearch productSearch) {
+        HashMap<Integer, String> questionKeywords = productSearch.getKeywords();
+        for (Integer key: questionKeywords.keySet()) {
+            System.out.println("key = " + key);
+            System.out.println("questionKeywords.get(key) = " + questionKeywords.get(key));
+        }
+        if (initialFilteredProducts.isEmpty() || questionKeywords.isEmpty()) {
+            return initialFilteredProducts;
+        }
+
+        List<Product> AllProductsFilterdByCategory= new ArrayList<>();
+
+        // make question category object
+        List<QuestionCategory> questionCategories = createQuestionCategory();
+        for (QuestionCategory q: questionCategories) {
+            // 해당 질문과 관련된 카테고리 idx 리스트
+            List<Long> categoryIdxList = q.getCategoryIdxList();
+            for (Long categoryIdx: categoryIdxList) {
+                System.out.println("categoryIdx = " + categoryIdx);
+            }
+
+            // 해당 질문에 대한 사용자의 답변 키워드
+            String answerKeyword = questionKeywords.get(q.getQuestionIdx());
+            System.out.println("q.getQuestionIdx() = " + q.getQuestionIdx());
+            // 해당 질문에 대한 사용자의 답변 키워드 idx
+            System.out.println("answerKeyword = " + answerKeyword);
+            Long answerKeywordIdx = keywordRepository.findKeywordIdx(answerKeyword);
+
+            // 해당 카테고리(대분류)이면서 해당 키워드를 가진 제품 리스트
+            String jpql = "select p from Product p " +
+                    "join ProductKeyword pk on p.idx = pk.product.idx " +
+                    "where pk.keyword.idx = :keywordIdx and p.categoryIdx in :categoryIdxList";
+            TypedQuery<Product> query = em.createQuery(jpql, Product.class);
+            query.setParameter("keywordIdx", answerKeywordIdx);
+            query.setParameter("categoryIdxList", categoryIdxList);
+            List<Product> productsFilteredByCategory = new ArrayList<>(query.getResultList());
+            AllProductsFilterdByCategory.addAll(productsFilteredByCategory);
+        }
+
+
+        return AllProductsFilterdByCategory;
+    }
+
+    private Product findProductByIdx(Long productIdx) {
+        return em.find(Product.class, productIdx);
     }
 
     public List<Product> findProductsByIdxOrdered(List<Long> productIdxList) {
@@ -133,28 +191,35 @@ public class ProductRepository {
 
 
     private List<QuestionCategory> createQuestionCategory() {
-        List<QuestionCategory> questionCategories = new ArrayList<>();
+        List<QuestionCategory> questionCategoryList = new ArrayList<>();
 
-        for(int i = 1; i<8; i++) {
+        for(int i = 0; i < 8; i++) {
             QuestionCategory q = new QuestionCategory(i);
-            questionCategories.add(q);
+            questionCategoryList.add(q);
 
-            if (i == 1 || i == 2) {
+            if (i == 3 || i == 5) {
                 q.getCategoryIdxList().add(644L);  // 가구/인테리어
                 q.getCategoryIdxList().add(649L);  // 패션의류
                 q.getCategoryIdxList().add(650L);  // 패션잡화
-            } else if (i == 3 || i == 4) {
+            } else if (i == 6 || i == 1) {
                 q.getCategoryIdxList().add(645L);  // 디지털/가전
                 q.getCategoryIdxList().add(646L);  // 생활/건강
                 q.getCategoryIdxList().add(648L);  // 출산/육아
-            } else if (i == 5 || i == 6) {
+            } else if (i == 4 || i == 0) {
                 q.getCategoryIdxList().add(647L);  // 식품
             } else {
                 q.getCategoryIdxList().add(651L);  // 화장품/미용
             }
-
         }
-        return questionCategories;
+
+        for (QuestionCategory q: questionCategoryList) {
+            System.out.println("q.getQuestionIdx() = " + q.getQuestionIdx());
+            for (Long categoryIdx: q.getCategoryIdxList()) {
+                System.out.println("categoryIdx = " + categoryIdx);
+            }
+        }
+        System.out.println("---------------------------");
+        return questionCategoryList;
     }
 
     private String buildInitialQuery(ProductSearch productSearch) {
@@ -173,7 +238,6 @@ public class ProductRepository {
             query.setParameter("excludedGender", excludedGender);
         }
     }
-
 
 
 

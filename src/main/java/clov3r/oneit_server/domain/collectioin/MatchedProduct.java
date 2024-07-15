@@ -27,4 +27,7 @@ public class MatchedProduct {
     }
 
 
+    public void addMatchedScore(int i) {
+        this.matchedScore += i;
+    }
 }

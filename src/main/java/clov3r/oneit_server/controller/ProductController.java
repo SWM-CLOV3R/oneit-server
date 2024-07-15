@@ -2,6 +2,7 @@ package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.domain.Keyword;
 import clov3r.oneit_server.domain.Product;
+import clov3r.oneit_server.domain.collectioin.KeyValue;
 import clov3r.oneit_server.domain.collectioin.MatchedProduct;
 import clov3r.oneit_server.domain.data.Gender;
 import clov3r.oneit_server.repository.ProductRepository;
@@ -10,6 +11,7 @@ import clov3r.oneit_server.response.BaseResponse;
 import clov3r.oneit_server.response.BaseResponseStatus;
 import clov3r.oneit_server.service.KeywordService;
 import clov3r.oneit_server.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -18,10 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,13 +43,49 @@ public class ProductController {
             description = "성별, 가격, 키워드에 해당하는 상품 리스트를 추출합니다. " +
                     "키워드 일치 개수가 많은 순서대로 출력되며 키워드 매칭 개수가 0인 경우 제외됩니다. " +
                     "개수가 5개 미만인 경우 그대로 출력됩니다. ")
+
+
     @PostMapping("/api/v1/product/result")
-    public BaseResponse<List<ProductDTO>> extractProducts(@RequestBody ProductSearch productSearch) {
+    public BaseResponse<List<ProductDTO>> extractProducts(@ModelAttribute("ProductSearch") ProductSearch productSearch) {
 
         // check gender
-        if (!Gender.isValid(productSearch.getGender())) {
-            return new BaseResponse<>(REQUEST_GENDER_ERROR);
+//        if (!Gender.isValid(productSearch.getGender())) {
+//            return new BaseResponse<>(REQUEST_GENDER_ERROR);
+//        }
+        // check price
+        if (productSearch.getMinPrice() < 0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
+            return new BaseResponse<>(REQUEST_PRICE_ERROR);
         }
+        // check keywords
+        if (productSearch.getKeywords() == null) {
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
+
+        // extract keyword string list from keywords object of productSearch
+        List<String> keywordList = productSearch.getKeywords().values().stream().toList();
+        if (!keywordService.existsByKeyword(keywordList)) {
+            return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
+        }
+
+        List<Product> products = productService.filterProducts(productSearch);
+        // max 5 products
+        if (products.size() > 5) {
+            products = products.subList(0, 5);
+        }
+        List<ProductDTO> productDTOs = products.stream()
+                .map(product -> new ProductDTO(product, keywordService.getKeywordsByIdx(product.getIdx())))
+                .toList();
+
+        return new BaseResponse<>(productDTOs);
+    }
+
+    @PostMapping("/api/v1/product/result/category")
+    public BaseResponse<List<ProductDTO>> extractProductsWithCategory(@RequestBody ProductSearch productSearch) {
+
+        // check gender
+//        if (!Gender.isValid(productSearch.getGender())) {
+//            return new BaseResponse<>(REQUEST_GENDER_ERROR);
+//        }
         // check price
         if (productSearch.getMinPrice() <0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
             return new BaseResponse<>(REQUEST_PRICE_ERROR);
@@ -63,7 +98,7 @@ public class ProductController {
             return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
         }
 
-        List<Product> products = productService.filterProducts(productSearch);
+        List<Product> products = productService.filterProductsWithCategory(productSearch);
         // max 5 products
         if (products.size() > 5) {
             products = products.subList(0, 5);
@@ -112,16 +147,15 @@ public class ProductController {
         private String thumbnailUrl;
         private Long categoryIdx;
         private List<Keyword> keywords  = new ArrayList<>();
-        private String gender;
+        private Gender gender;
 
         public ProductDTO(Product product, List<Keyword> keywords) {
             this.productIdx = product.getIdx();
             this.name = product.getName();
             this.originalPrice = product.getOriginalPrice();
-            this.shoppingmall = product.getShoppingmall();
+            this.shoppingmall = product.getShoppingmallName();
             this.productUrl = product.getProductUrl();
             this.thumbnailUrl = product.getThumbnailUrl();
-            this.categoryIdx = product.getCategoryIdx();
             this.keywords.addAll(keywords);
             this.gender = product.getGender();
         }

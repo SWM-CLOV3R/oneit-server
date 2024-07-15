@@ -63,4 +63,11 @@ public class KeywordRepository {
                 .setParameter("productIdx", productIdx)
                 .getResultList();
     }
+
+    public Long findKeywordIdx(String keyword) {
+        return em.createQuery("select k.idx from Keyword k where k.keyword = :keyword", Long.class)
+                .setParameter("keyword", keyword)
+                .getSingleResult();
+    }
+
 }

@@ -9,10 +9,10 @@ import java.util.List;
 @Getter
 public class QuestionCategory {
 
-    private Integer questionIdx;
+    private int questionIdx;
     private List<Long> categoryIdxList = new ArrayList<>();
 
-    public QuestionCategory(Integer questionIdx) {
+    public QuestionCategory(int questionIdx) {
         this.questionIdx = questionIdx;
     }
 
