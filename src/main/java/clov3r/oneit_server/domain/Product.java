@@ -1,12 +1,12 @@
 package clov3r.oneit_server.domain;
 
+import clov3r.oneit_server.domain.data.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -18,29 +18,38 @@ public class Product {
 
     @Id
     @GeneratedValue
-    @Column(name = "product_idx")
+    @Column(name = "idx")
     private Long idx;
 
-    @Column(name = "product_name")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "original_price")
     private int originalPrice;
 
-    private String shoppingmall;
+    @Column(name = "shoppingmapp_name")
+    private String shoppingmallName;
 
     @Column(name = "product_url")
     private String productUrl;
 
-    @Column(name = "thumbnail")
+    @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
-    @Column(name = "category_idx")
-    private Long categoryIdx;
+    @ManyToOne
+    @JoinColumn(name = "category_idx")
+    private Category category;
+    private String large;
+    private String middle;
+    private String small;
+
+    @Column(name = "category_display_name")
+    private String categoryDisplayName;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductKeyword> productKeywords = new ArrayList<>();
 
-    private String gender;  // FEMALE, MALE, UNISEX
+    @Enumerated(EnumType.STRING)
+    private Gender gender;  // FEMALE, MALE, UNISEX
 
 }
