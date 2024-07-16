@@ -114,16 +114,11 @@ public class ProductRepository {
         List<Long> matchedProductIdxList = matchedProductList.stream().map(MatchedProduct::getIdx).toList();
         // keep order matchedProductsIdxList when finding products List from database
         List<Product> matchedProducts = findProductsByIdxOrdered(matchedProductIdxList);
-
         return matchedProducts;
     }
 
     public List<Product> filterProductsByCategoryAndKeywords(List<Product> initialFilteredProducts, ProductSearch productSearch) {
         HashMap<Integer, String> questionKeywords = productSearch.getKeywords();
-        for (Integer key: questionKeywords.keySet()) {
-            System.out.println("key = " + key);
-            System.out.println("questionKeywords.get(key) = " + questionKeywords.get(key));
-        }
         if (initialFilteredProducts.isEmpty() || questionKeywords.isEmpty()) {
             return initialFilteredProducts;
         }
@@ -135,26 +130,24 @@ public class ProductRepository {
         for (QuestionCategory q: questionCategories) {
             // 해당 질문과 관련된 카테고리 idx 리스트
             List<Long> categoryIdxList = q.getCategoryIdxList();
-            for (Long categoryIdx: categoryIdxList) {
-                System.out.println("categoryIdx = " + categoryIdx);
-            }
-
             // 해당 질문에 대한 사용자의 답변 키워드
             String answerKeyword = questionKeywords.get(q.getQuestionIdx());
-            System.out.println("q.getQuestionIdx() = " + q.getQuestionIdx());
             // 해당 질문에 대한 사용자의 답변 키워드 idx
-            System.out.println("answerKeyword = " + answerKeyword);
             Long answerKeywordIdx = keywordRepository.findKeywordIdx(answerKeyword);
 
             // 해당 카테고리(대분류)이면서 해당 키워드를 가진 제품 리스트
             String jpql = "select p from Product p " +
                     "join ProductKeyword pk on p.idx = pk.product.idx " +
-                    "where pk.keyword.idx = :keywordIdx and p.categoryIdx in :categoryIdxList";
+                    "where pk.keyword.idx = :keywordIdx and p.category.idx in :categoryIdxList";
             TypedQuery<Product> query = em.createQuery(jpql, Product.class);
             query.setParameter("keywordIdx", answerKeywordIdx);
             query.setParameter("categoryIdxList", categoryIdxList);
             List<Product> productsFilteredByCategory = new ArrayList<>(query.getResultList());
             AllProductsFilterdByCategory.addAll(productsFilteredByCategory);
+            Set<Product> uniqueProducts = new HashSet<>(AllProductsFilterdByCategory);
+            // Convert the Set back to a List if needed
+            AllProductsFilterdByCategory = new ArrayList<>(uniqueProducts);
+            AllProductsFilterdByCategory.sort(Comparator.comparing(Product::getIdx));
         }
 
 
@@ -198,27 +191,20 @@ public class ProductRepository {
             questionCategoryList.add(q);
 
             if (i == 3 || i == 5) {
-                q.getCategoryIdxList().add(644L);  // 가구/인테리어
-                q.getCategoryIdxList().add(649L);  // 패션의류
-                q.getCategoryIdxList().add(650L);  // 패션잡화
+                q.getCategoryIdxList().add(1L);  // 가구/인테리어
+                q.getCategoryIdxList().add(7L);  // 패션의류
+                q.getCategoryIdxList().add(8L);  // 패션잡화
             } else if (i == 6 || i == 1) {
-                q.getCategoryIdxList().add(645L);  // 디지털/가전
-                q.getCategoryIdxList().add(646L);  // 생활/건강
-                q.getCategoryIdxList().add(648L);  // 출산/육아
+                q.getCategoryIdxList().add(2L);  // 디지털/가전
+                q.getCategoryIdxList().add(3L);  // 생활/건강
+                q.getCategoryIdxList().add(6L);  // 출산/육아
             } else if (i == 4 || i == 0) {
-                q.getCategoryIdxList().add(647L);  // 식품
+                q.getCategoryIdxList().add(5L);  // 식품
             } else {
-                q.getCategoryIdxList().add(651L);  // 화장품/미용
+                q.getCategoryIdxList().add(9L);  // 화장품/미용
             }
         }
 
-        for (QuestionCategory q: questionCategoryList) {
-            System.out.println("q.getQuestionIdx() = " + q.getQuestionIdx());
-            for (Long categoryIdx: q.getCategoryIdxList()) {
-                System.out.println("categoryIdx = " + categoryIdx);
-            }
-        }
-        System.out.println("---------------------------");
         return questionCategoryList;
     }
 

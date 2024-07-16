@@ -153,7 +153,7 @@ public class ProductController {
             this.productIdx = product.getIdx();
             this.name = product.getName();
             this.originalPrice = product.getOriginalPrice();
-            this.shoppingmall = product.getShoppingmallName();
+            this.shoppingmall = product.getMallName();
             this.productUrl = product.getProductUrl();
             this.thumbnailUrl = product.getThumbnailUrl();
             this.keywords.addAll(keywords);
@@ -163,13 +163,13 @@ public class ProductController {
 
     @Data
     static class KeywordDTO {
-        private Long keywordIdx;
-        private String keyword;
+        private Long idx;
+        private String name;
         private String description;
 
         public KeywordDTO(Keyword keyword) {
-            this.keywordIdx = keyword.getIdx();
-            this.keyword = keyword.getKeyword();
+            this.idx = keyword.getIdx();
+            this.name = keyword.getName();
             this.description = keyword.getDescription();
         }
     }
