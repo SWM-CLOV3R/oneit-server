@@ -2,7 +2,7 @@ name: Spring CI CD
 
 on:
   push:
-    branches: ["main"]
+    branches: ["develop"]
 
 jobs:
 
@@ -50,15 +50,10 @@ jobs:
     
       # LIGHTSAIL 배포
       - name: Deploy to LIGHTSAIL
-        env:
-          ACTIVE_ENV: "${{ secrets.ACTIVE_ENV }}"
-          RDS_ENDPOINT: "${{ secrets.RDS_ENDPOINT }}"
-          RDS_USER: "${{ secrets.RDS_USER }}"
-          RDS_PASSWORD: "${{ secrets.RDS_PASSWORD }}"
-          DEV_DATABASE: "${{ secrets.DEV_DATABASE }}"
         run: |
+          echo "${{ secrets.ENV_FILE }}" > env
           echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
           scp -i private_key.pem -o StrictHostKeyChecking=no build/libs/oneit_server-0.0.1-SNAPSHOT.jar ${{ secrets.LIGHTSAIL_USERNAME }}@${{ secrets.LIGHTSAIL_HOST }}:/home/${{ secrets.LIGHTSAIL_USERNAME }}/oneit_server-0.0.1-SNAPSHOT.jar
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.LIGHTSAIL_USERNAME }}@${{ secrets.LIGHTSAIL_HOST }} "pgrep java | xargs kill -9; nohup java -jar /home/${{ secrets.LIGHTSAIL_USERNAME }}/oneit_server-0.0.1-SNAPSHOT.jar > app.log 2>&1 &"
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.LIGHTSAIL_USERNAME }}@${{ secrets.LIGHTSAIL_HOST }} "pgrep java | xargs kill -9; source ~/.env; nohup java -jar /home/${{ secrets.LIGHTSAIL_USERNAME }}/oneit_server-0.0.1-SNAPSHOT.jar > app.log 2>&1 &"
           rm -f private_key.pem
