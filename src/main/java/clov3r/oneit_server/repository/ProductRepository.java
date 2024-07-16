@@ -1,7 +1,6 @@
 package clov3r.oneit_server.repository;
 
 import clov3r.oneit_server.domain.Product;
-import clov3r.oneit_server.domain.collectioin.KeyValue;
 import clov3r.oneit_server.domain.collectioin.MatchedProduct;
 import clov3r.oneit_server.domain.collectioin.QuestionCategory;
 import clov3r.oneit_server.domain.data.Gender;
