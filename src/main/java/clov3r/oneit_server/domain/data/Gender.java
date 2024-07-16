@@ -5,7 +5,6 @@ public enum Gender {
     MALE,
     UNISEX;
 
-
     @Override
     public String toString() {
         return super.toString();

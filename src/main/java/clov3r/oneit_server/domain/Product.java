@@ -27,14 +27,17 @@ public class Product {
     @Column(name = "original_price")
     private int originalPrice;
 
-    @Column(name = "shoppingmapp_name")
-    private String shoppingmallName;
+    @Column(name = "mall_name")
+    private String mallName;
 
     @Column(name = "product_url")
     private String productUrl;
 
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;  // FEMALE, MALE, UNISEX
 
     @ManyToOne
     @JoinColumn(name = "category_idx")
@@ -47,9 +50,9 @@ public class Product {
     private String categoryDisplayName;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @Column(updatable = false, insertable = false)
     private List<ProductKeyword> productKeywords = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;  // FEMALE, MALE, UNISEX
+
 
 }

@@ -8,10 +8,6 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "category", indexes = {
-        @Index(name = "idx_category_idx", columnList = "idx"),
-        @Index(name = "idx_parent_idx", columnList = "parent_idx")
-})
 public class Category {
 
     @Id @GeneratedValue
@@ -28,7 +24,7 @@ public class Category {
     private String displayName;
 
     @ManyToOne
-    @JoinColumn(name = "parent_idx", insertable=false, updatable=false, nullable = true)
+    @JoinColumn(name = "parent_category_idx", nullable = true)
     private Category parent;
 //
 //    @ManyToOne

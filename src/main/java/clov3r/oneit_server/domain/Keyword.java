@@ -16,9 +16,13 @@ public class Keyword {
     @Column(name = "idx")
     private Long idx;
 
-    private String keyword;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "description")
+    @Column(name = "field")
+    private String field;
+
+    @Column(name = "keyword_description")
     private String description;
 
 }
