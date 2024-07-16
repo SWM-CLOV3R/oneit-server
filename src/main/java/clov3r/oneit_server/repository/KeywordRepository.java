@@ -22,7 +22,7 @@ public class KeywordRepository {
 
 
     public List<Long> findIdsByKeywords(List<String> keywords) {
-        return em.createQuery("select k.idx from Keyword k where k.keyword in :keywords", Long.class)
+        return em.createQuery("select k.idx from Keyword k where k.name in :keywords", Long.class)
                 .setParameter("keywords", keywords)
                 .getResultList();
     }
@@ -41,7 +41,7 @@ public class KeywordRepository {
      * @return
      */
     public Boolean existsByKeyword(String keyword) {
-        return em.createQuery("select count(k) > 0 from Keyword k where k.keyword = :keyword", Boolean.class)
+        return em.createQuery("select count(k) > 0 from Keyword k where k.name = :keyword", Boolean.class)
                 .setParameter("keyword", keyword)
                 .getSingleResult();
     }
@@ -54,7 +54,7 @@ public class KeywordRepository {
      */
     List<Long> getKeywordIdxList(List<String> keywordList) {
         // only using keyword string from hash value to extract keyword idx list
-        return em.createQuery("select k.idx from Keyword k where k.keyword in :keywordList", Long.class)
+        return em.createQuery("select k.idx from Keyword k where k.name in :keywordList", Long.class)
                 .setParameter("keywordList", keywordList)
                 .getResultList();}
 
@@ -63,4 +63,11 @@ public class KeywordRepository {
                 .setParameter("productIdx", productIdx)
                 .getResultList();
     }
+
+    public Long findKeywordIdx(String keyword) {
+        return em.createQuery("select k.idx from Keyword k where k.name = :keyword", Long.class)
+                .setParameter("keyword", keyword)
+                .getSingleResult();
+    }
+
 }

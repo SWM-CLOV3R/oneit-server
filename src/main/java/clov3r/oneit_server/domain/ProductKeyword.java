@@ -17,13 +17,12 @@ public class ProductKeyword {
     @Column(name = "product_keyword_idx")
     private Long idx;
 
-    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "product_idx")
+    @JoinColumn(name = "product_idx", referencedColumnName = "idx")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "keyword_idx")
+    @JoinColumn(name = "keyword_idx", referencedColumnName = "idx")
     private Keyword keyword;
 
     private Integer intensity;
