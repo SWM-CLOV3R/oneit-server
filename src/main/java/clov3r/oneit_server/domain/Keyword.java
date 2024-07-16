@@ -13,15 +13,16 @@ public class Keyword {
 
     @Id
     @GeneratedValue
-    @Column(name = "keyword_idx")
+    @Column(name = "idx")
     private Long idx;
 
-    private String keyword;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "field")
+    private String field;
 
     @Column(name = "keyword_description")
     private String description;
-
-    // createKeyword
-
 
 }

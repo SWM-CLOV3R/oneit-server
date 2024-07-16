@@ -1,6 +1,7 @@
 package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.domain.Product;
+import clov3r.oneit_server.domain.collectioin.KeyValue;
 import clov3r.oneit_server.repository.KeywordRepository;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.repository.ProductSearch;
@@ -23,10 +24,27 @@ public class ProductService {
     public List<Product> filterProducts(ProductSearch productSearch) {
         // First Query: Filter by price and gender
         List<Product> initialFilteredProducts = productRepository.filterProductsByPriceAndGender(productSearch);
+        Product p = initialFilteredProducts.isEmpty() ? null : initialFilteredProducts.get(0);
+
 
         // Second Query: Further filter by keywords if applicable
         if (!productSearch.getKeywords().isEmpty()) {
             return productRepository.filterProductsByKeywords(initialFilteredProducts, productSearch.getKeywords());
+        }
+
+        return initialFilteredProducts;
+    }
+
+    public List<Product> filterProductsWithCategory(ProductSearch productSearch) {
+
+
+        List<Product> initialFilteredProducts = productRepository.filterProductsByPriceAndGender(productSearch);
+
+        // filter by category and answer keywords
+        List<Product> filterProductsByCategoryKeywords = productRepository.filterProductsByCategoryAndKeywords(initialFilteredProducts, productSearch);
+
+        if (!productSearch.getKeywords().isEmpty()) {
+            return productRepository.filterProductsByKeywords(filterProductsByCategoryKeywords, productSearch.getKeywords());
         }
 
         return initialFilteredProducts;
