@@ -1,5 +1,6 @@
 package clov3r.oneit_server.domain;
 
+import clov3r.oneit_server.domain.collectioin.ProductKeywordId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,16 +13,17 @@ import static jakarta.persistence.FetchType.LAZY;
 @Setter
 public class ProductKeyword {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "product_keyword_idx")
-    private Long idx;
 
-    @ManyToOne
+    @EmbeddedId
+    private ProductKeywordId id;
+
+    @ManyToOne(fetch = LAZY)
+    @MapsId("productIdx") // Maps productIdx in ProductKeywordId
     @JoinColumn(name = "product_idx", referencedColumnName = "idx")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
+    @MapsId("keywordIdx") // Maps keywordIdx in ProductKeywordId
     @JoinColumn(name = "keyword_idx", referencedColumnName = "idx")
     private Keyword keyword;
 
