@@ -1,18 +1,11 @@
 package clov3r.oneit_server.repository;
 
 import clov3r.oneit_server.domain.Keyword;
-import clov3r.oneit_server.domain.Product;
-import clov3r.oneit_server.domain.collectioin.MatchedProduct;
-import clov3r.oneit_server.domain.collectioin.QuestionCategory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
