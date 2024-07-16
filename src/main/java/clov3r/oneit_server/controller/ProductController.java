@@ -36,7 +36,7 @@ public class ProductController {
 
 
     @PostMapping("/api/v1/product/result")
-    public BaseResponse<List<ProductDTO>> extractProducts(@ModelAttribute("ProductSearch") ProductSearch productSearch) {
+    public BaseResponse<List<ProductDTO>> extractProducts(@RequestBody ProductSearch productSearch) {
 
         // check gender
 //        if (!Gender.isValid(productSearch.getGender())) {

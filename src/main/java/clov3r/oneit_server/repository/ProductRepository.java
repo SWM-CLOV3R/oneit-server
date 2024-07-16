@@ -31,24 +31,19 @@ public class ProductRepository {
         // First Query: Filter by price and gender
         String jpql = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
 
-        String jpqlTest = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice" +
-                " and p.gender <> :excludedGender";
-//
-//        if (!productSearch.getGender().equals(Gender.UNISEX)) {
-//            jpql += " and p.gender <> :excludedGender";
-//        }
+        if (!productSearch.getGender().equals(Gender.UNISEX)) {
+            jpql += " and p.gender <> :excludedGender";
+        }
 
-        TypedQuery<Product> query = em.createQuery(jpqlTest, Product.class);
+        TypedQuery<Product> query = em.createQuery(jpql, Product.class);
         query.setParameter("minPrice", productSearch.getMinPrice());
-
         query.setParameter("maxPrice", productSearch.getMaxPrice());
         query.setParameter("excludedGender", Gender.MALE);
 
-//        if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
-//            Gender excludedGender = productSearch.getGender().equals(Gender.MALE) ? Gender.FEMALE : Gender.MALE;
-//            query.setParameter("excludedGender", excludedGender);
-//            System.out.println("excludedGender = " + excludedGender);
-//        }
+        if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
+            Gender excludedGender = productSearch.getGender().equals(Gender.MALE) ? Gender.FEMALE : Gender.MALE;
+            query.setParameter("excludedGender", excludedGender);
+        }
 
         List<Product> resultList = query.getResultList();
         Set<Product> uniqueProducts = new HashSet<>(resultList);

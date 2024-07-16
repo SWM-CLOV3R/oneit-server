@@ -22,8 +22,6 @@ public class ProductService {
     public List<Product> filterProducts(ProductSearch productSearch) {
         // First Query: Filter by price and gender
         List<Product> initialFilteredProducts = productRepository.filterProductsByPriceAndGender(productSearch);
-        Product p = initialFilteredProducts.isEmpty() ? null : initialFilteredProducts.get(0);
-
 
         // Second Query: Further filter by keywords if applicable
         if (!productSearch.getKeywords().isEmpty()) {
