@@ -39,7 +39,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Gender gender;  // FEMALE, MALE, UNISEX
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_idx")
     private Category category;
     private String large;
@@ -49,7 +49,7 @@ public class Product {
     @Column(name = "category_display_name")
     private String categoryDisplayName;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Column(updatable = false, insertable = false)
     private List<ProductKeyword> productKeywords = new ArrayList<>();
 
