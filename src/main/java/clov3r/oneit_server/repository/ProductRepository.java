@@ -38,7 +38,6 @@ public class ProductRepository {
         TypedQuery<Product> query = em.createQuery(jpql, Product.class);
         query.setParameter("minPrice", productSearch.getMinPrice());
         query.setParameter("maxPrice", productSearch.getMaxPrice());
-        query.setParameter("excludedGender", Gender.MALE);
 
         if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
             Gender excludedGender = productSearch.getGender().equals(Gender.MALE) ? Gender.FEMALE : Gender.MALE;
