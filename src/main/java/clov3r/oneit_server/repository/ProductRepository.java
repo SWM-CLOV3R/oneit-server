@@ -131,9 +131,12 @@ public class ProductRepository {
             // 해당 카테고리(대분류)이면서 해당 키워드를 가진 제품 리스트
             String jpql = "select p from Product p " +
                     "join ProductKeyword pk on p.idx = pk.product.idx " +
-                    "where pk.keyword.idx = :keywordIdx and p.category.idx in :categoryIdxList";
+                    "where pk.keyword.idx = :keywordIdx " +
+                    "and p.idx in :initialFilteredProducts " +
+                    "and p.category.idx in :categoryIdxList";
             TypedQuery<Product> query = em.createQuery(jpql, Product.class);
             query.setParameter("keywordIdx", answerKeywordIdx);
+            query.setParameter("initialFilteredProducts", initialFilteredProducts.stream().map(Product::getIdx).toList());
             query.setParameter("categoryIdxList", categoryIdxList);
             List<Product> productsFilteredByCategory = new ArrayList<>(query.getResultList());
             AllProductsFilterdByCategory.addAll(productsFilteredByCategory);
@@ -142,7 +145,6 @@ public class ProductRepository {
             AllProductsFilterdByCategory = new ArrayList<>(uniqueProducts);
             AllProductsFilterdByCategory.sort(Comparator.comparing(Product::getIdx));
         }
-
 
         return AllProductsFilterdByCategory;
     }
