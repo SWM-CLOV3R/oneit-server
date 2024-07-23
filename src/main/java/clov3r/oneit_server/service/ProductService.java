@@ -1,9 +1,9 @@
 package clov3r.oneit_server.service;
 
-import clov3r.oneit_server.domain.Product;
+import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.repository.KeywordRepository;
 import clov3r.oneit_server.repository.ProductRepository;
-import clov3r.oneit_server.repository.ProductSearch;
+import clov3r.oneit_server.domain.collectioin.ProductSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

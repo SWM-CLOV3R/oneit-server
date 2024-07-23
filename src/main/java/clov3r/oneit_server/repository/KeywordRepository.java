@@ -1,6 +1,6 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.Keyword;
+import clov3r.oneit_server.domain.entity.Keyword;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
