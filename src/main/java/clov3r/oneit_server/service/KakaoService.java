@@ -1,5 +1,7 @@
 package clov3r.oneit_server.service;
 
+import clov3r.oneit_server.config.security.TokenProvider;
+import clov3r.oneit_server.domain.DTO.AuthToken;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.DTO.KakaoProfile;
 import clov3r.oneit_server.repository.KakaoRepository;
@@ -17,6 +19,7 @@ public class KakaoService {
 
     private final KakaoRepository kakaoRepository;
     private final RestTemplate restTemplate;
+    private final TokenProvider tokenProvider;
 
     /**
      * 카카오 API 서버로부터 거져온 사용자 정보를 저장하는 메소드
@@ -33,7 +36,10 @@ public class KakaoService {
         user.setKakaoAccessToken(kakaoAccessToken);
 
         // jwt 토큰 생성
-//        user.setJwt(jwtService.createJwt(user.getEmail());
+        AuthToken authToken =  tokenProvider.createToken(user.getIdx());
+        user.setJwt(authToken.getAccessToken());
+        System.out.println("authToken.getAccessToken() = " + authToken.getAccessToken());
+
         kakaoRepository.save(user);
         return user;
     }
