@@ -1,7 +1,6 @@
-package clov3r.oneit_server.domain;
+package clov3r.oneit_server.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 

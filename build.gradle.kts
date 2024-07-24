@@ -34,8 +34,11 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.12.3")
 }
-
 //tasks.withType<Test> {
 //    useJUnitPlatform()
 //}

@@ -1,7 +1,8 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.Product;
+import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.collectioin.MatchedProduct;
+import clov3r.oneit_server.domain.collectioin.ProductSearch;
 import clov3r.oneit_server.domain.collectioin.QuestionCategory;
 import clov3r.oneit_server.domain.data.Gender;
 import jakarta.persistence.EntityManager;

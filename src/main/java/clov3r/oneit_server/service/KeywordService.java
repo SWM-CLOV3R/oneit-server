@@ -1,6 +1,6 @@
 package clov3r.oneit_server.service;
 
-import clov3r.oneit_server.domain.Keyword;
+import clov3r.oneit_server.domain.entity.Keyword;
 import clov3r.oneit_server.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

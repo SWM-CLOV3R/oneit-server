@@ -1,6 +1,5 @@
-package clov3r.oneit_server.domain;
+package clov3r.oneit_server.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

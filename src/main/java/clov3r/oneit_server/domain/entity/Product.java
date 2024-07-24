@@ -1,4 +1,4 @@
-package clov3r.oneit_server.domain;
+package clov3r.oneit_server.domain.entity;
 
 import clov3r.oneit_server.domain.data.Gender;
 import jakarta.persistence.*;

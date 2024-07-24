@@ -6,3 +6,6 @@ spring:
     url: jdbc:mysql://${RDS_ENDPOINT}/${DEV_DATABASE}?
     username: ${RDS_USER}
     password: ${RDS_PASSWORD}
+
+jwt:
+  secret_key: ${DEV_JWT_SECRET_KEY}

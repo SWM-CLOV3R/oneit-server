@@ -1,4 +1,4 @@
-package clov3r.oneit_server.repository;
+package clov3r.oneit_server.domain.collectioin;
 
 import clov3r.oneit_server.domain.data.Gender;
 import lombok.Getter;
