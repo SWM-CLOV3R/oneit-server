@@ -22,10 +22,6 @@ public class User extends BaseEntity {
     private String phone;
     private String profileImg;
 
-    private String kakaoAccessToken;
-    private String kakaoRefreshToken;
-    private String accessToken;
     private String refreshToken;
-    private String jwt;
 
 }

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KakaoLoginDTO {
 
-    private Long idx;
-    private String email;
-    private String jwt;
-
+    private String accessToken;
+    private String refreshToken;
 }

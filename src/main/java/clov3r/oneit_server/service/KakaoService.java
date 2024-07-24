@@ -23,25 +23,22 @@ public class KakaoService {
 
     /**
      * 카카오 API 서버로부터 거져온 사용자 정보를 저장하는 메소드
-     * @param kakaoAccessToken
+     * @param kakaoProfile
      * @return
      */
     @Transactional
-    public User createUser(String kakaoAccessToken) {
-        KakaoProfile kakaoProfile = getUserInfo(kakaoAccessToken);
+    public User createUser(KakaoProfile kakaoProfile) {
+        // 사용자 정보 저장
         User user = new User();
         user.setEmail(kakaoProfile.getKakao_account().getEmail());
         user.setNickname(kakaoProfile.getProperties().getNickname());
         user.setProfileImg(kakaoProfile.getProperties().getProfile_image());
-        user.setKakaoAccessToken(kakaoAccessToken);
-
-        // jwt 토큰 생성
-        AuthToken authToken =  tokenProvider.createToken(user.getIdx());
-        user.setJwt(authToken.getAccessToken());
-        System.out.println("authToken.getAccessToken() = " + authToken.getAccessToken());
-
         kakaoRepository.save(user);
         return user;
+    }
+
+    public AuthToken createToken(Long userId) {
+        return tokenProvider.createToken(userId);
     }
 
     /**
@@ -67,7 +64,7 @@ public class KakaoService {
 
     }
 
-    public User getUser(String kakaoAccessToken) {
-        return kakaoRepository.findUser(kakaoAccessToken);
+    public User getUser(String email) {
+        return kakaoRepository.findUser(email);
     }
 }
