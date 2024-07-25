@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "product")
-public class Product {
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -27,8 +27,20 @@ public class Product {
     @Column(name = "original_price")
     private int originalPrice;
 
+    @Column(name = "current_price")
+    private int currentPrice;
+
+    @Column(name = "discount_rate")
+    private int discountRate;
+
     @Column(name = "mall_name")
     private String mallName;
+
+    @Column(name = "brand_name")
+    private String brandName;
+
+    @Column(name = "brand_description")
+    private String brandDescription;
 
     @Column(name = "product_url")
     private String productUrl;
@@ -42,9 +54,6 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_idx")
     private Category category;
-    private String large;
-    private String middle;
-    private String small;
 
     @Column(name = "category_display_name")
     private String categoryDisplayName;

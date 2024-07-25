@@ -19,7 +19,6 @@ public class ProductRepository {
 
     private final EntityManager em;
     private final KeywordRepository keywordRepository;
-    private final CategoryRepository categoryRepository;
 
     // save Product
 

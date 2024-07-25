@@ -32,7 +32,7 @@ public class KakaoService {
         User user = new User();
         user.setEmail(kakaoProfile.getKakao_account().getEmail());
         user.setNickname(kakaoProfile.getProperties().getNickname());
-        user.setProfileImg(kakaoProfile.getProperties().getProfile_image());
+        user.setProfileImgFromKakao(kakaoProfile.getProperties().getProfile_image());
         kakaoRepository.save(user);
         return user;
     }
