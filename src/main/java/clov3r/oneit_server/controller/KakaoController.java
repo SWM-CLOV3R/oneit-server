@@ -3,14 +3,20 @@ package clov3r.oneit_server.controller;
 import clov3r.oneit_server.domain.DTO.AuthToken;
 import clov3r.oneit_server.domain.DTO.KakaoLoginDTO;
 import clov3r.oneit_server.domain.DTO.KakaoProfile;
+import clov3r.oneit_server.domain.collectioin.KakaoAccessToken;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.repository.KakaoRepository;
 import clov3r.oneit_server.response.BaseResponse;
 import clov3r.oneit_server.service.KakaoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +27,9 @@ public class KakaoController {
 
     @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
     @PostMapping("/api/v1/kakao/login")
-    public BaseResponse<KakaoLoginDTO> kakaoLogin(String kakaoAccessToken) {
+    public BaseResponse<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
         // get user info from kakao api
-        KakaoProfile kakaoProfile = kakaoService.getUserInfo(kakaoAccessToken);
+        KakaoProfile kakaoProfile = kakaoService.getUserInfo(kakaoAccessToken.getAccessToken());
         User user = new User();
 
         // check if the user exists
@@ -41,5 +47,7 @@ public class KakaoController {
 
         return new BaseResponse<>(kakaoLoginDTO);
     }
+
+
 
 }
