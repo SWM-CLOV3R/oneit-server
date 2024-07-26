@@ -11,8 +11,10 @@ import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.response.BaseResponse;
 import clov3r.oneit_server.service.KakaoService;
 import clov3r.oneit_server.service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,9 +54,10 @@ public class KakaoController {
     // 헤더에서 토큰을 가져와 검증한 뒤에 유효하다면 user idx를 꺼내서 유저의 정보를 반환하는 API
     // @Auth 활용
     @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
-    @PostMapping("/api/v1/kakao/user")
+    @GetMapping("/api/v1/kakao/user")
     public BaseResponse<User> getUserInfo(
-            @Auth Long userId
+            @Parameter(description = "유저의 idx", required = false)
+            @Auth(required = false) Long userId
     ) {
         User user = userService.getUser(userId);
         return new BaseResponse<>(user);

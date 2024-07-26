@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class KakaoService {
 
-    private final KakaoRepository kakaoRepository;
     private final RestTemplate restTemplate;
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
@@ -65,6 +64,5 @@ public class KakaoService {
         return kakaoProfile;
 
     }
-
 
 }
