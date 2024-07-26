@@ -5,6 +5,7 @@ import clov3r.oneit_server.domain.DTO.AuthToken;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.DTO.KakaoProfile;
 import clov3r.oneit_server.repository.KakaoRepository;
+import clov3r.oneit_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,7 @@ public class KakaoService {
     private final KakaoRepository kakaoRepository;
     private final RestTemplate restTemplate;
     private final TokenProvider tokenProvider;
+    private final UserRepository userRepository;
 
     /**
      * 카카오 API 서버로부터 거져온 사용자 정보를 저장하는 메소드
@@ -33,7 +35,7 @@ public class KakaoService {
         user.setEmail(kakaoProfile.getKakao_account().getEmail());
         user.setNickname(kakaoProfile.getProperties().getNickname());
         user.setProfileImgFromKakao(kakaoProfile.getProperties().getProfile_image());
-        kakaoRepository.save(user);
+        userRepository.save(user);
         return user;
     }
 
@@ -64,7 +66,5 @@ public class KakaoService {
 
     }
 
-    public User getUser(String email) {
-        return kakaoRepository.findUser(email);
-    }
+
 }
