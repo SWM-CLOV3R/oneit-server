@@ -1,22 +1,23 @@
 package clov3r.oneit_server.controller;
 
+import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.AuthToken;
 import clov3r.oneit_server.domain.DTO.KakaoLoginDTO;
 import clov3r.oneit_server.domain.DTO.KakaoProfile;
 import clov3r.oneit_server.domain.collectioin.KakaoAccessToken;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.repository.KakaoRepository;
+import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.response.BaseResponse;
 import clov3r.oneit_server.service.KakaoService;
+import clov3r.oneit_server.service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +25,8 @@ public class KakaoController {
 
     private final KakaoService kakaoService;
     private final KakaoRepository kakaoRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
     @PostMapping("/api/v1/kakao/login")
@@ -33,9 +36,9 @@ public class KakaoController {
         User user = new User();
 
         // check if the user exists
-        if (kakaoRepository.existsUser(kakaoProfile.getKakao_account().getEmail())) {
+        if (userRepository.existsUserByEmail(kakaoProfile.getKakao_account().getEmail())) {
             // if so, return the user's access token (jwt)
-            user = kakaoService.getUser(kakaoProfile.getKakao_account().getEmail());
+            user = userRepository.findUserByEmail(kakaoProfile.getKakao_account().getEmail());
         } else {
             // if not, create a new user
             user = kakaoService.createUser(kakaoProfile);
@@ -48,6 +51,16 @@ public class KakaoController {
         return new BaseResponse<>(kakaoLoginDTO);
     }
 
-
+    // 헤더에서 토큰을 가져와 검증한 뒤에 유효하다면 user idx를 꺼내서 유저의 정보를 반환하는 API
+    // @Auth 활용
+    @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
+    @GetMapping("/api/v1/kakao/user")
+    public BaseResponse<User> getUserInfo(
+            @Parameter(description = "유저의 idx", required = false)
+            @Auth(required = false) Long userId
+    ) {
+        User user = userService.getUser(userId);
+        return new BaseResponse<>(user);
+    }
 
 }

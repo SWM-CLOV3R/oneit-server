@@ -1,5 +1,5 @@
 package clov3r.oneit_server.config.security;
-
+import clov3r.oneit_server.response.BaseResponseStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
@@ -29,7 +28,6 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .claim("user_id", userId)
-                .claim("uuid", createUUID())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpireTime))
                 .signWith(key)
                 .compact();
@@ -38,13 +36,28 @@ public class JwtTokenProvider {
     public String createRefreshToken(Long userId, long refreshTokenExpireTime) {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
-                .claim("uuid", createUUID())
+                .claim("user_id", userId)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpireTime))
                 .signWith(key)
                 .compact();
     }
 
-    public UUID createUUID() {
-        return UUID.randomUUID();
+    // validateToken 메서드는 토큰이 유효한지 확인하는 메서드입니다.
+    public boolean validateToken(String token) {
+
+        // 토큰이 만료되었는지 확인하고 만료되었다면 Exception을 발생시킵니다.
+        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        if (claims.getExpiration().before(new Date())) {
+            throw new RuntimeException(BaseResponseStatus.TOKEN_EXPIRED.getMessage());
+        }
+
+        return true;
+
+    }
+
+    // getUserIdFromToken 메서드는 토큰에서 userId를 추출하는 메서드입니다.
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Long.parseLong(claims.getSubject());
     }
 }
