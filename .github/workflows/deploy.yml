@@ -40,7 +40,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
-          aws-default-region: ap-northeast-2
+          aws-region: ap-northeast-2
   
       # S3에 zip 파일 업로드
       - name: Upload to S3
@@ -56,7 +56,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
-          aws-default-region: ap-northeast-2
+          aws-region: ap-northeast-2
         
       # CodeDeploy에 배포 요청
       - name: Code Deploy
