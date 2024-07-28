@@ -16,11 +16,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
+  
       # gradle 실행 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
+  
       # gradle 빌드
       - name: Build with Gradle
         env:
@@ -28,24 +28,36 @@ jobs:
         uses: gradle/gradle-build-action@v2.6.0
         with:
           arguments: build
-
+  
       # make zip file
       - name: Make zip file
         run: zip -qq -r ./$GITHUB_SHA.zip .
         shell: bash
-
+  
       # AWS 사용자 정보 입력
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
-          aws-region: ap-northeast-2
-
+          aws-default-region: ap-northeast-2
+  
       # S3에 zip 파일 업로드
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip --source .
-
+  
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # AWS 사용자 정보 입력
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+          aws-default-region: ap-northeast-2
+        
       # CodeDeploy에 배포 요청
       - name: Code Deploy
         env:
