@@ -18,6 +18,13 @@ public enum BaseResponseStatus {
     REQUEST_KEYWORD_ERROR(false, 2003, "키워드 입력값이 잘못되었습니다."),
 
     /**
+     * 2100 : token 오류
+     */
+    TOKEN_ERROR(false, 2100, "토큰이 유효하지 않습니다."),
+    TOKEN_EMPTY(false, 2101, "토큰이 비어있습니다."),
+    TOKEN_EXPIRED(false, 2102, "토큰이 만료되었습니다."),
+
+    /**
      * 4000 : Database, Server오류
      */
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
