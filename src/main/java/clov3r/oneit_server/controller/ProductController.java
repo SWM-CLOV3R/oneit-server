@@ -8,6 +8,7 @@ import clov3r.oneit_server.domain.collectioin.ProductSearch;
 import clov3r.oneit_server.response.BaseResponse;
 import clov3r.oneit_server.service.KeywordService;
 import clov3r.oneit_server.service.ProductService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
@@ -110,7 +111,7 @@ public class ProductController {
 
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
-    @Operation(summary = "가격 필터링", description = "가격대로 상품을 필터링하고 랜덤으로 5개의 상품을 반환합니다. 결과 제품개수가 5개 미만일 경우 결과 개수 그대로 반환합니다. (키워드 선정하기 전 프론트 연동 테스트용 API 입니다. 성별, 나이는 디폴값으로 요청해도 동작합니다. 가격은 0 <= min < max 이어야 하고, keywords 의 key값은 질문의 번호, 즉 integer 값이어야 합니다.)")
+    @Operation(hidden = true, summary = "가격 필터링", description = "가격대로 상품을 필터링하고 랜덤으로 5개의 상품을 반환합니다. 결과 제품개수가 5개 미만일 경우 결과 개수 그대로 반환합니다. (키워드 선정하기 전 프론트 연동 테스트용 API 입니다. 성별, 나이는 디폴값으로 요청해도 동작합니다. 가격은 0 <= min < max 이어야 하고, keywords 의 key값은 질문의 번호, 즉 integer 값이어야 합니다.)")
     @PostMapping("/api/v1/product/result/price")
     public BaseResponse<List<ProductDTO>> extractProductByPrice(@RequestBody ProductSearch productSearch) {
 

@@ -21,7 +21,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://oneit.gift", "https://www.oneit.gift", "https://client-dev.oneit.gift", "https://api.oneit.gift")
+                .allowedOrigins(
+                        "https://oneit.gift",
+                        "https://www.oneit.gift",
+                        "https://client-dev.oneit.gift",
+                        "https://api.oneit.gift",
+                        "https://dev-api.oneit.gift")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "HEAD")
                 .allowedHeaders("*");
     }
