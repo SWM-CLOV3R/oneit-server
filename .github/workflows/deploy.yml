@@ -5,14 +5,12 @@ on:
     branches: ["develop"]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
-    
     # jdk 17 설치
+    - uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -30,32 +28,33 @@ jobs:
       uses: gradle/gradle-build-action@v2.6.0
       with:
         arguments: build
-        
-    # artifact 업로드
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v2
+
+    # make zip file
+    - name: Make zip file
+      run: zip -qq -r ./$GITHUB_SHA.zip .
+      shell: bash
+
+    # AWS 사용자 정보 입력
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        name: build-artifact # Artifact 이름 지정
-        path: build/libs/oneit_server-0.0.1-SNAPSHOT.jar # 폴더 지정
+        aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
+        aws-region: ap-northeast-2
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+    # S3에 zip 파일 업로드
+    - name: Upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip --source .
 
-    steps:
-      # artifact 다운로드
-      - name: Download build artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build-artifact
-          path: build/libs/
-    
-      # LIGHTSAIL 배포
-      - name: Deploy to LIGHTSAIL
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > env
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          scp -i private_key.pem -o StrictHostKeyChecking=no build/libs/oneit_server-0.0.1-SNAPSHOT.jar ${{ secrets.LIGHTSAIL_USERNAME }}@${{ secrets.LIGHTSAIL_HOST }}:/home/${{ secrets.LIGHTSAIL_USERNAME }}/oneit_server-0.0.1-SNAPSHOT.jar
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.LIGHTSAIL_USERNAME }}@${{ secrets.LIGHTSAIL_HOST }} "pgrep java | xargs kill -9; source ~/.env; nohup java -jar /home/${{ secrets.LIGHTSAIL_USERNAME }}/oneit_server-0.0.1-SNAPSHOT.jar > app.log 2>&1 &"
-          rm -f private_key.pem
+    # CodeDeploy에 배포 요청
+    - name: Code Deploy
+      env:
+        ACTIVE_ENV: ${{ secrets.ACTIVE_ENV }}
+        RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
+        RDS_USER: ${{ secrets.RDS_USER }}
+        RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+        DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
+      run: aws deploy create-deployment --application-name ${{ secrets.CODE_DEPLOY_APP_NAME }}
+        --deployment-config-name CodeDeployDefault.AllAtOnce
+        --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+        --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$GITHUB_SHA.zip
