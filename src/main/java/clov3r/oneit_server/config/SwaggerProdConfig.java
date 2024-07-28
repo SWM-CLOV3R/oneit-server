@@ -5,17 +5,16 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import io.swagger.v3.oas.models.servers.Server;
-
 
 import java.util.Collections;
 
 @Configuration
-@Profile("dev")
-public class SwaggerDevConfig {
+@Profile("prod")
+public class SwaggerProdConfig {
     private Info apiInfo() {
         return new Info()
                 .title("One!t API") // Title of the API
@@ -38,6 +37,6 @@ public class SwaggerDevConfig {
                 .addSecurityItem(securityRequirement)
                 .info(apiInfo())
                 .servers(Collections.singletonList(
-                        new Server().url("https://dev-api.oneit.gift")));
+                        new Server().url("https://api.oneit.gift")));
     }
 }
