@@ -3,11 +3,11 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu
+    destination: /home/ubuntu/oneit
     overwrite: yes
 file_exists_behavior: OVERWRITE
 permissions:
-  - object: /home/ubuntu
+  - object: /home/ubuntu/oneit
     owner: ubuntu
     group: ubuntu
     mode: 755

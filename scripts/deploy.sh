@@ -1,5 +1,5 @@
 #!/bin/bash
-REPOSITORY=/home/ubuntu # 배포된 프로젝트 경로
+REPOSITORY=/home/ubuntu/oneit # 배포된 프로젝트 경로
 cd $REPOSITORY # 해당 경로로 이동
 
 APP_NAME=oneit_server
