@@ -62,6 +62,23 @@ public class Product extends BaseEntity {
     @Column(updatable = false, insertable = false)
     private List<ProductKeyword> productKeywords = new ArrayList<>();
 
-
-
+    @Override
+    public String toString() {
+        return "Product{" +
+                "idx=" + idx +
+                ", name='" + name + '\'' +
+                ", originalPrice=" + originalPrice +
+                ", currentPrice=" + currentPrice +
+                ", discountRate=" + discountRate +
+                ", mallName='" + mallName + '\'' +
+                ", brandName='" + brandName + '\'' +
+                ", brandDescription='" + brandDescription + '\'' +
+                ", productUrl='" + productUrl + '\'' +
+                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", gender=" + gender +
+                ", category=" + category +
+                ", categoryDisplayName='" + categoryDisplayName + '\'' +
+                ", productKeywords=" + productKeywords +
+                '}';
+    }
 }
