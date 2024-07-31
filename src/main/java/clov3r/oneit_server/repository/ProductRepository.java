@@ -1,10 +1,14 @@
 package clov3r.oneit_server.repository;
 
+import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.collectioin.MatchedProduct;
 import clov3r.oneit_server.domain.collectioin.ProductSearch;
 import clov3r.oneit_server.domain.collectioin.QuestionCategory;
 import clov3r.oneit_server.domain.data.Gender;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +17,15 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static clov3r.oneit_server.domain.entity.QProduct.product;
+
 @Repository
 @RequiredArgsConstructor
 public class ProductRepository {
 
     private final EntityManager em;
     private final KeywordRepository keywordRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
     // save Product
 
@@ -226,5 +233,39 @@ public class ProductRepository {
 
 
 
+
+    /**
+     * NoOffset 방식으로 상품 리스트를 반환합니다.
+     * @param productIdx
+     * @param pageSize
+     * @return
+     */
+    public List<ProductPaginationDTO> findProductListPagination(Long productIdx, int pageSize) {
+        return jpaQueryFactory
+                .select(Projections.fields(ProductPaginationDTO.class,
+                        product.idx,
+                        product.name,
+                        product.originalPrice,
+                        product.currentPrice,
+                        product.discountRate,
+                        product.thumbnailUrl))
+                .from(product)
+                .where(ltProduct(productIdx))
+                .orderBy(product.idx.desc())
+                .limit(pageSize)
+                .fetch();
+    }
+
+    private BooleanExpression ltProduct(Long productIdx) {
+        if (productIdx == null) {
+            return null;
+        }
+        return product.idx.lt(productIdx);
+    }
+
+    public List<Product> findAll() {
+        return em.createQuery("select p from Product p", Product.class)
+                .getResultList();
+    }
 }
 

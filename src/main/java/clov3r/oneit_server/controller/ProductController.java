@@ -163,6 +163,38 @@ public class ProductController {
         return new BaseResponse<>(productDTOs);
     }
 
+
+
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 리스트 전체 조회")
+    @GetMapping("/api/v1/products")
+    public BaseResponse<List<ProductDTO>> getProductList() {
+        List<Product> products = productService.getAllProducts();
+        List<ProductDTO> productDTOs = products.stream()
+                .map(product -> new ProductDTO(product, keywordService.getKeywordsByIdx(product.getIdx())))
+                .toList();
+        return new BaseResponse<>(productDTOs);
+    }
+
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 리스트 조회 - 페이지네이션(무한 스크롤)")
+    @GetMapping("/api/v1/products/pagination")
+    public BaseResponse<List<ProductPaginationDTO>> getProductListPagination(@RequestParam Long LastProductIdx, @RequestParam int pageSize) {
+        List<ProductPaginationDTO> productPaginationDTOs = productService.getProductListPagination(LastProductIdx, pageSize);
+//        List<ProductPaginationDTO> productDTOs = products.stream()
+//                .map(product -> new ProductPaginationDTO(
+//                        product.getIdx(),
+//                        product.getName(),
+//                        product.getOriginalPrice(),
+//                        product.getCurrentPrice(),
+//                        product.getDiscountRate(),
+//                        product.getThumbnailUrl()))
+//                .toList();
+        return new BaseResponse<>(productPaginationDTOs);
+    }
+
+
+
     @Data
     static class ProductDTO {
         private Long productIdx;
