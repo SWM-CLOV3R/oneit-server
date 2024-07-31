@@ -59,20 +59,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
           aws-region: ap-northeast-2
-      
-      # 디버깅을 위해 파일 리스트 출력
-      - name: List files for debugging
-        run: ls -al
-
-      - name: List scripts directory for debugging
-        run: ls -al scripts
-
-      # 스크립트 파일에 실행 권한 부여
-      - name: Grant execute permission for scripts
-        run: |
-          chmod +x scripts/stop.sh
-          chmod +x scripts/infisical.sh
-          chmod +x scripts/start.sh
 
       # CodeDeploy에 배포 요청
       - name: Code Deploy
