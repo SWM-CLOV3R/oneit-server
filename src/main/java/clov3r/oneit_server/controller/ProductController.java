@@ -177,7 +177,7 @@ public class ProductController {
     }
 
     @Tag(name = "상품 API", description = "상품 관련 API 목록")
-    @Operation(summary = "상품 리스트 조회 - 페이지네이션", description = "마지막 상품 인덱스와 페이지 사이즈를 입력받아 페이지네이션된 상품 리스트를 반환합니다. " +
+    @Operation(summary = "상품 리스트 조회 - 페이지네이션", description = "마지막 상품 인덱스와 페이지 사이즈를 입력받아 페이지네이션된 상품 리스트를 반환합니다.  !" +
             "LastproductIdx가 null 일 경우 처음부터 페이지네이션됩니다. " +
             "즉, 첫 페이지에서는 LastProductIdx를 입력하지 않아야 합니다.")
     @GetMapping("/api/v1/products/pagination")
