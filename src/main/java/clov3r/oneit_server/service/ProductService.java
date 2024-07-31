@@ -31,6 +31,12 @@ public class ProductService {
         return initialFilteredProducts;
     }
 
+    public Product getProductByIdx(Long productIdx) {
+        Product product = productRepository.findById(productIdx);
+//        System.out.println("product.toString() = " + product.toString());
+        return product;
+    }
+
     public List<Product> filterProductsWithCategory(ProductSearch productSearch) {
 
 
