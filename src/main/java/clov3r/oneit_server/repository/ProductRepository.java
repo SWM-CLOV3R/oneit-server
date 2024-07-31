@@ -256,6 +256,11 @@ public class ProductRepository {
                 .fetch();
     }
 
+    /**
+     * productIdx 보다 작은 상품 리스트를 반환합니다.
+     * @param productIdx
+     * @return
+     */
     private BooleanExpression ltProduct(Long productIdx) {
         if (productIdx == null) {
             return null;

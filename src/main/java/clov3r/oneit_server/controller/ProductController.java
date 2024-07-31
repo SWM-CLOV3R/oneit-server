@@ -113,28 +113,6 @@ public class ProductController {
         return new BaseResponse<>(productDTOs);
     }
 
-    @Tag(name = "상품 API", description = "상품 관련 API 목록")
-    @Operation(summary = "상품 상세 정보 조회")
-    @GetMapping("/api/v1/products/{productIdx}")
-    public BaseResponse<ProductDetailDTO> getProductDetail(@PathVariable Long productIdx) {
-        Product product = productService.getProductByIdx(productIdx);
-        if (product == null) {
-            return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
-        }
-        // get Category
-        Category category = categoryService.getCategoryByIdx(product.getCategory().getIdx());
-
-        // get keywords
-        List<Keyword> keywords = keywordService.getKeywordsByIdx(productIdx);
-        ProductDetailDTO productDetailDTO;
-        try {
-            productDetailDTO = new ProductDetailDTO(product, keywords, category);
-        } catch (Exception e) {
-            return new BaseResponse<>(PRODUCT_DTO_ERROR);
-        }
-
-        return new BaseResponse<>(productDetailDTO);
-    }
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
     @Operation(hidden = true, summary = "가격 필터링", description = "가격대로 상품을 필터링하고 랜덤으로 5개의 상품을 반환합니다. 결과 제품개수가 5개 미만일 경우 결과 개수 그대로 반환합니다. (키워드 선정하기 전 프론트 연동 테스트용 API 입니다. 성별, 나이는 디폴값으로 요청해도 동작합니다. 가격은 0 <= min < max 이어야 하고, keywords 의 key값은 질문의 번호, 즉 integer 값이어야 합니다.)")
@@ -163,6 +141,28 @@ public class ProductController {
         return new BaseResponse<>(productDTOs);
     }
 
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 상세 정보 조회")
+    @GetMapping("/api/v1/products/{productIdx}")
+    public BaseResponse<ProductDetailDTO> getProductDetail(@PathVariable Long productIdx) {
+        Product product = productService.getProductByIdx(productIdx);
+        if (product == null) {
+            return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
+        }
+        // get Category
+        Category category = categoryService.getCategoryByIdx(product.getCategory().getIdx());
+
+        // get keywords
+        List<Keyword> keywords = keywordService.getKeywordsByIdx(productIdx);
+        ProductDetailDTO productDetailDTO;
+        try {
+            productDetailDTO = new ProductDetailDTO(product, keywords, category);
+        } catch (Exception e) {
+            return new BaseResponse<>(PRODUCT_DTO_ERROR);
+        }
+
+        return new BaseResponse<>(productDetailDTO);
+    }
 
 
     @Tag(name = "상품 API", description = "상품 관련 API 목록")
@@ -177,9 +177,11 @@ public class ProductController {
     }
 
     @Tag(name = "상품 API", description = "상품 관련 API 목록")
-    @Operation(summary = "상품 리스트 조회 - 페이지네이션(무한 스크롤)")
+    @Operation(summary = "상품 리스트 조회 - 페이지네이션", description = "마지막 상품 인덱스와 페이지 사이즈를 입력받아 페이지네이션된 상품 리스트를 반환합니다. " +
+            "LastproductIdx가 null 일 경우 처음부터 페이지네이션됩니다. " +
+            "즉, 첫 페이지에서는 LastProductIdx를 입력하지 않아야 합니다.")
     @GetMapping("/api/v1/products/pagination")
-    public BaseResponse<List<ProductPaginationDTO>> getProductListPagination(@RequestParam Long LastProductIdx, @RequestParam int pageSize) {
+    public BaseResponse<List<ProductPaginationDTO>> getProductListPagination(@RequestParam(required = false) Long LastProductIdx, @RequestParam int pageSize) {
         List<ProductPaginationDTO> productPaginationDTOs = productService.getProductListPagination(LastProductIdx, pageSize);
 //        List<ProductPaginationDTO> productDTOs = products.stream()
 //                .map(product -> new ProductPaginationDTO(
