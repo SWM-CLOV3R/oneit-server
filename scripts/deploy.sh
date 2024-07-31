@@ -2,7 +2,7 @@
 REPOSITORY=/home/ubuntu/oneit # 배포된 프로젝트 경로
 cd $REPOSITORY # 해당 경로로 이동
 
-APP_NAME=oneit_server
+APP_NAME=oneit
 JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 

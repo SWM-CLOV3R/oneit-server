@@ -13,7 +13,15 @@ permissions:
     mode: 755
 
 hooks:
+  ApplicationStop:
+    - location: scripts/stop.sh
+      timeout: 60
+      runas: ubuntu
+  BeforeInstall:
+    - location: scripts/infisical.sh
+      timeout: 60
+      runas: ubuntu
   AfterInstall:
-    - location: scripts/deploy.sh
+    - location: scripts/start.sh
       timeout: 60
       runas: ubuntu
