@@ -211,6 +211,10 @@ public class ProductRepository {
         return jpql;
     }
 
+    public Product findById(Long productIdx) {
+        return em.find(Product.class, productIdx);
+    }
+
     private void setInitialQueryParameters(TypedQuery<Product> query, ProductSearch productSearch) {
         query.setParameter("minPrice", productSearch.getMinPrice());
         query.setParameter("maxPrice", productSearch.getMaxPrice());

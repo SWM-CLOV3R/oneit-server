@@ -1,14 +1,17 @@
 package clov3r.oneit_server.controller;
 
+import clov3r.oneit_server.domain.DTO.ProductDetailDTO;
+import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
+import clov3r.oneit_server.domain.entity.Category;
 import clov3r.oneit_server.domain.entity.Keyword;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.data.Gender;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.domain.collectioin.ProductSearch;
 import clov3r.oneit_server.response.BaseResponse;
+import clov3r.oneit_server.service.CategoryService;
 import clov3r.oneit_server.service.KeywordService;
 import clov3r.oneit_server.service.ProductService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
@@ -27,6 +30,7 @@ public class ProductController {
     private final ProductService productService;
     private final KeywordService keywordService;
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
 
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
@@ -109,6 +113,28 @@ public class ProductController {
         return new BaseResponse<>(productDTOs);
     }
 
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 상세 정보 조회")
+    @GetMapping("/api/v1/products/{productIdx}")
+    public BaseResponse<ProductDetailDTO> getProductDetail(@PathVariable Long productIdx) {
+        Product product = productService.getProductByIdx(productIdx);
+        if (product == null) {
+            return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
+        }
+        // get Category
+        Category category = categoryService.getCategoryByIdx(product.getCategory().getIdx());
+
+        // get keywords
+        List<Keyword> keywords = keywordService.getKeywordsByIdx(productIdx);
+        ProductDetailDTO productDetailDTO;
+        try {
+            productDetailDTO = new ProductDetailDTO(product, keywords, category);
+        } catch (Exception e) {
+            return new BaseResponse<>(PRODUCT_DTO_ERROR);
+        }
+
+        return new BaseResponse<>(productDetailDTO);
+    }
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
     @Operation(hidden = true, summary = "가격 필터링", description = "가격대로 상품을 필터링하고 랜덤으로 5개의 상품을 반환합니다. 결과 제품개수가 5개 미만일 경우 결과 개수 그대로 반환합니다. (키워드 선정하기 전 프론트 연동 테스트용 API 입니다. 성별, 나이는 디폴값으로 요청해도 동작합니다. 가격은 0 <= min < max 이어야 하고, keywords 의 key값은 질문의 번호, 즉 integer 값이어야 합니다.)")
