@@ -1,3 +1,4 @@
+echo "> infisical.sh"
 
 # 1. ubuntu ec2 instance에서 infisical CLI 설치
 curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash

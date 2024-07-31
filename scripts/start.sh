@@ -1,3 +1,5 @@
+echo "> start.sh"
+
 #!/bin/bash
 REPOSITORY=/home/ubuntu/oneit
 

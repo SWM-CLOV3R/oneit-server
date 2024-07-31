@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "> stop.sh"
 REPOSITORY=/home/ubuntu/oneit
 
 APP_NAME=oneit
