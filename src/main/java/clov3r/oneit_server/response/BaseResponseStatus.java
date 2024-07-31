@@ -30,7 +30,8 @@ public enum BaseResponseStatus {
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
     DATABASE_ERROR_QUERY(false, 4002, "데이터베이스 쿼리에 실패하였습니다."),
-    DATABASE_ERROR_NOT_FOUND(false, 4003, "데이터베이스에서 찾을 수 없습니다.");
+    DATABASE_ERROR_NOT_FOUND(false, 4003, "데이터베이스에서 찾을 수 없습니다."),
+    PRODUCT_DTO_ERROR(false, 4004, "상품 정보를 불러오는데 실패하였습니다.");
 
 
 
