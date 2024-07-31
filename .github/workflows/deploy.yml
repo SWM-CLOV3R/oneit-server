@@ -19,7 +19,11 @@ jobs:
 
       # gradle 실행 권한 부여
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: |
+          chmod +x gradlew
+          chmod +x scripts/stop.sh
+          chmod +x scripts/infisical.sh
+          chmod +x scripts/start.sh
 
       # gradle 빌드
       - name: Build with Gradle
