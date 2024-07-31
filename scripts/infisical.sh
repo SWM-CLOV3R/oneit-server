@@ -5,8 +5,10 @@ sudo apt-get update && sudo apt-get install infisical
 
 # 2. Systems Manager Parameter Store에서 INFISICAL 데이터 가져오기
 sudo apt-get install jq -y
-export CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id "CLIENT ID" --query "SecretString" --output text | jq -r .INFISICAL_CLIENT_ID)
-export CLIENT_SCERET=$(aws secretsmanager get-secret-value --secret-id "CLIENT_SECRET" --query "SecretString" --output text | jq -r .INFISICAL_CLIENT_SCERET)
+export PROJECT_ID=$(aws secretsmanager get-secret-value --secret-id "PROJECT_ID" --query "SecretString" --output text | jq -r .PROJECT_ID)
+export CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id "CLIENT_ID" --query "SecretString" --output text | jq -r .CLIENT_ID)
+export CLIENT_SECRET=$(aws secretsmanager get-secret-value --secret-id "CLIENT_SECRET" --query "SecretString" --output text | jq -r .CLIENT_SECRET)
+export ACTIVE_ENV=dev
 
 # 3. INFISICAL_TOKEN 받아오기 (infisical 로그인 with client id and client secret)
 export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id=$CLIENT_ID --client-secret=$CLIENT_SECRET --silent --plain)
