@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "> stop.sh"
+echo "> stop applications"
 REPOSITORY=/home/ubuntu/oneit
 
 APP_NAME=oneit
@@ -13,8 +13,7 @@ else
   sleep 5
 fi
 
-
-echo "> infisical.sh"
+echo "> get infisical env"
 
 # 1. ubuntu ec2 instance에서 infisical CLI 설치
 curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash
@@ -39,13 +38,8 @@ awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if
 # 6. .env 파일을 읽어 환경변수 설정
 export $(cat /home/ubuntu/oneit/.env | xargs)
 
-# 7.환경변수 잘 저장됐는지 확인
-echo "> $RDS_USER : $RDS_ENDPOINT"
-echo "> $DEV_JWT_SECRET_KEY"
 
-
-
-echo "> start.sh"
+echo "> start applications"
 
 #!/bin/bash
 REPOSITORY=/home/ubuntu/oneit
@@ -54,6 +48,4 @@ JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 
 echo "> $JAR_PATH deploy"
-echo "> nohup java -jar -Dspring.profiles.active=dev $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &"
-echo "> $RDS_USER : $RDS_ENDPOINT"
 nohup java -jar -Dspring.profiles.active=dev $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &
