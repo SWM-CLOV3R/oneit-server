@@ -1,7 +1,7 @@
 package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.response.BaseResponseStatus;
-import clov3r.oneit_server.response.exception.S3Exception;
+import clov3r.oneit_server.response.exception.BaseException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -36,7 +36,7 @@ public class S3Service {
 
     public String upload(MultipartFile image, String dirName) {
         if(image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
-            throw new S3Exception(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(BaseResponseStatus.S3_ERROR);
         }
         return this.uploadImage(image, dirName);
     }
@@ -46,21 +46,21 @@ public class S3Service {
         try {
             return this.uploadImageToS3(image, dirName);
         } catch (IOException e) {
-            throw new S3Exception(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(BaseResponseStatus.S3_ERROR);
         }
     }
 
     private void validateImageFileExtention(String filename) {
         int lastDotIndex = filename.lastIndexOf(".");
         if (lastDotIndex == -1) {
-            throw new S3Exception(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(BaseResponseStatus.S3_ERROR);
         }
 
         String extention = filename.substring(lastDotIndex + 1).toLowerCase();
         List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "png", "gif");
 
         if (!allowedExtentionList.contains(extention)) {
-            throw new S3Exception(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(BaseResponseStatus.S3_ERROR);
         }
     }
 
@@ -100,7 +100,7 @@ public class S3Service {
         try{
             amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
         }catch (Exception e){
-            throw new S3Exception(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(BaseResponseStatus.S3_ERROR);
         }
     }
 
@@ -110,7 +110,7 @@ public class S3Service {
             String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
             return decodingKey.substring(1); // 맨 앞의 '/' 제거
         }catch (MalformedURLException | UnsupportedEncodingException e){
-            throw new S3Exception(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(BaseResponseStatus.S3_ERROR);
         }
     }
 }

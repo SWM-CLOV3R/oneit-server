@@ -1,5 +1,6 @@
 package clov3r.oneit_server.repository;
 
+import clov3r.oneit_server.domain.DTO.GiftboxDTO;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import static clov3r.oneit_server.domain.entity.QGiftbox.giftbox;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -30,5 +32,11 @@ public class GiftboxRepository {
                 .where(giftbox.idx.eq(idx))
                 .execute();
 
+    }
+
+    public GiftboxDTO findById(Long giftboxIdx) {
+        // giftbox를 idx로 조회
+        Giftbox giftbox = em.find(Giftbox.class, giftboxIdx);
+        return new GiftboxDTO(giftboxIdx, giftbox.getName(), giftbox.getDescription(), giftbox.getDeadline(), giftbox.getImageUrl(), giftbox.getCreatedUserIdx(), giftbox.getAccessStatus());
     }
 }
