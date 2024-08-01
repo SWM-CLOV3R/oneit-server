@@ -18,10 +18,6 @@ public class BaseEntity {
     private String status;
 
     public BaseEntity() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.deletedAt = LocalDateTime.now();
-        this.status = "ACTIVE";
     }
 
 }

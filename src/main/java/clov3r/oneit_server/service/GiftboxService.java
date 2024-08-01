@@ -24,11 +24,16 @@ public class GiftboxService {
                 request.getAccessStatus()
         );
         Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
+        // 방금 저장한 giftbox의 idx를 가져옴
         return saveGiftbox.getIdx();
     }
 
     @Transactional
     public void updateGiftboxImageUrl(Long idx, String imageUrl) {
         giftboxRepository.updateImageUrl(idx, imageUrl);
+    }
+
+    public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
+        giftboxRepository.updateGiftbox(giftboxIdx, request);
     }
 }
