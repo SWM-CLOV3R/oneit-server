@@ -4,6 +4,7 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @MappedSuperclass
@@ -11,16 +12,15 @@ import java.util.Date;
 @Setter
 public class BaseEntity {
 
-    private String createdAt;
-    private String updatedAt;
-    private String deletedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
     private String status;
 
     public BaseEntity() {
-        // 현재 시간을 createdAt, updatedAt에 저장
-        this.createdAt = new Date().toString();
-        this.updatedAt = new Date().toString();
-        this.deletedAt = null;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
         this.status = "ACTIVE";
     }
 
