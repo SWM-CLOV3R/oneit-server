@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Keyword {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
     private Long idx;
 

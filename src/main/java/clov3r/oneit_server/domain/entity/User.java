@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class User extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "user_seq_generator", sequenceName = "user_seq", allocationSize = 1)
     private Long idx;
     private String name;

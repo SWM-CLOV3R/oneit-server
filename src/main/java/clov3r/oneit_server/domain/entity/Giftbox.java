@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "giftbox")
 public class Giftbox extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +27,10 @@ public class Giftbox extends BaseEntity {
     @Column(name = "access_status")
     private String accessStatus;
 
-    @OneToMany(mappedBy = "idx")
-    private List<User> participants;
-    @OneToMany(mappedBy = "idx")
-    private List<Product> products;
+    @OneToMany(mappedBy = "idx", fetch = FetchType.LAZY)
+    private List<GiftboxUser> participants;
+//    @OneToMany(mappedBy = "idx")
+//    private List<Product> products;
 
     public Giftbox(String name, String description, Date deadline, Long createdUserIdx, String accessStatus) {
         this.name = name;
