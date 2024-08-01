@@ -10,6 +10,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Setter
+@Table(name = "product_keyword")
 public class ProductKeyword {
 
 
