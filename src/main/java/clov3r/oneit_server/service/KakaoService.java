@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class KakaoService {
@@ -34,6 +36,7 @@ public class KakaoService {
         user.setEmail(kakaoProfile.getKakao_account().getEmail());
         user.setNickname(kakaoProfile.getProperties().getNickname());
         user.setProfileImgFromKakao(kakaoProfile.getProperties().getProfile_image());
+        user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
         return user;
     }
