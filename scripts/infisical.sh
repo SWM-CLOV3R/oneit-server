@@ -23,4 +23,9 @@ awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if
 # 6. .env 파일을 읽어 환경변수 설정
 export $(cat /home/ubuntu/oneit/.env | xargs)
 
+# 7.환경변수 잘 저장됐는지 확인
+echo "> $RDS_USER : $RDS_ENDPOINT"
+echo "> $DEV_JWT_SECRET_KEY"
+
+
 
