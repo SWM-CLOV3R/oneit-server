@@ -16,6 +16,7 @@ public enum BaseResponseStatus {
     REQUEST_GENDER_ERROR(false, 2001, "성별 입력값이 잘못되었습니다."),
     REQUEST_PRICE_ERROR(false, 2002, "가격 입력값이 잘못되었습니다."),
     REQUEST_KEYWORD_ERROR(false, 2003, "키워드 입력값이 잘못되었습니다."),
+    S3_ERROR(false, 2004, "S3에러입니다."),
 
     /**
      * 2100 : token 오류
@@ -31,7 +32,8 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
     DATABASE_ERROR_QUERY(false, 4002, "데이터베이스 쿼리에 실패하였습니다."),
     DATABASE_ERROR_NOT_FOUND(false, 4003, "데이터베이스에서 찾을 수 없습니다."),
-    PRODUCT_DTO_ERROR(false, 4004, "상품 정보를 불러오는데 실패하였습니다.");
+    PRODUCT_DTO_ERROR(false, 4004, "상품 정보를 불러오는데 실패하였습니다."),
+    GIFTBOX_NOT_FOUND(false, 4005, "선물바구니를 찾을 수 없습니다."),;
 
 
 
