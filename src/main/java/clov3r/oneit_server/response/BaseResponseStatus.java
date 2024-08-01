@@ -16,6 +16,7 @@ public enum BaseResponseStatus {
     REQUEST_GENDER_ERROR(false, 2001, "성별 입력값이 잘못되었습니다."),
     REQUEST_PRICE_ERROR(false, 2002, "가격 입력값이 잘못되었습니다."),
     REQUEST_KEYWORD_ERROR(false, 2003, "키워드 입력값이 잘못되었습니다."),
+    S3_ERROR(false, 2004, "S3에러입니다."),
 
     /**
      * 2100 : token 오류
