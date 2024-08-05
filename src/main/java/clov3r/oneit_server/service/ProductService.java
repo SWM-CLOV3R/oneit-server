@@ -1,5 +1,6 @@
 package clov3r.oneit_server.service;
 
+import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductDetailDTO;
 import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
 import clov3r.oneit_server.domain.entity.Product;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,8 +58,10 @@ public class ProductService {
 
 
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductPaginationDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(ProductPaginationDTO::new).toList();
     }
 
     public List<ProductPaginationDTO> getProductListPagination(Long lastProductIdx, int pageSize) {

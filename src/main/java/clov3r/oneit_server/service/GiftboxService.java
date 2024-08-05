@@ -28,7 +28,11 @@ public class GiftboxService {
         Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
 
         // 생성한 유저 idx와 선물 바구니 idx를 연결
-        giftboxRepository.createGiftboxManager(request.getCreatedUserIdx(), saveGiftbox.getIdx());
+        try {
+            giftboxRepository.createGiftboxManager(request.getCreatedUserIdx(), saveGiftbox.getIdx());
+        } catch (BaseException e) {
+            throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+        }
 
         // 방금 저장한 giftbox의 idx를 가져옴
         return saveGiftbox.getIdx();

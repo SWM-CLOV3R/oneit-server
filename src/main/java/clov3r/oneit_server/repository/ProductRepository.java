@@ -1,5 +1,6 @@
 package clov3r.oneit_server.repository;
 
+import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.collectioin.MatchedProduct;
@@ -242,7 +243,8 @@ public class ProductRepository {
      */
     public List<ProductPaginationDTO> findProductListPagination(Long productIdx, int pageSize) {
         return jpaQueryFactory
-                .select(Projections.fields(ProductPaginationDTO.class,
+                .select(
+                    Projections.fields(ProductPaginationDTO.class,
                         product.idx,
                         product.name,
                         product.originalPrice,
@@ -267,7 +269,6 @@ public class ProductRepository {
         }
         return product.idx.lt(productIdx);
     }
-
     public List<Product> findAll() {
         return em.createQuery("select p from Product p", Product.class)
                 .getResultList();
