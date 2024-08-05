@@ -40,13 +40,11 @@ public class SwaggerConfig {
         SecurityRequirement securityRequirement = new SecurityRequirement()
             .addList("Bearer Token");
 
-        OpenAPI openAPI = new OpenAPI()
+        return new OpenAPI()
             .components(new Components().addSecuritySchemes("Bearer Token", apiKey))
             .addSecurityItem(securityRequirement)
             .info(apiInfo())
             .servers(Collections.singletonList(new Server().url(requestUrl)));
-
-        return openAPI;
     }
 
 }

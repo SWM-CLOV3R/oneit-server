@@ -1,4 +1,4 @@
-package clov3r.oneit_server.domain.DTO;
+package clov3r.oneit_server.domain.data;
 
 import lombok.Data;
 

@@ -1,7 +1,6 @@
 package clov3r.oneit_server.config.security;
-import clov3r.oneit_server.domain.DTO.AuthToken;
+import clov3r.oneit_server.domain.data.AuthToken;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -3,7 +3,7 @@ package clov3r.oneit_server.domain.DTO;
 import lombok.Data;
 
 @Data
-public class KakaoProfile {
+public class KakaoProfileDTO {
     public Long id;
     public String connected_at;
     public Properties properties;

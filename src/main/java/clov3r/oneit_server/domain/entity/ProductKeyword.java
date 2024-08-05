@@ -1,6 +1,6 @@
 package clov3r.oneit_server.domain.entity;
 
-import clov3r.oneit_server.domain.collectioin.ProductKeywordId;
+import clov3r.oneit_server.domain.collection.ProductKeywordId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,6 @@ import static jakarta.persistence.FetchType.LAZY;
 @Setter
 @Table(name = "product_keyword")
 public class ProductKeyword {
-
 
     @EmbeddedId
     private ProductKeywordId id;

@@ -1,8 +1,7 @@
 package clov3r.oneit_server.controller;
 
-import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.GiftboxDTO;
-import clov3r.oneit_server.domain.data.PostGiftboxRequest;
+import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.response.BaseResponse;

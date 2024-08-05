@@ -1,10 +1,9 @@
 package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.config.security.TokenProvider;
-import clov3r.oneit_server.domain.DTO.AuthToken;
+import clov3r.oneit_server.domain.data.AuthToken;
 import clov3r.oneit_server.domain.entity.User;
-import clov3r.oneit_server.domain.DTO.KakaoProfile;
-import clov3r.oneit_server.repository.KakaoRepository;
+import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
 import clov3r.oneit_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -26,16 +25,16 @@ public class KakaoService {
 
     /**
      * 카카오 API 서버로부터 거져온 사용자 정보를 저장하는 메소드
-     * @param kakaoProfile
+     * @param kakaoProfileDTO
      * @return
      */
     @Transactional
-    public User createUser(KakaoProfile kakaoProfile) {
+    public User createUser(KakaoProfileDTO kakaoProfileDTO) {
         // 사용자 정보 저장
         User user = new User();
-        user.setEmail(kakaoProfile.getKakao_account().getEmail());
-        user.setNickname(kakaoProfile.getProperties().getNickname());
-        user.setProfileImgFromKakao(kakaoProfile.getProperties().getProfile_image());
+        user.setEmail(kakaoProfileDTO.getKakao_account().getEmail());
+        user.setNickname(kakaoProfileDTO.getProperties().getNickname());
+        user.setProfileImgFromKakao(kakaoProfileDTO.getProperties().getProfile_image());
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
         return user;
@@ -50,21 +49,21 @@ public class KakaoService {
      * @param accessToken
      * @return
      */
-    public KakaoProfile getUserInfo(String accessToken) {
+    public KakaoProfileDTO getUserInfo(String accessToken) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
 
         //kakao api server end point URI
         String uri = "https://kapi.kakao.com/v2/user/me";
-        KakaoProfile kakaoProfile = restTemplate.exchange(
+        KakaoProfileDTO kakaoProfileDTO = restTemplate.exchange(
                         uri,
                         HttpMethod.GET,
                         new HttpEntity<>(null, headers),
-                        KakaoProfile.class)
+                        KakaoProfileDTO.class)
                         .getBody();
 
-        return kakaoProfile;
+        return kakaoProfileDTO;
 
     }
 

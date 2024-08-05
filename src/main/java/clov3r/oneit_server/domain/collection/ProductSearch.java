@@ -1,6 +1,9 @@
-package clov3r.oneit_server.domain.collectioin;
+package clov3r.oneit_server.domain.collection;
 
 import clov3r.oneit_server.domain.data.Gender;
+import clov3r.oneit_server.domain.data.QuestionKeyword;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +16,7 @@ public class ProductSearch {
     private int age;
     private int minPrice;
     private int maxPrice;
-    // List of key-value data
-//    @JsonSerialize(using = MapSerializer.class)
-//    private List<KeyValue<Integer, String>> keywords = new ArrayList<>();
     private HashMap<Integer, String> keywords = new HashMap<>();
-
+//    private List<QuestionKeyword> keywordsList = new ArrayList<>();
 }
 

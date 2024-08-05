@@ -1,10 +1,10 @@
 package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.config.security.Auth;
-import clov3r.oneit_server.domain.DTO.AuthToken;
+import clov3r.oneit_server.domain.data.AuthToken;
 import clov3r.oneit_server.domain.DTO.KakaoLoginDTO;
-import clov3r.oneit_server.domain.DTO.KakaoProfile;
-import clov3r.oneit_server.domain.collectioin.KakaoAccessToken;
+import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
+import clov3r.oneit_server.domain.request.KakaoAccessToken;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.repository.KakaoRepository;
 import clov3r.oneit_server.repository.UserRepository;
@@ -33,16 +33,16 @@ public class KakaoController {
     @PostMapping("/api/v1/kakao/login")
     public BaseResponse<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
         // get user info from kakao api
-        KakaoProfile kakaoProfile = kakaoService.getUserInfo(kakaoAccessToken.getAccessToken());
+        KakaoProfileDTO kakaoProfileDTO = kakaoService.getUserInfo(kakaoAccessToken.getAccessToken());
         User user = new User();
 
         // check if the user exists
-        if (userRepository.existsUserByEmail(kakaoProfile.getKakao_account().getEmail())) {
+        if (userRepository.existsUserByEmail(kakaoProfileDTO.getKakao_account().getEmail())) {
             // if so, return the user's access token (jwt)
-            user = userRepository.findUserByEmail(kakaoProfile.getKakao_account().getEmail());
+            user = userRepository.findUserByEmail(kakaoProfileDTO.getKakao_account().getEmail());
         } else {
             // if not, create a new user
-            user = kakaoService.createUser(kakaoProfile);
+            user = kakaoService.createUser(kakaoProfileDTO);
         }
         AuthToken authToken = kakaoService.createToken(user.getIdx());
         kakaoRepository.saveRefreshToken(authToken.getRefreshToken(), user.getEmail());
