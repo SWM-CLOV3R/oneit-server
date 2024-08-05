@@ -12,6 +12,7 @@ import clov3r.oneit_server.response.BaseResponse;
 import clov3r.oneit_server.service.KakaoService;
 import clov3r.oneit_server.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,9 +57,10 @@ public class KakaoController {
     @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
     @GetMapping("/api/v1/kakao/user")
     public BaseResponse<User> getUserInfo(
-            @Parameter(description = "유저의 idx", required = false)
+            @Parameter(description = "유저의 idx", required = false, schema = @Schema(defaultValue = "1"))
             @Auth(required = false) Long userId
     ) {
+        System.out.println("kakao login userId = " + userId);
         User user = userService.getUser(userId);
         return new BaseResponse<>(user);
     }
