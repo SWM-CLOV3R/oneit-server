@@ -1,5 +1,6 @@
 package clov3r.oneit_server.controller;
 
+import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductDetailDTO;
 import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
 import clov3r.oneit_server.domain.entity.Category;
@@ -165,73 +166,28 @@ public class ProductController {
     }
 
 
-    @Tag(name = "상품 API", description = "상품 관련 API 목록")
-    @Operation(summary = "상품 리스트 전체 조회")
-    @GetMapping("/api/v1/products")
-    public BaseResponse<List<ProductDTO>> getProductList() {
-        List<Product> products = productService.getAllProducts();
-        List<ProductDTO> productDTOs = products.stream()
-                .map(product -> new ProductDTO(product, keywordService.getKeywordsByIdx(product.getIdx())))
-                .toList();
-        return new BaseResponse<>(productDTOs);
-    }
+//    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+//    @Operation(summary = "상품 리스트 전체 조회")
+//    @GetMapping("/api/v1/products")
+//    public BaseResponse<List<ProductDTO>> getProductList() {
+//        List<Product> products = productService.getAllProducts();
+//        List<ProductDTO> productDTOs = products.stream()
+//                .map(product -> new ProductDTO(product, keywordService.getKeywordsByIdx(product.getIdx())))
+//                .toList();
+//        return new BaseResponse<>(productDTOs);
+//    }
 
     @Tag(name = "상품 API", description = "상품 관련 API 목록")
     @Operation(summary = "상품 리스트 조회 - 페이지네이션", description = "마지막 상품 인덱스와 페이지 사이즈를 입력받아 페이지네이션된 상품 리스트를 반환합니다.  !" +
             "LastproductIdx가 null 일 경우 처음부터 페이지네이션됩니다. " +
             "즉, 첫 페이지에서는 LastProductIdx를 입력하지 않아야 합니다.")
-    @GetMapping("/api/v1/products/pagination")
-    public BaseResponse<List<ProductPaginationDTO>> getProductListPagination(@RequestParam(required = false) Long LastProductIdx, @RequestParam int pageSize) {
-        List<ProductPaginationDTO> productPaginationDTOs = productService.getProductListPagination(LastProductIdx, pageSize);
-//        List<ProductPaginationDTO> productDTOs = products.stream()
-//                .map(product -> new ProductPaginationDTO(
-//                        product.getIdx(),
-//                        product.getName(),
-//                        product.getOriginalPrice(),
-//                        product.getCurrentPrice(),
-//                        product.getDiscountRate(),
-//                        product.getThumbnailUrl()))
-//                .toList();
-        return new BaseResponse<>(productPaginationDTOs);
-    }
+    @GetMapping("/api/v1/products")
+    public BaseResponse<List<ProductPaginationDTO>> getProductListPagination(@RequestParam(required = false) Long LastProductIdx, @RequestParam(required = false) Integer pageSize) {
 
-
-
-    @Data
-    static class ProductDTO {
-        private Long productIdx;
-        private String name;
-        private int originalPrice;
-        private String shoppingmall;
-        private String productUrl;
-        private String thumbnailUrl;
-        private Long categoryIdx;
-        private List<Keyword> keywords  = new ArrayList<>();
-        private Gender gender;
-
-        public ProductDTO(Product product, List<Keyword> keywords) {
-            this.productIdx = product.getIdx();
-            this.name = product.getName();
-            this.originalPrice = product.getOriginalPrice();
-            this.shoppingmall = product.getMallName();
-            this.productUrl = product.getProductUrl();
-            this.thumbnailUrl = product.getThumbnailUrl();
-            this.keywords.addAll(keywords);
-            this.gender = product.getGender();
+        if (LastProductIdx == null && pageSize == null) {
+            return new BaseResponse<>(productService.getAllProducts());
         }
+        List<ProductPaginationDTO> products = productService.getProductListPagination(LastProductIdx, pageSize);
+        return new BaseResponse<>(products);
     }
-
-    @Data
-    static class KeywordDTO {
-        private Long idx;
-        private String name;
-        private String description;
-
-        public KeywordDTO(Keyword keyword) {
-            this.idx = keyword.getIdx();
-            this.name = keyword.getName();
-            this.description = keyword.getDescription();
-        }
-    }
-
 }
