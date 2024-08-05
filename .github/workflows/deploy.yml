@@ -62,12 +62,6 @@ jobs:
 
       # CodeDeploy에 배포 요청
       - name: Code Deploy
-        env:
-          ACTIVE_ENV: ${{ secrets.ACTIVE_ENV }}
-          RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
-          RDS_USER: ${{ secrets.RDS_USER }}
-          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-          DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
         run: |
           aws deploy create-deployment \
           --application-name ${{ secrets.CODE_DEPLOY_APP_NAME }} \
