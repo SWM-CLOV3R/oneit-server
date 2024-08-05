@@ -98,18 +98,4 @@ public class GiftboxRepository {
         em.persist(newGiftboxUser);
     }
 
-    @Transactional
-    public boolean checkUserExist(Long createdUserIdx) {
-        // user가 존재하는지 확인
-        try {
-            User result = queryFactory.select(user)
-                    .from(user)
-                    .where(user.idx.eq(createdUserIdx))
-                    .fetchOne();
-            System.out.println("result = " + result);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }

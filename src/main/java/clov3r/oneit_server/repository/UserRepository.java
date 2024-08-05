@@ -1,7 +1,10 @@
 package clov3r.oneit_server.repository;
 
+import static clov3r.oneit_server.domain.entity.QUser.user;
+
 import clov3r.oneit_server.domain.entity.User;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

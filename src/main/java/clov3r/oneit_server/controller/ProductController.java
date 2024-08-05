@@ -29,8 +29,8 @@ public class ProductController {
 
     private final ProductService productService;
     private final KeywordService keywordService;
-    private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final ProductRepository productRepository;
 
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")

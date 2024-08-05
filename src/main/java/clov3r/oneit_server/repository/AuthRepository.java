@@ -1,6 +1,5 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class KakaoRepository {
+public class AuthRepository {
 
     private final EntityManager em;
     @Transactional
