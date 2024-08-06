@@ -1,5 +1,6 @@
 package clov3r.oneit_server.repository;
 
+import clov3r.oneit_server.domain.DTO.GiftboxDTO;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.GiftboxUser;
@@ -8,12 +9,14 @@ import clov3r.oneit_server.response.exception.BaseException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 
 import static clov3r.oneit_server.domain.entity.QGiftbox.giftbox;
+import static clov3r.oneit_server.domain.entity.QGiftboxUser.giftboxUser;
 import static clov3r.oneit_server.domain.entity.QUser.user;
 import static clov3r.oneit_server.response.BaseResponseStatus.*;
 
@@ -98,4 +101,23 @@ public class GiftboxRepository {
         em.persist(newGiftboxUser);
     }
 
+    public List<Giftbox> findAll() {
+        // status가 ACTIVE인 모든 giftbox 조회
+        List<Giftbox> giftboxList = queryFactory.select(giftbox)
+                .from(giftbox)
+                .where(giftbox.status.eq("ACTIVE"))
+                .fetch();
+        return giftboxList;
+    }
+
+    public List<Giftbox> findGiftboxOfUser(Long userIdx) {
+        // userIdx로 status가 ACTIVE인 giftbox 조회
+        List<Giftbox> giftboxList = queryFactory.select(giftbox)
+                .from(giftbox)
+                .join(giftbox.participants, giftboxUser)
+                .where(giftboxUser.user.idx.eq(userIdx),
+                        giftbox.status.eq("ACTIVE"))
+                .fetch();
+        return null;
+    }
 }
