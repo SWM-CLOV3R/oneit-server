@@ -1,5 +1,6 @@
 package clov3r.oneit_server.domain.DTO;
 
+import clov3r.oneit_server.domain.entity.Giftbox;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +25,16 @@ public class GiftboxDTO {
         this.imageUrl = imageUrl;
         this.createdUserIdx = createdUserIdx;
         this.accessStatus = accessStatus;
+    }
+
+    public GiftboxDTO(Giftbox giftbox) {
+        this.idx = giftbox.getIdx();
+        this.name = giftbox.getName();
+        this.description = giftbox.getDescription();
+        this.deadline = giftbox.getDeadline();
+        this.imageUrl = giftbox.getImageUrl();
+        this.createdUserIdx = giftbox.getCreatedUserIdx();
+        this.accessStatus = giftbox.getAccessStatus();
     }
 
 }

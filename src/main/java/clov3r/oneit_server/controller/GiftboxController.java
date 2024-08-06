@@ -11,6 +11,7 @@ import clov3r.oneit_server.service.GiftboxService;
 import clov3r.oneit_server.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class GiftboxController {
   }
 
   @Tag(name = "Giftbox API", description = "Giftbox API 목록")
-  @Operation(summary = "Giftbox 조회", description = "선물 바구니의 idx로 선물 바구니 조회, 삭제한 선물 바구니는 조회되지 않음")
+  @Operation(summary = "Giftbox 상세 조회", description = "선물 바구니의 idx로 선물 바구니 조회, 삭제한 선물 바구니는 조회되지 않음")
   @GetMapping("/api/v1/giftbox/{giftboxIdx}")
   public BaseResponse<GiftboxDTO> getGiftboxByIdx(@PathVariable("giftboxIdx") Long giftboxIdx) {
     try {
@@ -63,8 +64,39 @@ public class GiftboxController {
     } catch (BaseException e) {
       return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
     }
-
   }
+
+  @Tag(name = "Giftbox API", description = "Giftbox API 목록")
+  @Operation(summary = "Giftbox 목록 조회", description = "모든 선물 바구니 조회, 삭제한 선물 바구니는 조회되지 않음")
+  @GetMapping("/api/v1/giftbox")
+  public BaseResponse<List<GiftboxDTO>> getGiftboxList() {
+    try {
+      List<Giftbox> giftboxList = giftboxRepository.findAll();
+      List<GiftboxDTO> giftboxDTOList = giftboxList.stream()
+          .map(GiftboxDTO::new)
+          .toList();
+      return new BaseResponse<>(giftboxDTOList);
+    } catch (BaseException e) {
+      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+    }
+  }
+
+//  @Tag(name = "Giftbox API", description = "Giftbox API 목록")
+//  @Operation(summary = "해당 유저의 Giftbox 목록 조회", description = "해당 유저가 소유한 모든 선물 바구니 조회, 삭제한 선물 바구니는 조회되지 않음")
+//  @GetMapping("/api/v1/giftbox/{userIdx}")
+//  public BaseResponse<List<GiftboxDTO>> getGiftboxList(
+//      @PathVariable("userIdx") Long userIdx
+//  ) {
+//    try {
+//      List<Giftbox> giftboxList = giftboxRepository.findGiftboxOfUser(userIdx);
+//      List<GiftboxDTO> giftboxDTOList = giftboxList.stream()
+//          .map(GiftboxDTO::new)
+//          .toList();
+//      return new BaseResponse<>(giftboxDTOList);
+//    } catch (BaseException e) {
+//      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+//    }
+//  }
 
   @Tag(name = "Giftbox API", description = "Giftbox API 목록")
   @Operation(summary = "Giftbox 삭제", description = "선물 바구니의 idx로 선물 바구니 삭제")
