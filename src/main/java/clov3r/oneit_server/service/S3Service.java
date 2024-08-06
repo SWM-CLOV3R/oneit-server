@@ -1,6 +1,7 @@
 package clov3r.oneit_server.service;
 
-import clov3r.oneit_server.response.BaseResponseStatus;
+import static clov3r.oneit_server.response.BaseResponseStatus.*;
+
 import clov3r.oneit_server.response.exception.BaseException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -36,31 +37,31 @@ public class S3Service {
 
     public String upload(MultipartFile image, String dirName) {
         if(image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
-            throw new BaseException(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(S3_REQUEST_ERROR);
         }
         return this.uploadImage(image, dirName);
     }
 
     private String uploadImage(MultipartFile image, String dirName) {
-        this.validateImageFileExtention(image.getOriginalFilename());
+        this.validateImageFileExtention(Objects.requireNonNull(image.getOriginalFilename()));
         try {
             return this.uploadImageToS3(image, dirName);
         } catch (IOException e) {
-            throw new BaseException(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(S3_UPLOAD_ERROR);
         }
     }
 
     private void validateImageFileExtention(String filename) {
         int lastDotIndex = filename.lastIndexOf(".");
         if (lastDotIndex == -1) {
-            throw new BaseException(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(S3_ERROR);
         }
 
         String extention = filename.substring(lastDotIndex + 1).toLowerCase();
         List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "png", "gif");
 
         if (!allowedExtentionList.contains(extention)) {
-            throw new BaseException(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(S3_FILE_EXTENSION_ERROR);
         }
     }
 
@@ -85,7 +86,7 @@ public class S3Service {
                             .withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(putObjectRequest); // put image to S3
         } catch (Exception e) {
-            System.out.println("e = " + e);
+            throw new BaseException(S3_PUT_OBJECT_ERROR);
         } finally {
             byteArrayInputStream.close();
             is.close();
@@ -100,7 +101,7 @@ public class S3Service {
         try{
             amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
         }catch (Exception e){
-            throw new BaseException(BaseResponseStatus.S3_ERROR);
+            throw new BaseException(S3_DELETE_OBJECT_ERROR);
         }
     }
 
@@ -109,8 +110,8 @@ public class S3Service {
             URL url = new URL(imageAddress);
             String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
             return decodingKey.substring(1); // 맨 앞의 '/' 제거
-        }catch (MalformedURLException | UnsupportedEncodingException e){
-            throw new BaseException(BaseResponseStatus.S3_ERROR);
+        } catch (MalformedURLException | UnsupportedEncodingException e){
+            throw new BaseException(S3_URL_DECODING_ERROR);
         }
     }
 }

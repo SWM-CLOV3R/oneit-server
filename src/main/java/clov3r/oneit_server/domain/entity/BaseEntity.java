@@ -20,4 +20,19 @@ public class BaseEntity {
     public BaseEntity() {
     }
 
+    public void createBaseEntity() {
+        this.createdAt = LocalDateTime.now();
+        this.status = "ACTIVE";
+    }
+
+    public void updateBaseEntity() {
+        this.updatedAt = LocalDateTime.now();
+        this.status = "ACTIVE";
+    }
+
+    public void deleteBaseEntity() {
+        this.deletedAt = LocalDateTime.now();
+        this.status = "DELETED";
+    }
+
 }

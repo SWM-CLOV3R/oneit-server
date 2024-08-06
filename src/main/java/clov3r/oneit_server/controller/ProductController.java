@@ -2,7 +2,7 @@ package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductDetailDTO;
-import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
+import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.entity.Category;
 import clov3r.oneit_server.domain.entity.Keyword;
 import clov3r.oneit_server.domain.entity.Product;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static clov3r.oneit_server.domain.entity.QProduct.product;
 import static clov3r.oneit_server.response.BaseResponseStatus.*;
 
 @RestController
@@ -162,11 +163,11 @@ public class ProductController {
     @Operation(summary = "상품 상세 정보 조회")
     @GetMapping("/api/v1/products/{productIdx}")
     public BaseResponse<ProductDetailDTO> getProductDetail(@PathVariable Long productIdx) {
-        Product product = productService.getProductByIdx(productIdx);
-        if (product == null) {
-            return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
+        if (!productRepository.existsProduct(productIdx)) {
+            return new BaseResponse<>(PRODUCT_NOT_FOUND);
         }
         // get Category
+        Product product = productService.getProductByIdx(productIdx);
         Category category = categoryService.getCategoryByIdx(product.getCategory().getIdx());
 
         // get keywords
@@ -186,12 +187,12 @@ public class ProductController {
             "LastproductIdx가 null 일 경우 처음부터 페이지네이션됩니다. " +
             "즉, 첫 페이지에서는 LastProductIdx를 입력하지 않아야 합니다.")
     @GetMapping("/api/v1/products")
-    public BaseResponse<List<ProductPaginationDTO>> getProductListPagination(@RequestParam(required = false) Long LastProductIdx, @RequestParam(required = false) Integer pageSize) {
+    public BaseResponse<List<ProductSummaryDTO>> getProductListPagination(@RequestParam(required = false) Long LastProductIdx, @RequestParam(required = false) Integer pageSize) {
 
         if (LastProductIdx == null && pageSize == null) {
             return new BaseResponse<>(productService.getAllProducts());
         }
-        List<ProductPaginationDTO> products = productService.getProductListPagination(LastProductIdx, pageSize);
+        List<ProductSummaryDTO> products = productService.getProductListPagination(LastProductIdx, pageSize);
         return new BaseResponse<>(products);
     }
 

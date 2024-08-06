@@ -1,6 +1,6 @@
 package clov3r.oneit_server.service;
 
-import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
+import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.repository.KeywordRepository;
 import clov3r.oneit_server.repository.ProductRepository;
@@ -53,13 +53,13 @@ public class ProductService {
         return initialFilteredProducts;
     }
 
-    public List<ProductPaginationDTO> getAllProducts() {
+    public List<ProductSummaryDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(ProductPaginationDTO::new).toList();
+                .map(ProductSummaryDTO::new).toList();
     }
 
-    public List<ProductPaginationDTO> getProductListPagination(Long lastProductIdx, int pageSize) {
+    public List<ProductSummaryDTO> getProductListPagination(Long lastProductIdx, int pageSize) {
         return productRepository.findProductListPagination(lastProductIdx, pageSize);
     }
 }

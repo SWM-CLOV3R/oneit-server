@@ -1,6 +1,9 @@
 package clov3r.oneit_server.domain.DTO;
 
+import clov3r.oneit_server.domain.data.AccessStatus;
 import clov3r.oneit_server.domain.entity.Giftbox;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,12 +15,12 @@ public class GiftboxDTO {
     private Long idx;
     private String name;
     private String description;
-    private Date deadline;
+    private LocalDate deadline;
     private String imageUrl;
     private Long createdUserIdx;
-    private String accessStatus;
+    private AccessStatus accessStatus;
 
-    public GiftboxDTO(Long idx, String name, String description, Date deadline, String imageUrl, Long createdUserIdx, String accessStatus) {
+    public GiftboxDTO(Long idx, String name, String description, LocalDate deadline, String imageUrl, Long createdUserIdx, AccessStatus accessStatus) {
         this.idx = idx;
         this.name = name;
         this.description = description;
