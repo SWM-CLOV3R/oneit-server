@@ -40,11 +40,10 @@ public class GiftboxController {
   @Tag(name = "Giftbox API", description = "Giftbox CRUD API 목록")
   @Operation(summary = "Giftbox 생성", description = "선물 바구니 생성, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")
   @PostMapping(value = "/api/v1/giftbox", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public BaseResponse<String> createGiftbox(
+  public BaseResponse<Long> createGiftbox(
       @RequestPart("request") PostGiftboxRequest request,
       @RequestPart(value = "image", required = false) MultipartFile image
   ) {
-
     try {
       // request validation
       if (request.getName() == null || request.getDeadline() == null
@@ -66,7 +65,7 @@ public class GiftboxController {
         String imageUrl = s3Service.upload(image, "giftbox-profile");
         giftboxService.updateGiftboxImageUrl(giftboxIdx, imageUrl);
       }
-      return new BaseResponse<>(giftboxIdx+"번 선물 바구니가 생성되었습니다.");
+      return new BaseResponse<>(giftboxIdx);
 
     } catch (BaseException e) {
       return new BaseResponse<>(e.getBaseResponseStatus());
@@ -154,7 +153,7 @@ public class GiftboxController {
   @Tag(name = "Giftbox API", description = "Giftbox CRUD API 목록")
   @Operation(summary = "Giftbox 수정", description = "선물 바구니의 idx로 선물 바구니 수정, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")
   @PutMapping(value = "/api/v1/giftbox/{giftboxIdx}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public BaseResponse<String> updateGiftbox(
+  public BaseResponse<Long> updateGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
       @RequestPart("request") PostGiftboxRequest request,
       @RequestPart(value = "image", required = false) MultipartFile image)
@@ -183,7 +182,7 @@ public class GiftboxController {
         String imageUrl = s3Service.upload(image, "giftbox-profile");
         giftboxService.updateGiftboxImageUrl(giftboxIdx, imageUrl);
       }
-      return new BaseResponse<>(giftboxIdx+"번 선물 바구니가 수정되었습니다.");
+      return new BaseResponse<>(giftboxIdx);
 
     } catch (BaseException e) {
       return new BaseResponse<>(e.getBaseResponseStatus());
