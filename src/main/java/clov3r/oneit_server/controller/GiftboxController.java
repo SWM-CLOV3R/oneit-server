@@ -1,8 +1,10 @@
 package clov3r.oneit_server.controller;
 
+import static clov3r.oneit_server.response.BaseResponseStatus.*;
+
 import clov3r.oneit_server.domain.DTO.GiftboxDTO;
-import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
+import clov3r.oneit_server.domain.data.AccessStatus;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
@@ -15,6 +17,8 @@ import clov3r.oneit_server.service.GiftboxService;
 import clov3r.oneit_server.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -33,21 +37,37 @@ public class GiftboxController {
   @Tag(name = "Giftbox API", description = "Giftbox CRUD API 목록")
   @Operation(summary = "Giftbox 생성", description = "선물 바구니 생성, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")
   @PostMapping(value = "/api/v1/giftbox", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public BaseResponse<Long> createGiftbox(
+  public BaseResponse<String> createGiftbox(
       @RequestPart("request") PostGiftboxRequest request,
       @RequestPart(value = "image", required = false) MultipartFile image
   ) {
-    // request validation
-    if (request.getName() == null || request.getDeadline() == null
-        || request.getCreatedUserIdx() == null || request.getAccessStatus() == null) {
-      return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR);
+
+    try {
+      // request validation
+      if (request.getName() == null || request.getDeadline() == null
+          || request.getCreatedUserIdx() == null) {
+        return new BaseResponse<>(REQUEST_ERROR);
+      }
+      if (!userRepository.existsUser(request.getCreatedUserIdx())) {
+        return new BaseResponse<>(USER_NOT_FOUND);
+      }
+      if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
+        return new BaseResponse<>(DATE_BEFORE_NOW);
+      }
+      if (!request.getAccessStatus().equals(AccessStatus.PUBLIC.toString())
+          && !request.getAccessStatus().equals(AccessStatus.PRIVATE.toString())) {
+        return new BaseResponse<>(INVALID_ACCESS_STATUS);
+      }
+      Long idx = giftboxService.createGiftbox(request);
+      if (image != null) {
+        String imageUrl = s3Service.upload(image, "giftbox-profile");
+        giftboxService.updateGiftboxImageUrl(idx, imageUrl);
+      }
+      return new BaseResponse<>(idx+"번 선물 바구니가 생성되었습니다.");
+
+    } catch (BaseException e) {
+      return new BaseResponse<>(e.getBaseResponseStatus());
     }
-    Long idx = giftboxService.createGiftbox(request);
-    if (image != null) {
-      String imageUrl = s3Service.upload(image, "giftbox-profile");
-      giftboxService.updateGiftboxImageUrl(idx, imageUrl);
-    }
-    return new BaseResponse<>(idx);
   }
 
   @Tag(name = "Giftbox API", description = "Giftbox CRUD API 목록")
@@ -67,7 +87,7 @@ public class GiftboxController {
       );
       return new BaseResponse<>(giftboxDTO);
     } catch (BaseException e) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
   }
 
@@ -82,7 +102,7 @@ public class GiftboxController {
           .toList();
       return new BaseResponse<>(giftboxDTOList);
     } catch (BaseException e) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
   }
 
@@ -94,7 +114,7 @@ public class GiftboxController {
   ) {
 
     if (!userRepository.existsUser(userIdx)) {
-      return new BaseResponse<>(BaseResponseStatus.USER_NOT_FOUND);
+      return new BaseResponse<>(USER_NOT_FOUND);
     }
 
     try {
@@ -104,7 +124,7 @@ public class GiftboxController {
           .toList();
       return new BaseResponse<>(giftboxDTOList);
     } catch (BaseException e) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
   }
 
@@ -113,13 +133,13 @@ public class GiftboxController {
   @DeleteMapping("/api/v1/giftbox/{giftboxIdx}")
   public BaseResponse<String> deleteGiftboxByIdx(@PathVariable("giftboxIdx") Long giftboxIdx) {
     if (giftboxRepository.findById(giftboxIdx) == null) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
     try {
       giftboxRepository.deleteById(giftboxIdx);
       return new BaseResponse<>(giftboxIdx + "번 선물 바구니가 삭제되었습니다.");
     } catch (BaseException e) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
   }
 
@@ -133,10 +153,10 @@ public class GiftboxController {
     // request validation
     if (request.getName() == null || request.getDeadline() == null
         || request.getCreatedUserIdx() == null || request.getAccessStatus() == null) {
-      return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR);
+      return new BaseResponse<>(REQUEST_ERROR);
     }
     if (giftboxRepository.findById(giftboxIdx) == null) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
     giftboxService.updateGiftbox(giftboxIdx, request);
     if (image != null) {
@@ -154,7 +174,7 @@ public class GiftboxController {
       @PathVariable("giftboxIdx") Long giftboxIdx,
       @RequestBody List<Long> productIdxList) {
     if (giftboxRepository.findById(giftboxIdx) == null) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
     for (Long productIdx : productIdxList) {
       giftboxService.addProductToGiftbox(giftboxIdx, productIdx);
@@ -171,7 +191,7 @@ public class GiftboxController {
       @PathVariable("giftboxIdx") Long giftboxIdx
   ) {
     if (giftboxRepository.findById(giftboxIdx) == null) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
     List<Product> productList = giftboxRepository.findProductOfGiftbox(giftboxIdx);
     List<ProductSummaryDTO> productSummaryDTOList = productList.stream()
@@ -189,13 +209,13 @@ public class GiftboxController {
       @RequestBody List<Long> productIdxList
   ) {
     if (giftboxRepository.findById(giftboxIdx) == null) {
-      return new BaseResponse<>(BaseResponseStatus.GIFTBOX_NOT_FOUND);
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
     for (Long productIdx : productIdxList) {
       try {
         giftboxRepository.deleteProductOfGiftbox(giftboxIdx, productIdx);
       } catch (BaseException e) {
-        return new BaseResponse<>(BaseResponseStatus.PRODUCT_NOT_FOUND);
+        return new BaseResponse<>(PRODUCT_NOT_FOUND);
       }
     }
     return new BaseResponse<>(giftboxIdx + "번 선물 바구니의 상품"+

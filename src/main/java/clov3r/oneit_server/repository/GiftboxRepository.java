@@ -1,6 +1,7 @@
 package clov3r.oneit_server.repository;
 
 import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
+import clov3r.oneit_server.domain.data.AccessStatus;
 import clov3r.oneit_server.domain.entity.GiftboxProduct;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
@@ -80,7 +81,7 @@ public class GiftboxRepository {
                 .set(giftbox.name, request.getName())
                 .set(giftbox.description, request.getDescription())
                 .set(giftbox.deadline, request.getDeadline())
-                .set(giftbox.accessStatus, request.getAccessStatus())
+                .set(giftbox.accessStatus, AccessStatus.fromString(request.getAccessStatus()))
                 .set(giftbox.updatedAt, LocalDateTime.now())
                 .where(giftbox.idx.eq(giftboxIdx),
                         giftbox.status.eq("ACTIVE"))
@@ -100,8 +101,13 @@ public class GiftboxRepository {
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR_NOT_FOUND);
         }
-        // giftbox와 user를 연결
-        em.persist(newGiftboxUser);
+
+        try {
+            // giftbox와 user를 연결
+            em.persist(newGiftboxUser);
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
@@ -121,7 +127,6 @@ public class GiftboxRepository {
                             giftboxProduct.product.idx.eq(productIdx),
                             giftboxProduct.status.eq("DELETED"))
                     .execute();
-            return;
         } else {
             // giftbox와 product를 연결
             GiftboxProduct giftboxProduct = new GiftboxProduct(
