@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductPaginationDTO {
+public class ProductSummaryDTO {
     private Long idx;
     private String name;
     private int originalPrice;
@@ -16,7 +16,7 @@ public class ProductPaginationDTO {
     private int discountRate;
     private String thumbnailUrl;
 
-    public ProductPaginationDTO(Product product) {
+    public ProductSummaryDTO(Product product) {
         this.idx = product.getIdx();
         this.name = product.getName();
         this.originalPrice = product.getOriginalPrice();

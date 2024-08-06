@@ -32,7 +32,9 @@ public enum BaseResponseStatus {
     DATABASE_ERROR_QUERY(false, 4002, "데이터베이스 쿼리에 실패하였습니다."),
     DATABASE_ERROR_NOT_FOUND(false, 4003, "데이터베이스에서 찾을 수 없습니다."),
     PRODUCT_DTO_ERROR(false, 4004, "상품 정보를 불러오는데 실패하였습니다."),
-    GIFTBOX_NOT_FOUND(false, 4005, "선물바구니를 찾을 수 없습니다.");
+    GIFTBOX_NOT_FOUND(false, 4005, "선물바구니를 찾을 수 없습니다."),
+    USER_NOT_FOUND(false, 4006, "유저를 찾을 수 없습니다."),
+    PRODUCT_NOT_FOUND(false, 4007, "상품을 찾을 수 없습니다.");
 
 
     private final boolean isSuccess;

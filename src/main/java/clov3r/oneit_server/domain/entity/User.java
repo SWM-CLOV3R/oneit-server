@@ -41,10 +41,11 @@ public class User extends BaseEntity {
 
     private String refreshToken;
 
-    public User(String email, String nickname, String profileImage, LocalDateTime now) {
+    public User(String email, String nickname, String profileImage) {
         this.email = email;
         this.nickname = nickname;
         this.profileImgFromKakao = profileImage;
-        this.setCreatedAt(now);
+
+        this.createBaseEntity();
     }
 }

@@ -31,8 +31,7 @@ public class AuthService {
         User user = new User(
                 kakaoProfileDTO.getKakao_account().getEmail(),
                 kakaoProfileDTO.getProperties().getNickname(),
-                kakaoProfileDTO.getProperties().getProfile_image(),
-                LocalDateTime.now()
+                kakaoProfileDTO.getProperties().getProfile_image()
         );
         userRepository.save(user);
         return user;

@@ -27,10 +27,10 @@ public class Giftbox extends BaseEntity {
     @Column(name = "access_status")
     private String accessStatus;
 
-    @OneToMany(mappedBy = "idx", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "giftbox", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<GiftboxUser> participants;
-//    @OneToMany(mappedBy = "idx")
-//    private List<Product> products;
+    @OneToMany(mappedBy = "giftbox", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<GiftboxProduct> products;
 
     public Giftbox(String name, String description, Date deadline, Long createdUserIdx, String accessStatus) {
         this.name = name;
@@ -38,6 +38,8 @@ public class Giftbox extends BaseEntity {
         this.deadline = deadline;
         this.createdUserIdx = createdUserIdx;
         this.accessStatus = accessStatus;
+
+        this.createBaseEntity();
     }
 
     public Giftbox() {

@@ -15,7 +15,6 @@ public class GiftboxService {
 
     private final GiftboxRepository giftboxRepository;
 
-    @Transactional
     public Long createGiftbox(PostGiftboxRequest request) {
 
         Giftbox newGiftbox = new Giftbox(
@@ -38,12 +37,15 @@ public class GiftboxService {
         return saveGiftbox.getIdx();
     }
 
-    @Transactional
     public void updateGiftboxImageUrl(Long idx, String imageUrl) {
         giftboxRepository.updateImageUrl(idx, imageUrl);
     }
 
     public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
         giftboxRepository.updateGiftbox(giftboxIdx, request);
+    }
+
+    public void addProductToGiftbox(Long giftboxIdx, Long productIdx) {
+        giftboxRepository.addProductToGiftbox(giftboxIdx, productIdx);
     }
 }
