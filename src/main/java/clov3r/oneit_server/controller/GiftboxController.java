@@ -1,8 +1,7 @@
 package clov3r.oneit_server.controller;
 
-import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.GiftboxDTO;
-import clov3r.oneit_server.domain.data.PostGiftboxRequest;
+import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.response.BaseResponse;
@@ -22,8 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class GiftboxController {
 
   private final GiftboxService giftboxService;
-  private final S3Service s3Service;
   private final GiftboxRepository giftboxRepository;
+  private final S3Service s3Service;
 
   @Tag(name = "Giftbox API", description = "Giftbox API 목록")
   @Operation(summary = "Giftbox 생성", description = "선물 바구니 생성, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")

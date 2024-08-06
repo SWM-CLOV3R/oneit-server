@@ -1,4 +1,4 @@
-package clov3r.oneit_server.domain.collectioin;
+package clov3r.oneit_server.domain.collection;
 
 import lombok.Getter;
 import lombok.Setter;

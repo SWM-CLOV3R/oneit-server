@@ -1,11 +1,10 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
 import clov3r.oneit_server.domain.entity.Product;
-import clov3r.oneit_server.domain.collectioin.MatchedProduct;
-import clov3r.oneit_server.domain.collectioin.ProductSearch;
-import clov3r.oneit_server.domain.collectioin.QuestionCategory;
+import clov3r.oneit_server.domain.collection.MatchedProduct;
+import clov3r.oneit_server.domain.collection.ProductSearch;
+import clov3r.oneit_server.domain.collection.QuestionCategory;
 import clov3r.oneit_server.domain.data.Gender;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -29,7 +28,6 @@ public class ProductRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     // save Product
-
     /**
      * 가격과 성별을 기준으로 상품을 필터링해서 해당하는 상품 리스트를 반환합니다.
      * @param productSearch
@@ -231,8 +229,6 @@ public class ProductRepository {
             query.setParameter("excludedGender", excludedGender);
         }
     }
-
-
 
 
     /**

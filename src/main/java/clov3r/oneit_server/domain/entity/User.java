@@ -2,6 +2,7 @@ package clov3r.oneit_server.domain.entity;
 
 import clov3r.oneit_server.domain.data.Gender;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,4 +41,10 @@ public class User extends BaseEntity {
 
     private String refreshToken;
 
+    public User(String email, String nickname, String profileImage, LocalDateTime now) {
+        this.email = email;
+        this.nickname = nickname;
+        this.profileImgFromKakao = profileImage;
+        this.setCreatedAt(now);
+    }
 }

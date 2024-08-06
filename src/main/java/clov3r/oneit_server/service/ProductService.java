@@ -1,17 +1,14 @@
 package clov3r.oneit_server.service;
 
-import clov3r.oneit_server.domain.DTO.ProductDTO;
-import clov3r.oneit_server.domain.DTO.ProductDetailDTO;
 import clov3r.oneit_server.domain.DTO.ProductPaginationDTO;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.repository.KeywordRepository;
 import clov3r.oneit_server.repository.ProductRepository;
-import clov3r.oneit_server.domain.collectioin.ProductSearch;
+import clov3r.oneit_server.domain.collection.ProductSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,8 +52,6 @@ public class ProductService {
 
         return initialFilteredProducts;
     }
-
-
 
     public List<ProductPaginationDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();

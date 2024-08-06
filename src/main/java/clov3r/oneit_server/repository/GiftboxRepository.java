@@ -1,10 +1,9 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.data.PostGiftboxRequest;
+import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.GiftboxUser;
 import clov3r.oneit_server.domain.entity.User;
-import clov3r.oneit_server.response.BaseResponseStatus;
 import clov3r.oneit_server.response.exception.BaseException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 
 import static clov3r.oneit_server.domain.entity.QGiftbox.giftbox;
-import static clov3r.oneit_server.domain.entity.QGiftboxUser.*;
 import static clov3r.oneit_server.domain.entity.QUser.user;
 import static clov3r.oneit_server.response.BaseResponseStatus.*;
 
@@ -100,18 +98,4 @@ public class GiftboxRepository {
         em.persist(newGiftboxUser);
     }
 
-    @Transactional
-    public boolean checkUserExist(Long createdUserIdx) {
-        // user가 존재하는지 확인
-        try {
-            User result = queryFactory.select(user)
-                    .from(user)
-                    .where(user.idx.eq(createdUserIdx))
-                    .fetchOne();
-            System.out.println("result = " + result);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package clov3r.oneit_server.domain.collectioin;
+package clov3r.oneit_server.domain.collection;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -6,6 +6,9 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * 복합키 product_idx, keyword_idx를 가지는 ProductKeywordId 클래스
+ */
 @Embeddable
 public class ProductKeywordId implements Serializable {
 
@@ -21,9 +24,7 @@ public class ProductKeywordId implements Serializable {
         this.productIdx = productIdx;
         this.keywordIdx = keywordIdx;
     }
-
     // Getters and setters
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
