@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static clov3r.oneit_server.domain.entity.QProduct.product;
 import static clov3r.oneit_server.response.BaseResponseStatus.*;
 
 @RestController
@@ -162,11 +163,11 @@ public class ProductController {
     @Operation(summary = "상품 상세 정보 조회")
     @GetMapping("/api/v1/products/{productIdx}")
     public BaseResponse<ProductDetailDTO> getProductDetail(@PathVariable Long productIdx) {
-        Product product = productService.getProductByIdx(productIdx);
-        if (product == null) {
-            return new BaseResponse<>(DATABASE_ERROR_NOT_FOUND);
+        if (!productRepository.existsProduct(productIdx)) {
+            return new BaseResponse<>(PRODUCT_NOT_FOUND);
         }
         // get Category
+        Product product = productService.getProductByIdx(productIdx);
         Category category = categoryService.getCategoryByIdx(product.getCategory().getIdx());
 
         // get keywords

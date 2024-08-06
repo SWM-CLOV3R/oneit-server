@@ -53,7 +53,7 @@ public class GiftboxRepository {
     }
 
     @Transactional
-    public Giftbox findById(Long giftboxIdx) throws BaseException {
+    public Giftbox findById(Long giftboxIdx) {
         // idx로 status가 ACTIVE인 row만 조회
         Giftbox result = queryFactory.select(giftbox)
                 .from(giftbox)
@@ -110,7 +110,6 @@ public class GiftboxRepository {
         }
     }
 
-    @Transactional
     public void addProductToGiftbox(Long giftboxIdx, Long productIdx) {
         GiftboxProduct deletedProduct = queryFactory.select(giftboxProduct)
                 .from(giftboxProduct)
@@ -181,5 +180,24 @@ public class GiftboxRepository {
                         giftboxProduct.product.idx.eq(productIdx),
                         giftboxProduct.status.eq("ACTIVE"))
                 .execute();
+    }
+
+    public boolean existsById(Long giftboxIdx) {
+        // giftboxIdx로 status가 ACTIVE인 giftbox가 존재하는지 확인
+        return queryFactory.selectOne()
+                .from(giftbox)
+                .where(giftbox.idx.eq(giftboxIdx),
+                        giftbox.status.eq("ACTIVE"))
+                .fetchFirst() != null;
+    }
+
+    public boolean existProductInGiftbox(Long giftboxIdx, Long productIdx) {
+        // giftboxIdx와 productIdx로 status가 ACTIVE인 giftboxProduct가 존재하는지 확인
+        return queryFactory.selectOne()
+                .from(giftboxProduct)
+                .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
+                        giftboxProduct.product.idx.eq(productIdx),
+                        giftboxProduct.status.eq("ACTIVE"))
+                .fetchFirst() != null;
     }
 }

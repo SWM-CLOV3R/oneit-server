@@ -18,8 +18,8 @@ public enum BaseResponseStatus {
   REQUEST_KEYWORD_ERROR(false, 2003, "키워드 입력값이 잘못되었습니다."),
   INVALID_ACCESS_STATUS(false, 2005, "접근 권한 요청값은 PRIVATE 또는 PUBLIC이어야 합니다."),
   DATE_BEFORE_NOW(false, 2006, "현재 시간 이후의 날짜를 입력해주세요."),
-  S3_REQUEST_ERROR(false, 4008, "S3 이미지 요청값이 잘못되었습니다."),
-  S3_FILE_EXTENSION_ERROR(false, 4010, "S3 이미지 확장자가 유효하지 않습니다."),
+  S3_REQUEST_ERROR(false, 2007, "S3 이미지 요청값이 잘못되었습니다."),
+  S3_FILE_EXTENSION_ERROR(false, 2008, "S3 이미지 확장자가 유효하지 않습니다."),
 
 
 
@@ -34,12 +34,14 @@ public enum BaseResponseStatus {
    * 3000 : Service 오류
    *
    */
-  S3_ERROR(false, 2004, "S3에러입니다."),
-  S3_UPLOAD_ERROR(false, 4009,"S3 업로드가 실패하였습니다."),
-  S3_DELETE_OBJECT_ERROR(false,4011, "S3 이미지 삭제가 실패하였습니다."),
-  S3_GET_URL_ERROR(false, 4012, "S3 이미지 URL을 가져오는데 실패하였습니다."),
-  S3_URL_DECODING_ERROR(false, 4013, "S3 이미지 URL 디코딩이 실패하였습니다."),
-  S3_PUT_OBJECT_ERROR(false, 4014, "S3 이미지 객체 생성이 실패하였습니다."),
+  S3_ERROR(false, 3000, "S3에러입니다."),
+  S3_UPLOAD_ERROR(false, 3001,"S3 업로드가 실패하였습니다."),
+  S3_DELETE_OBJECT_ERROR(false,3002, "S3 이미지 삭제가 실패하였습니다."),
+  S3_GET_URL_ERROR(false, 3003, "S3 이미지 URL을 가져오는데 실패하였습니다."),
+  S3_URL_DECODING_ERROR(false, 3004, "S3 이미지 URL 디코딩이 실패하였습니다."),
+  S3_PUT_OBJECT_ERROR(false, 3005, "S3 이미지 객체 생성이 실패하였습니다."),
+  FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL(false, 3006, "선물바구니 이미지 URL 업데이트에 실패하였습니다."),
+  FAIL_TO_UPDATE_GIFTBOX(false, 3007, "선물바구니 업데이트에 실패하였습니다."),
 
 
   /**

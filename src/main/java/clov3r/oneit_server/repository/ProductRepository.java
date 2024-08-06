@@ -177,7 +177,7 @@ public class ProductRepository {
         return orderedProducts;
     }
 
-    public List<Product> findProductsByIdx(List<Long> productIdxList) {
+    public List<Product> findProductListByIdxList(List<Long> productIdxList) {
         return em.createQuery("select p from Product p where p.idx in :productIdxList", Product.class)
                 .setParameter("productIdxList", productIdxList)
                 .getResultList();
@@ -269,5 +269,15 @@ public class ProductRepository {
         return em.createQuery("select p from Product p", Product.class)
                 .getResultList();
     }
+
+    public boolean existsProduct(Long productIdx) {
+        // productIdx로 status가 ACTIVE인 product가 존재하는지 확인
+        return jpaQueryFactory.selectOne()
+                .from(product)
+                .where(product.idx.eq(productIdx))
+                .fetchFirst() != null;
+
+    }
+
 }
 
