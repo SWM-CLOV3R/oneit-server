@@ -24,14 +24,12 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
         throws IOException {
         if (handler instanceof HandlerMethod) {
-            System.out.println("Request URL: " + request.getRequestURL());
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Parameter[] parameters = handlerMethod.getMethod().getParameters();
 
             boolean authParameterFound = false;
             boolean authRequired = false;
             for (Parameter parameter : parameters) {
-                System.out.println("parameter = " + parameter);
                 if (parameter.isAnnotationPresent(Auth.class) && parameter.getType().equals(Long.class)) {
                     authParameterFound = true;
                     Annotation[] auth = parameter.getAnnotations();
