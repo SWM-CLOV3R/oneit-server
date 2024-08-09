@@ -20,20 +20,20 @@ public class GiftboxService {
   private final GiftboxRepository giftboxRepository;
   private final ProductRepository productRepository;
 
-  public Long createGiftbox(PostGiftboxRequest request) {
+  public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
 
     Giftbox newGiftbox = new Giftbox(
         request.getName(),
         request.getDescription(),
         request.getDeadline(),
-        request.getCreatedUserIdx(),
+        userIdx,
         AccessStatus.fromString(request.getAccessStatus())
     );
     Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
 
     // 생성한 유저 idx와 선물 바구니 idx를 연결
     try {
-      giftboxRepository.createGiftboxManager(request.getCreatedUserIdx(), saveGiftbox.getIdx());
+      giftboxRepository.createGiftboxManager(userIdx, saveGiftbox.getIdx());
     } catch (BaseException exception) {
       throw exception;
     }

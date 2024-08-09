@@ -43,6 +43,8 @@ public enum BaseResponseStatus {
   S3_PUT_OBJECT_ERROR(false, 3005, "S3 이미지 객체 생성이 실패하였습니다."),
   FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL(false, 3006, "선물바구니 이미지 URL 업데이트에 실패하였습니다."),
   FAIL_TO_UPDATE_GIFTBOX(false, 3007, "선물바구니 업데이트에 실패하였습니다."),
+  NOT_MANAGER_OF_GIFTBOX(false, 3008, "선물바구니의 관리자가 아닙니다."),
+  NOT_PARTICIPANT_OF_GIFTBOX(false, 3009,"선물바구니의 참여자가 아닙니다."),
 
 
   /**
@@ -55,7 +57,8 @@ public enum BaseResponseStatus {
   PRODUCT_DTO_ERROR(false, 4004, "상품 정보를 불러오는데 실패하였습니다."),
   GIFTBOX_NOT_FOUND(false, 4005, "선물바구니를 찾을 수 없습니다."),
   USER_NOT_FOUND(false, 4006, "유저를 찾을 수 없습니다."),
-  PRODUCT_NOT_FOUND(false, 4007, "상품을 찾을 수 없습니다.");
+  PRODUCT_NOT_FOUND(false, 4007, "상품을 찾을 수 없습니다."),
+  ;
 
 
   private final boolean isSuccess;

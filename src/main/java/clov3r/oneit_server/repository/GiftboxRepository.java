@@ -87,13 +87,13 @@ public class GiftboxRepository {
     }
 
     @Transactional
-    public void createGiftboxManager(Long createdUserIdx, Long idx) {
+    public void createGiftboxManager(Long userIdx, Long giftIdx) {
 
         GiftboxUser newGiftboxUser;
         try {
             newGiftboxUser = new GiftboxUser(
-                em.find(Giftbox.class, idx),
-                em.find(User.class, createdUserIdx),
+                em.find(Giftbox.class, giftIdx),
+                em.find(User.class, userIdx),
                 "MANAGER");
             newGiftboxUser.createBaseEntity();
         } catch (Exception e) {
@@ -196,6 +196,27 @@ public class GiftboxRepository {
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.product.idx.eq(productIdx),
                         giftboxProduct.status.eq("ACTIVE"))
+                .fetchFirst() != null;
+    }
+
+    public boolean isManagerOfGiftbox(Long userIdx, Long giftboxIdx) {
+        // userIdx와 giftboxIdx로 status가 ACTIVE인 giftboxUser가 존재하고 role이 MANAGER인지 확인
+        return queryFactory.selectOne()
+                .from(giftboxUser)
+                .where(giftboxUser.user.idx.eq(userIdx),
+                        giftboxUser.giftbox.idx.eq(giftboxIdx),
+                        giftboxUser.status.eq("ACTIVE"),
+                        giftboxUser.userRole.eq("MANAGER"))
+                .fetchFirst() != null;
+    }
+
+    public boolean isParticipantOfGiftbox(Long userIdx, Long giftboxIdx) {
+        // userIdx와 giftboxIdx로 status가 ACTIVE인 giftboxUser가 존재하는지 확인
+        return queryFactory.selectOne()
+                .from(giftboxUser)
+                .where(giftboxUser.user.idx.eq(userIdx),
+                        giftboxUser.giftbox.idx.eq(giftboxIdx),
+                        giftboxUser.status.eq("ACTIVE"))
                 .fetchFirst() != null;
     }
 }
