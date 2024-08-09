@@ -2,6 +2,7 @@ package clov3r.oneit_server.controller;
 
 import static clov3r.oneit_server.response.BaseResponseStatus.*;
 
+import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.GiftboxDTO;
 import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.data.AccessStatus;
@@ -12,15 +13,14 @@ import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.response.BaseResponse;
-import clov3r.oneit_server.response.BaseResponseStatus;
-import clov3r.oneit_server.response.exception.BaseException;
+import clov3r.oneit_server.exception.BaseException;
 import clov3r.oneit_server.service.GiftboxService;
 import clov3r.oneit_server.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -42,16 +42,20 @@ public class GiftboxController {
   @PostMapping(value = "/api/v1/giftbox", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public BaseResponse<Long> createGiftbox(
       @RequestPart("request") PostGiftboxRequest request,
-      @RequestPart(value = "image", required = false) MultipartFile image
+      @RequestPart(value = "image", required = false) MultipartFile image,
+      @Parameter(hidden = true) @Auth Long userIdx
   ) {
     try {
+      if (!userRepository.existsUser(userIdx)) {
+        return new BaseResponse<>(USER_NOT_FOUND);
+      } else {
+        request.setCreatedUserIdx(userIdx);
+      }
+
       // request validation
       if (request.getName() == null || request.getDeadline() == null
           || request.getCreatedUserIdx() == null) {
         return new BaseResponse<>(REQUEST_ERROR);
-      }
-      if (!userRepository.existsUser(request.getCreatedUserIdx())) {
-        return new BaseResponse<>(USER_NOT_FOUND);
       }
       if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
         return new BaseResponse<>(DATE_BEFORE_NOW);
@@ -75,7 +79,9 @@ public class GiftboxController {
   @Tag(name = "Giftbox API", description = "Giftbox CRUD API 목록")
   @Operation(summary = "Giftbox 상세 조회", description = "선물 바구니의 idx로 선물 바구니 조회, 삭제한 선물 바구니는 조회되지 않음")
   @GetMapping("/api/v1/giftbox/{giftboxIdx}")
-  public BaseResponse<GiftboxDTO> getGiftboxByIdx(@PathVariable("giftboxIdx") Long giftboxIdx) {
+  public BaseResponse<GiftboxDTO> getGiftboxByIdx(
+      @PathVariable("giftboxIdx") Long giftboxIdx)
+  {
 
     if (!giftboxRepository.existsById(giftboxIdx)) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
@@ -117,6 +123,7 @@ public class GiftboxController {
   @Operation(summary = "해당 유저의 Giftbox 목록 조회", description = "해당 유저가 소유한 모든 선물 바구니 조회, 삭제한 선물 바구니는 조회되지 않음")
   @GetMapping("/api/v1/giftbox")
   public BaseResponse<List<GiftboxDTO>> getGiftboxList(
+      @Parameter(hidden = true)
       @RequestParam("userIdx") Long userIdx
   ) {
 

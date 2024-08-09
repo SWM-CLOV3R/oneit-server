@@ -59,11 +59,10 @@ public class AuthController {
     // @Auth 활용
     @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
     @GetMapping("/api/v1/kakao/user")
-    public BaseResponse<User> getUserInfo(
-            @Parameter(description = "유저의 idx", schema = @Schema(defaultValue = "1"))
-            @Auth(required = false) Long userId
+    public BaseResponse<User> getUserInfo (
+            @Parameter(hidden = true) @Auth Long userIdx
     ) {
-        User user = userService.getUser(userId);
+        User user = userService.getUser(userIdx);
         return new BaseResponse<>(user);
     }
 
