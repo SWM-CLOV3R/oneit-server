@@ -3,16 +3,13 @@ package clov3r.oneit_server.service;
 import static clov3r.oneit_server.response.BaseResponseStatus.DATABASE_ERROR;
 import static clov3r.oneit_server.response.BaseResponseStatus.FAIL_TO_UPDATE_GIFTBOX;
 import static clov3r.oneit_server.response.BaseResponseStatus.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
-import static clov3r.oneit_server.response.BaseResponseStatus.PRODUCT_NOT_FOUND;
 
 import clov3r.oneit_server.domain.data.AccessStatus;
-import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
-import clov3r.oneit_server.response.exception.BaseException;
-import jakarta.transaction.Transactional;
+import clov3r.oneit_server.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

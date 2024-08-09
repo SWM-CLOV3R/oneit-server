@@ -1,6 +1,5 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.data.AccessStatus;
 import clov3r.oneit_server.domain.entity.GiftboxProduct;
 import clov3r.oneit_server.domain.entity.Product;
@@ -8,9 +7,8 @@ import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.GiftboxUser;
 import clov3r.oneit_server.domain.entity.User;
-import clov3r.oneit_server.response.exception.BaseException;
+import clov3r.oneit_server.exception.BaseException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;

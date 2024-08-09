@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -60,4 +59,23 @@ public class AuthService {
 
     }
 
+    /**
+     * 카카오 API 서버로부터 사용자의 친구 목록을 가져오는 메소드
+     * @param accessToken
+     * @return
+     */
+//    public KakaoFriendsDTO getKaKaoUserFriends(String accessToken) {
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", "Bearer " + accessToken);
+//
+//        //kakao api server end point URI
+//        String uri = "https://kapi.kakao.com/v1/api/talk/friends";
+//        return restTemplate.exchange(
+//                uri,
+//                HttpMethod.GET,
+//                new HttpEntity<>(null, headers),
+//                KakaoFriendsDTO.class)
+//            .getBody();
+//    }
 }
