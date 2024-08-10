@@ -47,7 +47,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
             if (!authParameterFound) {
                 return true;
-            } else if (!authRequired) {
+            }
+            if (!authRequired && request.getHeader("Authorization") == null) {
                 return true;
             }
 
