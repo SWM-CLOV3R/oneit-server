@@ -81,28 +81,24 @@ public class GiftboxController {
   @GetMapping("/api/v1/giftbox/{giftboxIdx}")
   public BaseResponse<GiftboxDTO> getGiftboxByIdx(
       @PathVariable("giftboxIdx") Long giftboxIdx,
-      @Parameter(hidden = true) @Auth Long userIdx
+      @Parameter(hidden = true) @Auth(required = false) Long userIdx
   )
   {
     // request validation
-    if (giftboxIdx == null || userIdx == null) {
+    if (giftboxIdx == null) {
       return new BaseResponse<>(REQUEST_ERROR);
     }
     if (!giftboxRepository.existsById(giftboxIdx)) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
-      return new BaseResponse<>(USER_NOT_FOUND);
-    }
-
     // get giftbox
     try {
       Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
-
-      if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE) && !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-        return new BaseResponse<>(NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
+      if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE)) {
+        if (userIdx == null || !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+          return new BaseResponse<>(NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
+        }
       }
-
       GiftboxDTO giftboxDTO = new GiftboxDTO(
           giftbox.getIdx(),
           giftbox.getName(),
@@ -248,6 +244,9 @@ public class GiftboxController {
         return new BaseResponse<>(PRODUCT_NOT_FOUND);
       }
     }
+    if (!userRepository.existsUser(userIdx)) {
+      return new BaseResponse<>(USER_NOT_FOUND);
+    }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
       return new BaseResponse<>(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 상품 추가 가능함
     }
@@ -269,19 +268,36 @@ public class GiftboxController {
   @Operation(summary = "Giftbox 상품 조회", description = "선물 바구니의 idx로 상품 조회")
   @GetMapping("/api/v1/giftbox/{giftboxIdx}/products")
   public BaseResponse<List<ProductSummaryDTO>> getProductOfGiftbox(
-      @PathVariable("giftboxIdx") Long giftboxIdx
+      @PathVariable("giftboxIdx") Long giftboxIdx,
+      @Parameter(hidden = true) @Auth(required = false) Long userIdx
   ) {
     // request validation
+    if (giftboxIdx == null) {
+      return new BaseResponse<>(REQUEST_ERROR);
+    }
     if (giftboxRepository.findById(giftboxIdx) == null) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
 
-    // get product list of the giftbox
-    List<Product> productList = giftboxRepository.findProductOfGiftbox(giftboxIdx);
-    List<ProductSummaryDTO> productSummaryDTOList = productList.stream()
-        .map(ProductSummaryDTO::new)
-        .toList();
-    return new BaseResponse<>(productSummaryDTOList);
+    try {
+      // check if the user is a participant of the giftbox
+      Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+      if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE)) {
+        if (userIdx == null || !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+          return new BaseResponse<>(
+              NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
+        }
+      }
+
+      // get product list of the giftbox
+      List<Product> productList = giftboxRepository.findProductOfGiftbox(giftboxIdx);
+      List<ProductSummaryDTO> productSummaryDTOList = productList.stream()
+          .map(ProductSummaryDTO::new)
+          .toList();
+      return new BaseResponse<>(productSummaryDTOList);
+    } catch (BaseException e) {
+      return new BaseResponse<>(e.getBaseResponseStatus());
+    }
   }
 
   // 선물 바구니의 상품 리스트 삭제 API
