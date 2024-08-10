@@ -1,7 +1,11 @@
 package clov3r.oneit_server.config.security;
 
+import clov3r.oneit_server.exception.AuthException;
+import clov3r.oneit_server.response.BaseResponseStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,15 +21,26 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+        throws IOException {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Parameter[] parameters = handlerMethod.getMethod().getParameters();
 
             boolean authParameterFound = false;
+            boolean authRequired = false;
             for (Parameter parameter : parameters) {
                 if (parameter.isAnnotationPresent(Auth.class) && parameter.getType().equals(Long.class)) {
                     authParameterFound = true;
+                    Annotation[] auth = parameter.getAnnotations();
+                    for (Annotation annotation : auth) {
+                        if (annotation instanceof Auth authAnnotation) {
+                            if (authAnnotation.required()) {
+                                authRequired = true;
+                                break;
+                            }
+                        }
+                    }
                     break;
                 }
             }
@@ -33,19 +48,20 @@ public class AuthInterceptor implements HandlerInterceptor {
             if (!authParameterFound) {
                 return true;
             }
+            if (!authRequired && request.getHeader("Authorization") == null) {
+                return true;
+            }
 
             String token = request.getHeader("Authorization");
             if (token == null || !token.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "HttpServletRequest request");
-                return false;
+                throw new AuthException(BaseResponseStatus.NO_AUTHORIZATION_HEADER);
             }
             token = token.substring(7); // "Bearer " 제거
             if (!jwtTokenProvider.validateToken(token)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
-                return false;
+                throw new AuthException(BaseResponseStatus.INVALID_TOKEN);
             }
 
-            request.setAttribute("userId", jwtTokenProvider.getUserIdFromToken(token));
+            request.setAttribute("userIdx", jwtTokenProvider.getUserIdFromToken(token));
         }
         return true;
     }

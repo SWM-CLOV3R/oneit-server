@@ -1,4 +1,4 @@
-package clov3r.oneit_server.response.exception;
+package clov3r.oneit_server.exception;
 
 import clov3r.oneit_server.response.BaseResponseStatus;
 import lombok.Getter;

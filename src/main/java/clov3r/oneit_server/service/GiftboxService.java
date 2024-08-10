@@ -3,16 +3,13 @@ package clov3r.oneit_server.service;
 import static clov3r.oneit_server.response.BaseResponseStatus.DATABASE_ERROR;
 import static clov3r.oneit_server.response.BaseResponseStatus.FAIL_TO_UPDATE_GIFTBOX;
 import static clov3r.oneit_server.response.BaseResponseStatus.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
-import static clov3r.oneit_server.response.BaseResponseStatus.PRODUCT_NOT_FOUND;
 
 import clov3r.oneit_server.domain.data.AccessStatus;
-import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
-import clov3r.oneit_server.response.exception.BaseException;
-import jakarta.transaction.Transactional;
+import clov3r.oneit_server.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,20 +20,20 @@ public class GiftboxService {
   private final GiftboxRepository giftboxRepository;
   private final ProductRepository productRepository;
 
-  public Long createGiftbox(PostGiftboxRequest request) {
+  public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
 
     Giftbox newGiftbox = new Giftbox(
         request.getName(),
         request.getDescription(),
         request.getDeadline(),
-        request.getCreatedUserIdx(),
+        userIdx,
         AccessStatus.fromString(request.getAccessStatus())
     );
     Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
 
     // 생성한 유저 idx와 선물 바구니 idx를 연결
     try {
-      giftboxRepository.createGiftboxManager(request.getCreatedUserIdx(), saveGiftbox.getIdx());
+      giftboxRepository.createGiftboxManager(userIdx, saveGiftbox.getIdx());
     } catch (BaseException exception) {
       throw exception;
     }

@@ -2,7 +2,7 @@ package clov3r.oneit_server.service;
 
 import static clov3r.oneit_server.response.BaseResponseStatus.*;
 
-import clov3r.oneit_server.response.exception.BaseException;
+import clov3r.oneit_server.exception.BaseException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;

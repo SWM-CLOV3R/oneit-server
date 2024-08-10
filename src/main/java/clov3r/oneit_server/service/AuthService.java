@@ -1,8 +1,11 @@
 package clov3r.oneit_server.service;
 
+import clov3r.oneit_server.domain.DTO.KakaoFriendDTO;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
+import clov3r.oneit_server.domain.request.KakaoAccessToken;
 import clov3r.oneit_server.repository.UserRepository;
+import clov3r.oneit_server.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -39,13 +41,13 @@ public class AuthService {
 
     /**
      * 카카오 API 서버로부터 사용자 정보를 가져오는 메소드
-     * @param accessToken
+     * @param kakaoAccessToken
      * @return
      */
-    public KakaoProfileDTO getKaKaoUserInfo(String accessToken) {
+    public KakaoProfileDTO getKaKaoUserInfo(String kakaoAccessToken) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Authorization", "Bearer " + kakaoAccessToken);
 
         //kakao api server end point URI
         String uri = "https://kapi.kakao.com/v2/user/me";
@@ -58,6 +60,27 @@ public class AuthService {
 
         return kakaoProfileDTO;
 
+    }
+
+    /**
+     * 카카오 API 서버로부터 사용자의 친구 목록을 가져오는 메소드
+     * @param kakaoAccessToken
+     * @return
+     */
+    public KakaoFriendDTO getKakaoFriends(String kakaoAccessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + kakaoAccessToken);
+
+        //kakao api server end point URI
+        String uri = "https://kapi.kakao.com/v1/api/talk/friends";
+        KakaoFriendDTO kakaoFriendDTO = restTemplate.exchange(
+                                            uri,
+                                            HttpMethod.GET,
+                                            new HttpEntity<>(null, headers),
+                                            KakaoFriendDTO.class)
+                                            .getBody();
+
+        return kakaoFriendDTO;
     }
 
 }

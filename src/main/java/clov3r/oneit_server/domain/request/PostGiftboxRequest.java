@@ -15,6 +15,5 @@ public class PostGiftboxRequest {
     private String name;
     private String description;
     private LocalDate deadline;
-    private Long createdUserIdx;
     private String accessStatus;
 }

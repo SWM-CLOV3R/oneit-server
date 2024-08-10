@@ -2,6 +2,7 @@ package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.config.security.TokenProvider;
+import clov3r.oneit_server.domain.DTO.KakaoFriendDTO;
 import clov3r.oneit_server.domain.data.AuthToken;
 import clov3r.oneit_server.domain.DTO.KakaoLoginDTO;
 import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
@@ -59,12 +60,19 @@ public class AuthController {
     // @Auth 활용
     @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
     @GetMapping("/api/v1/kakao/user")
-    public BaseResponse<User> getUserInfo(
-            @Parameter(description = "유저의 idx", schema = @Schema(defaultValue = "1"))
-            @Auth(required = false) Long userId
+    public BaseResponse<User> getUserInfo (
+            @Parameter(hidden = true) @Auth Long userIdx
     ) {
-        User user = userService.getUser(userId);
+        User user = userService.getUser(userIdx);
         return new BaseResponse<>(user);
+    }
+
+    // 유저의 카카오톡 친구 목록을 가져오는 API
+    @GetMapping("/api/v1/kakao/friends")
+    public BaseResponse<KakaoFriendDTO> getFriends(
+        @RequestBody KakaoAccessToken kakaoAccessToken
+    ) {
+        return new BaseResponse<>(authService.getKakaoFriends(kakaoAccessToken.getAccessToken()));
     }
 
 }

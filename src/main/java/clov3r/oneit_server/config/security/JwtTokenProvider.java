@@ -1,4 +1,5 @@
 package clov3r.oneit_server.config.security;
+import clov3r.oneit_server.exception.AuthException;
 import clov3r.oneit_server.response.BaseResponseStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -43,13 +44,18 @@ public class JwtTokenProvider {
     }
 
     // validateToken 메서드는 토큰이 유효한지 확인하는 메서드입니다.
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token) throws RuntimeException {
 
         // 토큰이 만료되었는지 확인하고 만료되었다면 Exception을 발생시킵니다.
-        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        if (claims.getExpiration().before(new Date())) {
-            throw new RuntimeException(BaseResponseStatus.TOKEN_EXPIRED.getMessage());
+        try {
+            Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            if (claims.getExpiration().before(new Date())) {
+                throw new AuthException(BaseResponseStatus.TOKEN_EXPIRED);
+            }
+        } catch (Exception e) {
+            throw new AuthException(BaseResponseStatus.INVALID_TOKEN);
         }
+
 
         return true;
 
