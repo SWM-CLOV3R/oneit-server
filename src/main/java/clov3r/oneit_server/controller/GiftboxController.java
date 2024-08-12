@@ -4,11 +4,18 @@ import static clov3r.oneit_server.response.BaseResponseStatus.*;
 
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.GiftboxDTO;
+import clov3r.oneit_server.domain.DTO.InvitationUserDTO;
+import clov3r.oneit_server.domain.DTO.ParticipantsDTO;
 import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.data.status.AccessStatus;
+import clov3r.oneit_server.domain.data.status.InvitationStatus;
+import clov3r.oneit_server.domain.entity.GiftboxUser;
 import clov3r.oneit_server.domain.entity.Product;
+import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
+import clov3r.oneit_server.domain.request.InviteUserRequest;
+import clov3r.oneit_server.domain.request.acceptInvitationRequest;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.repository.UserRepository;
@@ -21,6 +28,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -340,4 +348,105 @@ public class GiftboxController {
         productIdxList.toString()
         +"이 삭제되었습니다.");
   }
+
+
+  // 선물 바구니 초대 API (PENDING)
+  @Tag(name = "Giftbox 초대 API", description = "Giftbox 초대 API 목록")
+  @PostMapping("/api/v1/giftbox/{giftboxIdx}/invitation")
+  public BaseResponse<InvitationUserDTO> inviteUserToGiftBox(
+      @PathVariable("giftboxIdx") Long giftboxIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    // request validation
+    if (giftboxIdx == null || userIdx == null) {
+      return new BaseResponse<>(REQUEST_ERROR);
+    }
+    if (!giftboxRepository.existsById(giftboxIdx)) {
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
+    }
+    if (!userRepository.existsUser(userIdx)) {
+      return new BaseResponse<>(USER_NOT_FOUND);
+    }
+//    if (!giftboxRepository.isManagerOfGiftbox(userIdx, request.getGiftboxIdx())) {
+//      return new BaseResponse<>(NOT_MANAGER_OF_GIFTBOX);  // 해당 선물 바구니의 관리자만 초대 가능함
+//    }
+
+    // invite user to giftbox
+    try {
+      Long invitationIdx = giftboxService.inviteUserToGiftBox(giftboxIdx);
+      return new BaseResponse<>(new InvitationUserDTO(invitationIdx));
+    } catch (BaseException e) {
+      return new BaseResponse<>(e.getBaseResponseStatus());
+    }
+  }
+
+  // 선물 바구니 초대 수락 API (ACCEPTED)
+  @Tag(name = "Giftbox 초대 API", description = "Giftbox 초대 API 목록")
+  @PatchMapping("/api/v1/giftbox/invitation/{invitationIdx}/status")
+  public BaseResponse<String> acceptInvitationToGiftBox(
+      @PathVariable("invitationIdx") Long invitationIdx,
+      @RequestParam("userIdx") Long userIdx
+  ) {
+    // request validation
+    if (invitationIdx == null || userIdx == null) {
+      return new BaseResponse<>(REQUEST_ERROR);
+    }
+    GiftboxUser giftboxUser = giftboxRepository.findGiftboxByInvitationIdx(invitationIdx);
+    if (giftboxUser == null) {
+      return new BaseResponse<>(ALREADY_PARTICIPANT_OF_GIFTBOX);
+    }
+    if (!giftboxRepository.existsById(giftboxUser.getGiftbox().getIdx())) {
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
+    }
+    if (!userRepository.existsUser(userIdx)) {
+      return new BaseResponse<>(USER_NOT_FOUND);
+    }
+
+    // accept invitation to giftbox
+    try {
+      giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
+      return new BaseResponse<>("유저 " + invitationIdx + "님이 " + giftboxUser.getGiftbox().getIdx() + "번 선물 바구니에 참여하였습니다.");
+    } catch (BaseException e) {
+      return new BaseResponse<>(e.getBaseResponseStatus());
+    }
+  }
+
+  @Tag(name = "Giftbox API", description = "Giftbox API 목록")
+  @GetMapping("/api/v1/giftbox/{giftboxIdx}/participants")
+  public BaseResponse<List<ParticipantsDTO>> getParticipantsOfGiftbox(
+      @PathVariable("giftboxIdx") Long giftboxIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    // request validation
+    if (giftboxIdx == null) {
+      return new BaseResponse<>(REQUEST_ERROR);
+    }
+    if (!giftboxRepository.existsById(giftboxIdx)) {
+      return new BaseResponse<>(GIFTBOX_NOT_FOUND);
+    }
+    if (!userRepository.existsUser(userIdx)) {
+      return new BaseResponse<>(USER_NOT_FOUND);
+    }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      return new BaseResponse<>(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 조회 가능함
+    }
+
+    try {
+      List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
+      List<ParticipantsDTO> participantsDTOList = participants.stream()
+          .map(participant -> new ParticipantsDTO(
+              participant.getUser().getIdx(),
+              participant.getUser().getNickname(),
+              participant.getUser().getName(),
+              participant.getUser().getProfileImgFromKakao(),
+              participant.getUserRole()
+          ))
+          .toList();
+      return new BaseResponse<>(participantsDTOList);
+    } catch (BaseException e) {
+      return new BaseResponse<>(DATABASE_ERROR);
+    }
+  }
+
+
 }

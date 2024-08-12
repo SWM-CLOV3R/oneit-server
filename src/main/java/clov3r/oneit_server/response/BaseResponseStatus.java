@@ -58,7 +58,7 @@ public enum BaseResponseStatus {
   GIFTBOX_NOT_FOUND(false, 4005, "선물바구니를 찾을 수 없습니다."),
   USER_NOT_FOUND(false, 4006, "유저를 찾을 수 없습니다."),
   PRODUCT_NOT_FOUND(false, 4007, "상품을 찾을 수 없습니다."),
-  ;
+  ALREADY_PARTICIPANT_OF_GIFTBOX(false, 4008, "이미 선물바구니의 초대장으로 참여한 참여자가 존재합니다."),;
 
 
   private final boolean isSuccess;

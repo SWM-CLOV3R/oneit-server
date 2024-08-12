@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Data
 @Getter
-@Setter
 public class PostGiftboxRequest {
     private String name;
     private String description;

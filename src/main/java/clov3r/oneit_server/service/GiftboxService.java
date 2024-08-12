@@ -68,4 +68,8 @@ public class GiftboxService {
       throw new BaseException(DATABASE_ERROR);
     }
   }
+
+  public Long inviteUserToGiftBox(Long giftboxIdx) {
+    return giftboxRepository.createPendingInvitation(giftboxIdx);
+  }
 }

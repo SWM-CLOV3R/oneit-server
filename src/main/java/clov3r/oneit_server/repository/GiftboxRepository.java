@@ -112,6 +112,7 @@ public class GiftboxRepository {
         }
     }
 
+    @Transactional
     public void addProductToGiftbox(Long giftboxIdx, Long productIdx) {
         GiftboxProduct deletedProduct = queryFactory.select(giftboxProduct)
                 .from(giftboxProduct)
@@ -223,5 +224,48 @@ public class GiftboxRepository {
                         giftboxUser.giftbox.idx.eq(giftboxIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
                 .fetchFirst() != null;
+    }
+
+    @Transactional
+    public Long createPendingInvitation(Long giftboxIdx) {
+        // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
+        GiftboxUser giftboxUser = new GiftboxUser(
+            em.find(Giftbox.class, giftboxIdx),
+            null,
+            GiftboxUserRole.PARTICIPANT,
+            InvitationStatus.PENDING
+        );
+        giftboxUser.createBaseEntity();
+        em.persist(giftboxUser);
+        return giftboxUser.getIdx();
+    }
+
+    public GiftboxUser findGiftboxByInvitationIdx(Long invitationIdx) {
+        // invitationIdx로 status가 PENDING인 giftboxUser의 giftbox 조회
+        return queryFactory.select(giftboxUser)
+                .from(giftboxUser)
+                .where(giftboxUser.idx.eq(invitationIdx),
+                        giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
+                .fetchOne();
+    }
+
+    @Transactional
+    public void acceptInvitationToGiftBox(Long userIdx, Long invitationIdx) {
+        queryFactory.update(giftboxUser)
+                .set(giftboxUser.invitationStatus, InvitationStatus.ACCEPTED)
+                .set(giftboxUser.updatedAt, LocalDateTime.now())
+                .set(giftboxUser.user, em.find(User.class, userIdx))
+                .where(giftboxUser.idx.eq(invitationIdx),
+                        giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
+                .execute();
+    }
+
+    public List<GiftboxUser> findParticipantsOfGiftbox(Long giftboxIdx) {
+        // giftboxIdx로 status가 ACTIVE인 giftboxUser 조회
+        return queryFactory.select(giftboxUser)
+                .from(giftboxUser)
+                .where(giftboxUser.giftbox.idx.eq(giftboxIdx),
+                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                .fetch();
     }
 }
