@@ -1,6 +1,7 @@
 package clov3r.oneit_server.domain.entity;
 
 import clov3r.oneit_server.domain.data.Gender;
+import clov3r.oneit_server.domain.data.status.UserStatus;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,19 +35,20 @@ public class User extends BaseEntity {
     @Column(name = "profile_img_from_kakao")
     private String profileImgFromKakao;
 
-
-    private Gender gender;
+    private String gender;  //  product gender enum 과 다름
     private String age;
     private LocalDate birthDate;
 
-
     private String refreshToken;
 
-    public User(String email, String nickname, String profileImage) {
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
+    public User(String email, String nickname, String profileImage, UserStatus status) {
         this.email = email;
         this.nickname = nickname;
         this.profileImgFromKakao = profileImage;
-
+        this.status = status;
         this.createBaseEntity();
     }
 }

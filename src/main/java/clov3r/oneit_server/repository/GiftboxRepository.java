@@ -1,6 +1,9 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.data.AccessStatus;
+import clov3r.oneit_server.domain.data.GiftboxUserRole;
+import clov3r.oneit_server.domain.data.status.InvitationStatus;
+import clov3r.oneit_server.domain.data.status.ProductStatus;
+import clov3r.oneit_server.domain.data.status.Status;
 import clov3r.oneit_server.domain.entity.GiftboxProduct;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
@@ -56,7 +59,7 @@ public class GiftboxRepository {
         Giftbox result = queryFactory.select(giftbox)
                 .from(giftbox)
                 .where(giftbox.idx.eq(giftboxIdx)
-                        .and(giftbox.status.eq("ACTIVE")))
+                        .and(giftbox.status.eq(Status.ACTIVE)))
                 .fetchOne();
         return result;
     }
@@ -65,10 +68,10 @@ public class GiftboxRepository {
     public void deleteById(Long giftboxIdx) {
         // status가 ACTIVE인 row일 경우에만 DELETED로 변경, deletedAt을 현재 시간으로 변경
         queryFactory.update(giftbox)
-                .set(giftbox.status, "DELETED")
+                .set(giftbox.status, Status.DELETED)
                 .set(giftbox.deletedAt, LocalDateTime.now())
                 .where(giftbox.idx.eq(giftboxIdx),
-                        giftbox.status.eq("ACTIVE"))
+                        giftbox.status.eq(Status.ACTIVE))
                 .execute();
     }
 
@@ -79,10 +82,10 @@ public class GiftboxRepository {
                 .set(giftbox.name, request.getName())
                 .set(giftbox.description, request.getDescription())
                 .set(giftbox.deadline, request.getDeadline())
-                .set(giftbox.accessStatus, AccessStatus.fromString(request.getAccessStatus()))
+                .set(giftbox.accessStatus, request.getAccessStatus())
                 .set(giftbox.updatedAt, LocalDateTime.now())
                 .where(giftbox.idx.eq(giftboxIdx),
-                        giftbox.status.eq("ACTIVE"))
+                        giftbox.status.eq(Status.ACTIVE))
                 .execute();
     }
 
@@ -94,7 +97,8 @@ public class GiftboxRepository {
             newGiftboxUser = new GiftboxUser(
                 em.find(Giftbox.class, giftIdx),
                 em.find(User.class, userIdx),
-                "MANAGER");
+                GiftboxUserRole.MANAGER,
+                InvitationStatus.ACCEPTED);
             newGiftboxUser.createBaseEntity();
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR_NOT_FOUND);
@@ -113,22 +117,23 @@ public class GiftboxRepository {
                 .from(giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.product.idx.eq(productIdx),
-                        giftboxProduct.status.eq("DELETED"))
+                        giftboxProduct.status.eq(Status.DELETED))
                 .fetchOne();
         if (deletedProduct != null) {
             // status가 DELETED인 giftboxProduct가 존재할 경우 status를 ACTIVE로 변경
             queryFactory.update(giftboxProduct)
-                    .set(giftboxProduct.status, "ACTIVE")
+                    .set(giftboxProduct.status, Status.ACTIVE)
                     .set(giftboxProduct.updatedAt, LocalDateTime.now())
                     .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                             giftboxProduct.product.idx.eq(productIdx),
-                            giftboxProduct.status.eq("DELETED"))
+                            giftboxProduct.status.eq(Status.DELETED))
                     .execute();
         } else {
             // giftbox와 product를 연결
             GiftboxProduct giftboxProduct = new GiftboxProduct(
                 em.find(Giftbox.class, giftboxIdx),
-                em.find(Product.class, productIdx)
+                em.find(Product.class, productIdx),
+                Status.ACTIVE
             );
             giftboxProduct.createBaseEntity();
             em.persist(giftboxProduct);
@@ -140,7 +145,7 @@ public class GiftboxRepository {
         // status가 ACTIVE인 모든 giftbox 조회
         List<Giftbox> giftboxList = queryFactory.select(giftbox)
                 .from(giftbox)
-                .where(giftbox.status.eq("ACTIVE"))
+                .where(giftbox.status.eq(Status.ACTIVE))
                 .fetch();
         return giftboxList;
     }
@@ -151,8 +156,8 @@ public class GiftboxRepository {
                 .from(giftbox)
                 .join(giftbox.participants, giftboxUser)
                 .where(giftboxUser.user.idx.eq(userIdx),
-                        giftboxUser.status.eq("ACTIVE"),
-                        giftbox.status.eq("ACTIVE"))
+                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED),
+                        giftbox.status.eq(Status.ACTIVE))
                 .fetch();
     }
 
@@ -164,19 +169,19 @@ public class GiftboxRepository {
                 .join(giftbox.products, giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         product.idx.eq(giftboxProduct.product.idx),
-                        product.status.eq("ACTIVE"),
-                        giftboxProduct.status.eq("ACTIVE"))
+                        product.status.eq(ProductStatus.ACTIVE),
+                        giftboxProduct.status.eq(Status.ACTIVE))
                 .fetch();
     }
 
     @Transactional
     public void deleteProductOfGiftbox(Long giftboxIdx, Long productIdx) {
         queryFactory.update(giftboxProduct)
-                .set(giftboxProduct.status, "DELETED")
+                .set(giftboxProduct.status, Status.DELETED)
                 .set(giftboxProduct.deletedAt, LocalDateTime.now())
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.product.idx.eq(productIdx),
-                        giftboxProduct.status.eq("ACTIVE"))
+                        giftboxProduct.status.eq(Status.ACTIVE))
                 .execute();
     }
 
@@ -185,7 +190,7 @@ public class GiftboxRepository {
         return queryFactory.selectOne()
                 .from(giftbox)
                 .where(giftbox.idx.eq(giftboxIdx),
-                        giftbox.status.eq("ACTIVE"))
+                        giftbox.status.eq(Status.ACTIVE))
                 .fetchFirst() != null;
     }
 
@@ -195,7 +200,7 @@ public class GiftboxRepository {
                 .from(giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.product.idx.eq(productIdx),
-                        giftboxProduct.status.eq("ACTIVE"))
+                        giftboxProduct.status.eq(Status.ACTIVE))
                 .fetchFirst() != null;
     }
 
@@ -205,8 +210,8 @@ public class GiftboxRepository {
                 .from(giftboxUser)
                 .where(giftboxUser.user.idx.eq(userIdx),
                         giftboxUser.giftbox.idx.eq(giftboxIdx),
-                        giftboxUser.status.eq("ACTIVE"),
-                        giftboxUser.userRole.eq("MANAGER"))
+                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED),
+                        giftboxUser.userRole.eq(GiftboxUserRole.MANAGER))
                 .fetchFirst() != null;
     }
 
@@ -216,7 +221,7 @@ public class GiftboxRepository {
                 .from(giftboxUser)
                 .where(giftboxUser.user.idx.eq(userIdx),
                         giftboxUser.giftbox.idx.eq(giftboxIdx),
-                        giftboxUser.status.eq("ACTIVE"))
+                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
                 .fetchFirst() != null;
     }
 }

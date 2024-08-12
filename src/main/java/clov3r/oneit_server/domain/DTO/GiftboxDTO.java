@@ -1,13 +1,10 @@
 package clov3r.oneit_server.domain.DTO;
 
-import clov3r.oneit_server.domain.data.AccessStatus;
+import clov3r.oneit_server.domain.data.status.AccessStatus;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter

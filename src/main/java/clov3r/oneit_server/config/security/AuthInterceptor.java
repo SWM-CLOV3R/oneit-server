@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -48,7 +49,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             if (!authParameterFound) {
                 return true;
             }
-            if (!authRequired && request.getHeader("Authorization") == null) {
+            if (!authRequired && request.getHeader(HttpHeaders.AUTHORIZATION) == null) {
                 return true;
             }
 

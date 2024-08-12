@@ -1,12 +1,11 @@
 package clov3r.oneit_server.domain.entity;
 
-import clov3r.oneit_server.domain.data.AccessStatus;
+import clov3r.oneit_server.domain.data.status.AccessStatus;
+import clov3r.oneit_server.domain.data.status.Status;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,18 +30,21 @@ public class Giftbox extends BaseEntity {
     @Column(name = "access_status")
     private AccessStatus accessStatus;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @OneToMany(mappedBy = "giftbox", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<GiftboxUser> participants;
     @OneToMany(mappedBy = "giftbox", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<GiftboxProduct> products;
 
-    public Giftbox(String name, String description, LocalDate deadline, Long createdUserIdx, AccessStatus accessStatus) {
+    public Giftbox(String name, String description, LocalDate deadline, Long createdUserIdx, AccessStatus accessStatus, Status status) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.createdUserIdx = createdUserIdx;
         this.accessStatus = accessStatus;
-
+        this.status = status;
         this.createBaseEntity();
     }
 

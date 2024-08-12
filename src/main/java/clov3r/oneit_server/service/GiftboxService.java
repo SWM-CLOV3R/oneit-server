@@ -4,7 +4,7 @@ import static clov3r.oneit_server.response.BaseResponseStatus.DATABASE_ERROR;
 import static clov3r.oneit_server.response.BaseResponseStatus.FAIL_TO_UPDATE_GIFTBOX;
 import static clov3r.oneit_server.response.BaseResponseStatus.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
 
-import clov3r.oneit_server.domain.data.AccessStatus;
+import clov3r.oneit_server.domain.data.status.Status;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.repository.GiftboxRepository;
@@ -27,7 +27,8 @@ public class GiftboxService {
         request.getDescription(),
         request.getDeadline(),
         userIdx,
-        AccessStatus.fromString(request.getAccessStatus())
+        request.getAccessStatus(),
+        Status.ACTIVE
     );
     Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
 

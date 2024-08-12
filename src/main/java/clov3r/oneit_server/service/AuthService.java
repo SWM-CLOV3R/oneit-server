@@ -1,6 +1,7 @@
 package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.domain.DTO.KakaoFriendDTO;
+import clov3r.oneit_server.domain.data.status.UserStatus;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
 import clov3r.oneit_server.domain.request.KakaoAccessToken;
@@ -33,7 +34,8 @@ public class AuthService {
         User user = new User(
                 kakaoProfileDTO.getKakao_account().getEmail(),
                 kakaoProfileDTO.getProperties().getNickname(),
-                kakaoProfileDTO.getProperties().getProfile_image()
+                kakaoProfileDTO.getProperties().getProfile_image(),
+                UserStatus.ACTIVE
         );
         userRepository.save(user);
         return user;

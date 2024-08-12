@@ -1,5 +1,6 @@
 package clov3r.oneit_server.domain.DTO;
 
+import clov3r.oneit_server.domain.data.status.ProductStatus;
 import clov3r.oneit_server.domain.entity.Category;
 import clov3r.oneit_server.domain.entity.Keyword;
 import clov3r.oneit_server.domain.entity.Product;
@@ -25,8 +26,7 @@ public class ProductDetailDTO {
     private String categoryDisplayName;
 
     private List<String> keywords = new ArrayList<>();
-
-    private String status;
+    private ProductStatus status;
 
     public ProductDetailDTO(Product product, List<Keyword> keywords, Category category) {
         this.idx = product.getIdx();

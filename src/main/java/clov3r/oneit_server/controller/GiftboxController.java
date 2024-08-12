@@ -5,7 +5,7 @@ import static clov3r.oneit_server.response.BaseResponseStatus.*;
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.GiftboxDTO;
 import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
-import clov3r.oneit_server.domain.data.AccessStatus;
+import clov3r.oneit_server.domain.data.status.AccessStatus;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
@@ -56,10 +56,10 @@ public class GiftboxController {
       if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
         return new BaseResponse<>(DATE_BEFORE_NOW);
       }
-      if (!request.getAccessStatus().equals(AccessStatus.PUBLIC.toString())
-          && !request.getAccessStatus().equals(AccessStatus.PRIVATE.toString())) {
-        return new BaseResponse<>(INVALID_ACCESS_STATUS);
-      }
+//      if (!request.getAccessStatus().equals(AccessStatus.PUBLIC.toString())
+//          && !request.getAccessStatus().equals(AccessStatus.PRIVATE.toString())) {
+//        return new BaseResponse<>(INVALID_ACCESS_STATUS);
+//      }
 
       // create Gift box
       Long giftboxIdx = giftboxService.createGiftbox(request, userIdx);

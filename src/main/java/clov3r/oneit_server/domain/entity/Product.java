@@ -1,6 +1,7 @@
 package clov3r.oneit_server.domain.entity;
 
 import clov3r.oneit_server.domain.data.Gender;
+import clov3r.oneit_server.domain.data.status.ProductStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,9 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Column(updatable = false, insertable = false)
     private List<ProductKeyword> productKeywords = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @Override
     public String toString() {
