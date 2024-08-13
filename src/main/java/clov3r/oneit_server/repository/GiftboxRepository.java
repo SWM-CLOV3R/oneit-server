@@ -244,8 +244,7 @@ public class GiftboxRepository {
         // invitationIdx로 status가 PENDING인 giftboxUser의 giftbox 조회
         return queryFactory.select(giftboxUser)
                 .from(giftboxUser)
-                .where(giftboxUser.idx.eq(invitationIdx),
-                        giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
+                .where(giftboxUser.idx.eq(invitationIdx))
                 .fetchOne();
     }
 
@@ -268,4 +267,15 @@ public class GiftboxRepository {
                         giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
                 .fetch();
     }
+
+    public boolean existParticipantOfGiftbox(Long userIdx, Long idx) {
+        // userIdx와 giftboxIdx로 status가 ACCEPTED인 giftboxUser가 존재하는지 확인
+        return queryFactory.selectOne()
+                .from(giftboxUser)
+                .where(giftboxUser.user.idx.eq(userIdx),
+                        giftboxUser.giftbox.idx.eq(idx),
+                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                .fetchFirst() != null;
+    }
+
 }

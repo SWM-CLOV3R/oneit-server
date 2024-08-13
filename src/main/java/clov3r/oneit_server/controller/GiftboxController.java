@@ -392,7 +392,10 @@ public class GiftboxController {
       return new BaseResponse<>(REQUEST_ERROR);
     }
     GiftboxUser giftboxUser = giftboxRepository.findGiftboxByInvitationIdx(invitationIdx);
-    if (giftboxUser == null) {
+    if (giftboxUser.getInvitationStatus().equals(InvitationStatus.ACCEPTED) && giftboxUser.getUser().getIdx() != null) {
+      return new BaseResponse<>(ALREADY_USED_INVITATION);
+    }
+    if (giftboxRepository.existParticipantOfGiftbox(userIdx, giftboxUser.getGiftbox().getIdx())) {
       return new BaseResponse<>(ALREADY_PARTICIPANT_OF_GIFTBOX);
     }
     if (!giftboxRepository.existsById(giftboxUser.getGiftbox().getIdx())) {
