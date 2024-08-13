@@ -6,6 +6,7 @@ import clov3r.oneit_server.domain.DTO.KakaoFriendDTO;
 import clov3r.oneit_server.domain.data.AuthToken;
 import clov3r.oneit_server.domain.DTO.KakaoLoginDTO;
 import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
+import clov3r.oneit_server.domain.data.status.UserStatus;
 import clov3r.oneit_server.domain.request.KakaoAccessToken;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.repository.AuthRepository;
@@ -44,6 +45,9 @@ public class AuthController {
         if (userRepository.existsUserByEmail(kakaoProfileDTO.getKakao_account().getEmail())) {
             // if so, return the user's access token (jwt)
             user = userRepository.findUserByEmail(kakaoProfileDTO.getKakao_account().getEmail());
+            if (!user.getStatus().equals(UserStatus.ACTIVE)) {
+                user.setStatus(UserStatus.ACTIVE); 
+            }
         } else {
             // if not, create a new user
             user = authService.createUserByKakao(kakaoProfileDTO);

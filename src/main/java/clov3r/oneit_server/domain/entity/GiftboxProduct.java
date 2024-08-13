@@ -3,7 +3,11 @@ package clov3r.oneit_server.domain.entity;
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
+import clov3r.oneit_server.domain.data.status.InvitationStatus;
+import clov3r.oneit_server.domain.data.status.Status;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,9 +37,14 @@ public class GiftboxProduct extends BaseEntity {
     @JoinColumn(name = "product_idx")
     private Product product;
 
-    public GiftboxProduct(Giftbox giftbox, Product product) {
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+
+    public GiftboxProduct(Giftbox giftbox, Product product, Status status) {
         this.giftbox = giftbox;
         this.product = product;
+        this.status = status;
 
         this.createBaseEntity();
     }
