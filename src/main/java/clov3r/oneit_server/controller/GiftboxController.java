@@ -107,6 +107,17 @@ public class GiftboxController {
           return new BaseResponse<>(NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
         }
       }
+
+      List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
+      List<ParticipantsDTO> participantsDTOList = participants.stream()
+          .map(participant -> new ParticipantsDTO(
+              participant.getUser().getIdx(),
+              participant.getUser().getNickname(),
+              participant.getUser().getName(),
+              participant.getUser().getProfileImgFromKakao(),
+              participant.getUserRole()
+          ))
+          .toList();
       GiftboxDTO giftboxDTO = new GiftboxDTO(
           giftbox.getIdx(),
           giftbox.getName(),
@@ -114,7 +125,8 @@ public class GiftboxController {
           giftbox.getDeadline(),
           giftbox.getImageUrl(),
           giftbox.getCreatedUserIdx(),
-          giftbox.getAccessStatus()
+          giftbox.getAccessStatus(),
+          participantsDTOList
       );
       return new BaseResponse<>(giftboxDTO);
     } catch (BaseException e) {
@@ -213,8 +225,8 @@ public class GiftboxController {
       if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
         return new BaseResponse<>(DATE_BEFORE_NOW);
       }
-      if (!request.getAccessStatus().equals(AccessStatus.PUBLIC.toString())
-          && !request.getAccessStatus().equals(AccessStatus.PRIVATE.toString())) {
+      if (!request.getAccessStatus().equals(AccessStatus.PUBLIC)
+          && !request.getAccessStatus().equals(AccessStatus.PRIVATE)) {
         return new BaseResponse<>(INVALID_ACCESS_STATUS);
       }
 
@@ -385,7 +397,7 @@ public class GiftboxController {
   @PatchMapping("/api/v1/giftbox/invitation/{invitationIdx}/status")
   public BaseResponse<String> acceptInvitationToGiftBox(
       @PathVariable("invitationIdx") Long invitationIdx,
-      @RequestParam("userIdx") Long userIdx
+      @Parameter(hidden = true) @Auth Long userIdx
   ) {
     // request validation
     if (invitationIdx == null || userIdx == null) {
