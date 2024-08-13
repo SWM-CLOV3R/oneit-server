@@ -59,7 +59,8 @@ public enum BaseResponseStatus {
   USER_NOT_FOUND(false, 4006, "유저를 찾을 수 없습니다."),
   PRODUCT_NOT_FOUND(false, 4007, "상품을 찾을 수 없습니다."),
   ALREADY_PARTICIPANT_OF_GIFTBOX(false, 4008, "이미 선물바구니의 참여자입니다."),
-  ALREADY_USED_INVITATION(false, 4009, "이미 초대가 완료되었습니다."),;
+  ALREADY_USED_INVITATION(false, 4009, "이미 초대가 완료되었습니다."),
+  INVITATION_NOT_FOUND(false, 4010, "초대를 찾을 수 없습니다."),;
 
 
   private final boolean isSuccess;
