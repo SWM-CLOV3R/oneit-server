@@ -278,4 +278,13 @@ public class GiftboxRepository {
                 .fetchFirst() != null;
     }
 
+    public boolean existsInvitationOfGiftbox(Long invitationIdx) {
+        // invitationIdx로 status가 PENDING인 giftboxUser가 존재하는지 확인
+        return queryFactory.selectOne()
+                .from(giftboxUser)
+                .where(giftboxUser.idx.eq(invitationIdx),
+                        giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
+                .fetchFirst() != null;
+    }
+
 }

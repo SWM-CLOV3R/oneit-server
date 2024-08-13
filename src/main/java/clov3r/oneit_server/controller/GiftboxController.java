@@ -367,9 +367,9 @@ public class GiftboxController {
     if (!userRepository.existsUser(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
-//    if (!giftboxRepository.isManagerOfGiftbox(userIdx, request.getGiftboxIdx())) {
-//      return new BaseResponse<>(NOT_MANAGER_OF_GIFTBOX);  // 해당 선물 바구니의 관리자만 초대 가능함
-//    }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      return new BaseResponse<>(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 초대 가능함
+    }
 
     // invite user to giftbox
     try {
@@ -391,6 +391,9 @@ public class GiftboxController {
     if (invitationIdx == null || userIdx == null) {
       return new BaseResponse<>(REQUEST_ERROR);
     }
+    if (!giftboxRepository.existsInvitationOfGiftbox(invitationIdx)) {
+      return new BaseResponse<>(INVITATION_NOT_FOUND);
+    }
     GiftboxUser giftboxUser = giftboxRepository.findGiftboxByInvitationIdx(invitationIdx);
     if (giftboxUser.getInvitationStatus().equals(InvitationStatus.ACCEPTED) && giftboxUser.getUser().getIdx() != null) {
       return new BaseResponse<>(ALREADY_USED_INVITATION);
@@ -408,7 +411,7 @@ public class GiftboxController {
     // accept invitation to giftbox
     try {
       giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
-      return new BaseResponse<>("유저 " + invitationIdx + "님이 " + giftboxUser.getGiftbox().getIdx() + "번 선물 바구니에 참여하였습니다.");
+      return new BaseResponse<>("유저 " + userIdx + "님이 " + giftboxUser.getGiftbox().getIdx() + "번 선물 바구니에 참여하였습니다.");
     } catch (BaseException e) {
       return new BaseResponse<>(e.getBaseResponseStatus());
     }
