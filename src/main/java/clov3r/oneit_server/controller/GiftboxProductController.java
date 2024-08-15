@@ -8,7 +8,6 @@ import static clov3r.oneit_server.response.BaseResponseStatus.USER_NOT_FOUND;
 
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.GiftboxProductDTO;
-import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.collection.GiftboxProductVoteId;
 import clov3r.oneit_server.domain.data.status.AccessStatus;
 import clov3r.oneit_server.domain.data.status.VoteStatus;
@@ -123,6 +122,7 @@ public class GiftboxProductController {
           .map(giftboxProduct -> new GiftboxProductDTO(
               giftboxProduct.getProduct().getIdx(),
               giftboxProduct.getProduct().getName(),
+              giftboxProduct.getProduct().getDescription(),
               giftboxProduct.getProduct().getOriginalPrice(),
               giftboxProduct.getProduct().getCurrentPrice(),
               giftboxProduct.getProduct().getDiscountRate(),

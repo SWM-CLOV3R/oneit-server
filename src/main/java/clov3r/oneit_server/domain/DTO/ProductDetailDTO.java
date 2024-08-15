@@ -13,6 +13,8 @@ import java.util.List;
 public class ProductDetailDTO {
     private Long idx;
     private String name;
+    private String description;
+
     private int originalPrice;
     private int currentPrice;
     private int discountRate;
@@ -31,6 +33,7 @@ public class ProductDetailDTO {
     public ProductDetailDTO(Product product, List<Keyword> keywords, Category category) {
         this.idx = product.getIdx();
         this.name = product.getName();
+        this.description = product.getDescription();
         this.originalPrice = product.getOriginalPrice();
         this.currentPrice = product.getCurrentPrice();
         this.discountRate = product.getDiscountRate();

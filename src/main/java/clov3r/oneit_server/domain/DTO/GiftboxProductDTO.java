@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class GiftboxProductDTO {
   private Long idx;
   private String name;
+  private String description;
   private int originalPrice;
   private int currentPrice;
   private int discountRate;
@@ -24,6 +25,7 @@ public class GiftboxProductDTO {
   public GiftboxProductDTO(Product product, int likeCount, VoteStatus voteStatus) {
     this.idx = product.getIdx();
     this.name = product.getName();
+    this.description = product.getDescription();
     this.originalPrice = product.getOriginalPrice();
     this.currentPrice = product.getCurrentPrice();
     this.discountRate = product.getDiscountRate();
