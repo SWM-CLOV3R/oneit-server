@@ -41,6 +41,9 @@ public class GiftboxProduct extends BaseEntity {
     @Column(name = "like_count")
     private int likeCount;
 
+    @Column(name = "dislike_count")
+    private int dislikeCount;
+
 
     public GiftboxProduct(Giftbox giftbox, Product product, Status status) {
         this.giftbox = giftbox;

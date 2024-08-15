@@ -22,6 +22,9 @@ public class GiftboxProductVoteId implements Serializable {
   @Column(name = "product_idx")
   private Long productIdx;
 
+  @Column(name = "user_idx")
+  private Long userIdx;
+
   @Column(name = "browser_uuid")
   private String browserUuid;
 }

@@ -11,6 +11,7 @@ import clov3r.oneit_server.domain.DTO.GiftboxProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.collection.GiftboxProductVoteId;
 import clov3r.oneit_server.domain.data.status.AccessStatus;
+import clov3r.oneit_server.domain.data.status.VoteStatus;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.GiftboxProduct;
 import clov3r.oneit_server.domain.entity.GiftboxProductVote;
@@ -29,6 +30,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -176,12 +178,13 @@ public class GiftboxProductController {
         +"이 삭제되었습니다.");
   }
 
+  @Transactional
   @Tag(name = "Giftbox 상품 API", description = "Giftbox API 목록")
   @Operation(summary = "선물 바구니 상품 좋아요/싫어요 투표", description = "선물 바구니 상품에 좋아요/싫어요 투표합니다.")
   @PutMapping("/api/v1/giftbox/products/vote")
   public BaseResponse<String> voteProduct(
       @RequestBody VoteProductRequest request,
-      @Parameter(hidden = true) @Auth Long userIdx
+      @Parameter(hidden = true) @Auth(required = false) Long userIdx
   ) {
 
     // request validation
@@ -199,6 +202,9 @@ public class GiftboxProductController {
       return new BaseResponse<>(PRODUCT_NOT_FOUND);
     }
 
+//    if (userIdx == null) {
+//      userIdx = Long.valueOf(UUID.randomUUID().toString().substring(0, 10));
+//    }
 
     // 로그인 유저만 가능한 경우
     if (userIdx == null || !userRepository.existsUser(userIdx)) {
@@ -210,22 +216,21 @@ public class GiftboxProductController {
 
     try {
       // vote product
-      GiftboxProductVote giftboxProductVote = new GiftboxProductVote(
+      GiftboxProductVote newVote = new GiftboxProductVote(
           new GiftboxProductVoteId(
               request.getGiftboxIdx(),
               request.getProductIdx(),
+              userIdx,
               request.getBrowserUuid()
           ),
-          userRepository.findById(userIdx),
           request.getVote()
       );
-      giftboxProductService.voteProduct(giftboxProductVote);
-      // count like
-      giftboxProductService.countLike(request.getGiftboxIdx(), request.getProductIdx());
+      // vote
+      VoteStatus previousStatus = giftboxProductService.voteProduct(newVote);
+      // count update
+      giftboxProductService.updateVoteCount(request.getGiftboxIdx(), request.getProductIdx(), previousStatus, newVote.getVote());
       return new BaseResponse<>("상품에 투표하였습니다.");
     } catch (BaseException e) {
-      System.out.println("GiftboxProductController.voteProduct");
-      System.out.println("e = " + e);
       return new BaseResponse<>(e.getBaseResponseStatus());
     }
   }

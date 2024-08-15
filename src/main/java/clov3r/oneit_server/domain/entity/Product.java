@@ -40,8 +40,8 @@ public class Product extends BaseEntity {
     @Column(name = "brand_name")
     private String brandName;
 
-    @Column(name = "brand_description")
-    private String brandDescription;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "product_url")
     private String productUrl;
@@ -66,23 +66,4 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "idx=" + idx +
-                ", name='" + name + '\'' +
-                ", originalPrice=" + originalPrice +
-                ", currentPrice=" + currentPrice +
-                ", discountRate=" + discountRate +
-                ", mallName='" + mallName + '\'' +
-                ", brandName='" + brandName + '\'' +
-                ", brandDescription='" + brandDescription + '\'' +
-                ", productUrl='" + productUrl + '\'' +
-                ", thumbnailUrl='" + thumbnailUrl + '\'' +
-                ", gender=" + gender +
-                ", category=" + category +
-                ", categoryDisplayName='" + categoryDisplayName + '\'' +
-                ", productKeywords=" + productKeywords +
-                '}';
-    }
 }
