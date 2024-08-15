@@ -9,7 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class GiftboxProductCustomRepositoryImpl implements GiftboxProductCustomRepository {
@@ -18,37 +17,55 @@ public class GiftboxProductCustomRepositoryImpl implements GiftboxProductCustomR
   private final EntityManager em;
   private final JPAQueryFactory queryFactory;
 
-  public void voteProduct(GiftboxProductVote giftboxProductVote) {
+  public VoteStatus voteProduct(GiftboxProductVote newVote) {
     try {
-      em.persist(giftboxProductVote);
+      GiftboxProductVote result = queryFactory.select(giftboxProductVote)
+          .from(giftboxProductVote)
+          .where(giftboxProductVote.id.giftboxIdx.eq(newVote.getId().getGiftboxIdx())
+              .and(giftboxProductVote.id.productIdx.eq(newVote.getId().getProductIdx()))
+              .and(giftboxProductVote.id.userIdx.eq(newVote.getId().getUserIdx())))
+          .fetchOne();
+      VoteStatus previousVote = result == null ? null : result.getVote();
+      if (result == null) {
+        em.persist(newVote);
+      }
+      else {
+        em.merge(newVote);
+      }
+      return previousVote;
     } catch (Exception e) {
       e.printStackTrace();
       throw e;
     }
   }
 
-  public void countLike(Long giftboxIdx, Long productIdx) {
-    try {
-      queryFactory.update(giftboxProduct)
-          .where(giftboxProduct.giftbox.idx.eq(giftboxIdx)
-              .and(giftboxProduct.product.idx.eq(productIdx)))
-          .set(giftboxProduct.likeCount, giftboxProduct.likeCount.add(1))
-          .execute();
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw e;
-    }
-
-  }
 
   @Override
   public VoteStatus getVoteStatusOfUser(Long userIdx, Long giftboxIdx, Long productIdx) {
     return queryFactory.select(giftboxProductVote.vote)
         .from(giftboxProductVote)
-        .where(giftboxProductVote.user.idx.eq(userIdx)
+        .where(giftboxProductVote.id.userIdx.eq(userIdx)
             .and(giftboxProductVote.id.giftboxIdx.eq(giftboxIdx))
             .and(giftboxProductVote.id.productIdx.eq(productIdx)))
         .fetchOne();
+  }
+
+  @Override
+  public void updateLikeCount(Long giftboxIdx, Long productIdx, int i) {
+    queryFactory.update(giftboxProduct)
+        .where(giftboxProduct.giftbox.idx.eq(giftboxIdx)
+            .and(giftboxProduct.product.idx.eq(productIdx)))
+        .set(giftboxProduct.likeCount, giftboxProduct.likeCount.add(i))
+        .execute();
+  }
+
+  @Override
+  public void updateDislikeCount(Long giftboxIdx, Long productIdx, int i) {
+    queryFactory.update(giftboxProduct)
+        .where(giftboxProduct.giftbox.idx.eq(giftboxIdx)
+            .and(giftboxProduct.product.idx.eq(productIdx)))
+        .set(giftboxProduct.dislikeCount, giftboxProduct.dislikeCount.add(i))
+        .execute();
   }
 
 }

@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GiftboxProductCustomRepository {
 
-  void voteProduct(GiftboxProductVote giftboxProductVote);
-
-  void countLike(Long giftboxIdx, Long productIdx);
+  VoteStatus voteProduct(GiftboxProductVote giftboxProductVote);
 
   VoteStatus getVoteStatusOfUser(Long userIdx, Long giftboxIdx, Long idx);
 
+  void updateLikeCount(Long giftboxIdx, Long productIdx, int i);
+
+  void updateDislikeCount(Long giftboxIdx, Long productIdx, int i);
 }

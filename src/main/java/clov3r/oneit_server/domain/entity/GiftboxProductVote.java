@@ -9,7 +9,6 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -27,13 +26,8 @@ public class GiftboxProductVote {
   @EmbeddedId
   private GiftboxProductVoteId id;
 
-  @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "user_idx")
-  private User user;
-
   @Enumerated(EnumType.STRING)
   @Column(name = "vote")
   private VoteStatus vote;
-
 
 }
