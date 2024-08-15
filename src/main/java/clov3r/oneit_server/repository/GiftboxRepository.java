@@ -175,6 +175,7 @@ public class GiftboxRepository {
                 .fetch();
     }
 
+
     @Transactional
     public void deleteProductOfGiftbox(Long giftboxIdx, Long productIdx) {
         queryFactory.update(giftboxProduct)
@@ -285,6 +286,15 @@ public class GiftboxRepository {
                 .where(giftboxUser.idx.eq(invitationIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
                 .fetchFirst() != null;
+    }
+
+    public List<GiftboxProduct> findGiftboxProductList(Long giftboxIdx) {
+        // giftboxIdx로 status가 ACTIVE인 giftboxProduct 조회
+        return queryFactory.select(giftboxProduct)
+                .from(giftboxProduct)
+                .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
+                        giftboxProduct.status.eq(Status.ACTIVE))
+                .fetch();
     }
 
 }

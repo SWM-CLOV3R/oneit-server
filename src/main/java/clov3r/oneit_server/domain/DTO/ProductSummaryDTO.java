@@ -15,6 +15,7 @@ public class ProductSummaryDTO {
     private int currentPrice;
     private int discountRate;
     private String thumbnailUrl;
+    private int likeCount;
 
     public ProductSummaryDTO(Product product) {
         this.idx = product.getIdx();

@@ -47,4 +47,9 @@ public class UserRepository {
                 .setParameter("email", email)
                 .getSingleResult();
     }
+
+    public User findById(Long userIdx) {
+        return em.find(User.class, userIdx);
+    }
+
 }
