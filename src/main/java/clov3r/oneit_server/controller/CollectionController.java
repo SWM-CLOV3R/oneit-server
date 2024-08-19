@@ -1,6 +1,7 @@
 package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.domain.DTO.CollectionDTO;
+import clov3r.oneit_server.domain.DTO.CollectionProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.entity.Collection;
 import clov3r.oneit_server.domain.entity.Product;
@@ -39,15 +40,22 @@ public class CollectionController {
   }
 
   @Tag(name = "컬렉션 API", description = "컬렉션(둘러보기) API")
-  @Operation(summary = "컬렉션 상품 리스트 조회", description = "컬렉션에 속한 상품 리스트를 조회합니다.")
-  @GetMapping("api/v1/collections/{collectionIdx}/products")
-  public BaseResponse<List<ProductDTO>> getProductList(@Parameter(description = "컬렉션 idx") Long collectionIdx) {
+  @Operation(summary = "컬렉션 상세 조회", description = "컬렉션 정보와 컬렉션에 속한 상품 리스트를 조회합니다.")
+  @GetMapping("api/v1/collections/{collectionIdx}")
+  public BaseResponse<CollectionProductDTO> getProductList(@Parameter(description = "컬렉션 idx") Long collectionIdx) {
+    Collection collection = collectionRepository.getCollection(collectionIdx);
     List<Product> productList = collectionRepository.getProductList(collectionIdx);
-    List<ProductDTO> productDTOList = productList.stream().map(product -> new ProductDTO(
-        product,
-        keywordRepository.findKeywordByProductIdx(product.getIdx())
-        )).toList();
-    return new BaseResponse<>(productDTOList);
+    CollectionProductDTO collectionProductDTO = new CollectionProductDTO(
+        collection.getIdx(),
+        collection.getName(),
+        collection.getDescription(),
+        collection.getThumbnailUrl(),
+        productList.stream().map(product -> new ProductDTO(
+            product,
+            keywordRepository.findKeywordByProductIdx(product.getIdx())
+        )).toList()
+    );
+    return new BaseResponse<>(collectionProductDTO);
   }
 
 }
