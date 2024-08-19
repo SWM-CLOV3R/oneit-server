@@ -34,6 +34,8 @@ public class S3Service {
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
+    @Value("${cdn.domain}")
+    private String cdnDomain;
 
     public String upload(MultipartFile image, String dirName) {
         if(image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
@@ -92,8 +94,8 @@ public class S3Service {
             is.close();
         }
 
-        return amazonS3.getUrl(savePath, s3FileName).toString();
-
+        String s3Url = amazonS3.getUrl(savePath, s3FileName).toString();
+        return s3Url.replace("https://s3.ap-northeast-2.amazonaws.com", cdnDomain);
     }
 
     public void deleteImageFromS3(String imageAddress){

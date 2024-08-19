@@ -10,4 +10,5 @@ spring:
     url: ${REQUEST_URL}
 
 jwt:
-  secret_key: ${DEV_JWT_SECRET_KEY}
+  secret_key: ${PROD_JWT_SECRET_KEY}
+
