@@ -30,6 +30,7 @@ public class ProductDetailDTO {
     private List<String> keywords = new ArrayList<>();
     private ProductStatus status;
 
+    // 상세 조회시 사용
     public ProductDetailDTO(Product product, List<Keyword> keywords, Category category) {
         this.idx = product.getIdx();
         this.name = product.getName();

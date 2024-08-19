@@ -35,7 +35,7 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
 
-    @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
+    @Tag(name = "카카오 로그인 API", description = "카카오 로그인 관련 API 목록")
     @PostMapping("/api/v1/kakao/login")
     public BaseResponse<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
         // get user info from kakao api
@@ -62,7 +62,7 @@ public class AuthController {
 
     // 헤더에서 토큰을 가져와 검증한 뒤에 유효하다면 user idx를 꺼내서 유저의 정보를 반환하는 API
     // @Auth 활용
-    @Tag(name = "카카오 로그인 API", description = "카카오 로그인 API 목록")
+    @Tag(name = "카카오 로그인 API", description = "카카오 로그인 관련 API 목록")
     @GetMapping("/api/v1/kakao/user")
     public BaseResponse<User> getUserInfo (
             @Parameter(hidden = true) @Auth Long userIdx
@@ -72,6 +72,7 @@ public class AuthController {
     }
 
     // 유저의 카카오톡 친구 목록을 가져오는 API
+    @Tag(name = "카카오 로그인 API", description = "카카오 로그인 관련 API 목록")
     @GetMapping("/api/v1/kakao/friends")
     public BaseResponse<KakaoFriendDTO> getFriends(
         @RequestBody KakaoAccessToken kakaoAccessToken

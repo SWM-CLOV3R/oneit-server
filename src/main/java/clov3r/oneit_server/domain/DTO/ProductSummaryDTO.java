@@ -17,6 +17,7 @@ public class ProductSummaryDTO {
     private String thumbnailUrl;
     private int likeCount;
 
+    // 리스트 조회시 사용
     public ProductSummaryDTO(Product product) {
         this.idx = product.getIdx();
         this.name = product.getName();
