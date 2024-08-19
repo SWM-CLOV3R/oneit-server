@@ -1,4 +1,4 @@
-package clov3r.oneit_server.domain.collectioin;
+package clov3r.oneit_server.domain.collection;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +27,7 @@ public class MatchedProduct {
     }
 
 
+    public void addMatchedScore(int i) {
+        this.matchedScore += i;
+    }
 }

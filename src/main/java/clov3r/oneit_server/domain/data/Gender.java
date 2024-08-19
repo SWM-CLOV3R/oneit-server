@@ -5,13 +5,9 @@ public enum Gender {
     MALE,
     UNISEX;
 
-    public static boolean isValid(String value) {
-        for (Gender gender : Gender.values()) {
-            if (gender.name().equalsIgnoreCase(value)) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isValid(Gender gender) {
+        // Check if gender is one of the specified enum values
+        return gender == Gender.FEMALE || gender == Gender.MALE || gender == Gender.UNISEX;
     }
 
     @Override

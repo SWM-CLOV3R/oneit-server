@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: oneit_server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${RDS_ENDPOINT}/${PROD_DATABASE}?
+    username: ${RDS_USER}
+    password: ${RDS_PASSWORD}
+  request:
+    url: ${REQUEST_URL}
+
+jwt:
+  secret_key: ${PROD_JWT_SECRET_KEY}
+

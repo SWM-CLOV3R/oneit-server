@@ -1,6 +1,5 @@
-package clov3r.oneit_server.domain;
+package clov3r.oneit_server.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,16 +11,17 @@ import lombok.Setter;
 public class Keyword {
 
     @Id
-    @GeneratedValue
-    @Column(name = "keyword_idx")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idx")
     private Long idx;
 
-    private String keyword;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "field")
+    private String field;
 
     @Column(name = "keyword_description")
     private String description;
-
-    // createKeyword
-
 
 }

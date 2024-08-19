@@ -6,3 +6,8 @@ spring:
     url: jdbc:mysql://localhost:3306/${LOCAL_DATABASE}?
     username: ${LOCAL_USER}
     password: ${LOCAL_PASSWORD}
+  request:
+    url: ${REQUEST_URL}
+
+jwt:
+  secret_key: ${LOCAL_JWT_SECRET_KEY}

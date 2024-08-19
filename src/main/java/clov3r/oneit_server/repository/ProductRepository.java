@@ -1,19 +1,23 @@
 package clov3r.oneit_server.repository;
 
-import clov3r.oneit_server.domain.Product;
-import clov3r.oneit_server.domain.collectioin.MatchedProduct;
-import clov3r.oneit_server.domain.collectioin.QuestionCategory;
+import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
+import clov3r.oneit_server.domain.entity.Product;
+import clov3r.oneit_server.domain.collection.MatchedProduct;
+import clov3r.oneit_server.domain.collection.ProductSearch;
+import clov3r.oneit_server.domain.collection.QuestionCategory;
 import clov3r.oneit_server.domain.data.Gender;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static clov3r.oneit_server.domain.entity.QProduct.product;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,9 +25,9 @@ public class ProductRepository {
 
     private final EntityManager em;
     private final KeywordRepository keywordRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
     // save Product
-
     /**
      * 가격과 성별을 기준으로 상품을 필터링해서 해당하는 상품 리스트를 반환합니다.
      * @param productSearch
@@ -31,20 +35,26 @@ public class ProductRepository {
      */
     public List<Product> filterProductsByPriceAndGender(ProductSearch productSearch) {
         // First Query: Filter by price and gender
-        String jpql = "select p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
-        if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
+        String jpql = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
+
+        if (!productSearch.getGender().equals(Gender.UNISEX)) {
             jpql += " and p.gender <> :excludedGender";
         }
 
         TypedQuery<Product> query = em.createQuery(jpql, Product.class);
         query.setParameter("minPrice", productSearch.getMinPrice());
         query.setParameter("maxPrice", productSearch.getMaxPrice());
+
         if (!productSearch.getGender().equals(Gender.UNISEX.toString())) {
-            String excludedGender = productSearch.getGender().equals(Gender.MALE.toString()) ? Gender.FEMALE.toString() : Gender.MALE.toString();
+            Gender excludedGender = productSearch.getGender().equals(Gender.MALE) ? Gender.FEMALE : Gender.MALE;
             query.setParameter("excludedGender", excludedGender);
         }
 
-        return query.getResultList();
+        List<Product> resultList = query.getResultList();
+        Set<Product> uniqueProducts = new HashSet<>(resultList);
+        // Convert the Set back to a List if needed
+        List<Product> uniqueProductList = new ArrayList<>(uniqueProducts);
+        return uniqueProductList;
     }
 
     /**
@@ -79,7 +89,7 @@ public class ProductRepository {
 
         // product idx list and keyword idx list
         List<Long> productIdxList = products.stream().map(Product::getIdx).toList();
-        List<Long> keywordIdxList = keywordRepository.getKeywordIdxList(new ArrayList<>(keywords.values()));
+        List<Long> keywordIdxList = keywordRepository.getKeywordIdxList(keywords.values().stream().toList());
 
         // if match product keyword, add 1 scores
         // count matched keywords with keywordList per products
@@ -103,8 +113,50 @@ public class ProductRepository {
         List<Long> matchedProductIdxList = matchedProductList.stream().map(MatchedProduct::getIdx).toList();
         // keep order matchedProductsIdxList when finding products List from database
         List<Product> matchedProducts = findProductsByIdxOrdered(matchedProductIdxList);
-
         return matchedProducts;
+    }
+
+    public List<Product> filterProductsByCategoryAndKeywords(List<Product> initialFilteredProducts, ProductSearch productSearch) {
+        HashMap<Integer, String> questionKeywords = productSearch.getKeywords();
+        if (initialFilteredProducts.isEmpty() || questionKeywords.isEmpty()) {
+            return initialFilteredProducts;
+        }
+
+        List<Product> AllProductsFilterdByCategory= new ArrayList<>();
+
+        // make question category object
+        List<QuestionCategory> questionCategories = createQuestionCategory();
+        for (QuestionCategory q: questionCategories) {
+            // 해당 질문과 관련된 카테고리 idx 리스트
+            List<Long> categoryIdxList = q.getCategoryIdxList();
+            // 해당 질문에 대한 사용자의 답변 키워드
+            String answerKeyword = questionKeywords.get(q.getQuestionIdx());
+            // 해당 질문에 대한 사용자의 답변 키워드 idx
+            Long answerKeywordIdx = keywordRepository.findKeywordIdx(answerKeyword);
+
+            // 해당 카테고리(대분류)이면서 해당 키워드를 가진 제품 리스트
+            String jpql = "select p from Product p " +
+                    "join ProductKeyword pk on p.idx = pk.product.idx " +
+                    "where pk.keyword.idx = :keywordIdx " +
+                    "and p.idx in :initialFilteredProducts " +
+                    "and p.category.idx in :categoryIdxList";
+            TypedQuery<Product> query = em.createQuery(jpql, Product.class);
+            query.setParameter("keywordIdx", answerKeywordIdx);
+            query.setParameter("initialFilteredProducts", initialFilteredProducts.stream().map(Product::getIdx).toList());
+            query.setParameter("categoryIdxList", categoryIdxList);
+            List<Product> productsFilteredByCategory = new ArrayList<>(query.getResultList());
+            AllProductsFilterdByCategory.addAll(productsFilteredByCategory);
+            Set<Product> uniqueProducts = new HashSet<>(AllProductsFilterdByCategory);
+            // Convert the Set back to a List if needed
+            AllProductsFilterdByCategory = new ArrayList<>(uniqueProducts);
+            AllProductsFilterdByCategory.sort(Comparator.comparing(Product::getIdx));
+        }
+
+        return AllProductsFilterdByCategory;
+    }
+
+    private Product findProductByIdx(Long productIdx) {
+        return em.find(Product.class, productIdx);
     }
 
     public List<Product> findProductsByIdxOrdered(List<Long> productIdxList) {
@@ -125,7 +177,7 @@ public class ProductRepository {
         return orderedProducts;
     }
 
-    public List<Product> findProductsByIdx(List<Long> productIdxList) {
+    public List<Product> findProductListByIdxList(List<Long> productIdxList) {
         return em.createQuery("select p from Product p where p.idx in :productIdxList", Product.class)
                 .setParameter("productIdxList", productIdxList)
                 .getResultList();
@@ -133,28 +185,28 @@ public class ProductRepository {
 
 
     private List<QuestionCategory> createQuestionCategory() {
-        List<QuestionCategory> questionCategories = new ArrayList<>();
+        List<QuestionCategory> questionCategoryList = new ArrayList<>();
 
-        for(int i = 1; i<8; i++) {
+        for(int i = 0; i < 8; i++) {
             QuestionCategory q = new QuestionCategory(i);
-            questionCategories.add(q);
+            questionCategoryList.add(q);
 
-            if (i == 1 || i == 2) {
-                q.getCategoryIdxList().add(644L);  // 가구/인테리어
-                q.getCategoryIdxList().add(649L);  // 패션의류
-                q.getCategoryIdxList().add(650L);  // 패션잡화
-            } else if (i == 3 || i == 4) {
-                q.getCategoryIdxList().add(645L);  // 디지털/가전
-                q.getCategoryIdxList().add(646L);  // 생활/건강
-                q.getCategoryIdxList().add(648L);  // 출산/육아
-            } else if (i == 5 || i == 6) {
-                q.getCategoryIdxList().add(647L);  // 식품
+            if (i == 3 || i == 5) {
+                q.getCategoryIdxList().add(1L);  // 가구/인테리어
+                q.getCategoryIdxList().add(7L);  // 패션의류
+                q.getCategoryIdxList().add(8L);  // 패션잡화
+            } else if (i == 6 || i == 1) {
+                q.getCategoryIdxList().add(2L);  // 디지털/가전
+                q.getCategoryIdxList().add(3L);  // 생활/건강
+                q.getCategoryIdxList().add(6L);  // 출산/육아
+            } else if (i == 4 || i == 0) {
+                q.getCategoryIdxList().add(5L);  // 식품
             } else {
-                q.getCategoryIdxList().add(651L);  // 화장품/미용
+                q.getCategoryIdxList().add(9L);  // 화장품/미용
             }
-
         }
-        return questionCategories;
+
+        return questionCategoryList;
     }
 
     private String buildInitialQuery(ProductSearch productSearch) {
@@ -163,6 +215,10 @@ public class ProductRepository {
             jpql += " and p.gender <> :excludedGender";
         }
         return jpql;
+    }
+
+    public Product findById(Long productIdx) {
+        return em.find(Product.class, productIdx);
     }
 
     private void setInitialQueryParameters(TypedQuery<Product> query, ProductSearch productSearch) {
@@ -175,7 +231,53 @@ public class ProductRepository {
     }
 
 
+    /**
+     * NoOffset 방식으로 상품 리스트를 반환합니다.
+     * @param productIdx
+     * @param pageSize
+     * @return
+     */
+    public List<ProductSummaryDTO> findProductListPagination(Long productIdx, int pageSize) {
+        return jpaQueryFactory
+                .select(
+                    Projections.fields(ProductSummaryDTO.class,
+                        product.idx,
+                        product.name,
+                        product.originalPrice,
+                        product.currentPrice,
+                        product.discountRate,
+                        product.thumbnailUrl))
+                .from(product)
+                .where(ltProduct(productIdx))
+                .orderBy(product.idx.desc())
+                .limit(pageSize)
+                .fetch();
+    }
 
+    /**
+     * productIdx 보다 작은 상품 리스트를 반환합니다.
+     * @param productIdx
+     * @return
+     */
+    private BooleanExpression ltProduct(Long productIdx) {
+        if (productIdx == null) {
+            return null;
+        }
+        return product.idx.lt(productIdx);
+    }
+    public List<Product> findAll() {
+        return em.createQuery("select p from Product p", Product.class)
+                .getResultList();
+    }
+
+    public boolean existsProduct(Long productIdx) {
+        // productIdx로 status가 ACTIVE인 product가 존재하는지 확인
+        return jpaQueryFactory.selectOne()
+                .from(product)
+                .where(product.idx.eq(productIdx))
+                .fetchFirst() != null;
+
+    }
 
 }
 
