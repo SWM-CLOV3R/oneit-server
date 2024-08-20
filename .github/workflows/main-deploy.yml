@@ -66,5 +66,5 @@ jobs:
           aws deploy create-deployment \
           --application-name ${{ secrets.CODE_DEPLOY_APP_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME_PROD }} \
           --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$GITHUB_SHA.zip
