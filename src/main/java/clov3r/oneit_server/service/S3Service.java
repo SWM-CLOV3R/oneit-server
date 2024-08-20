@@ -95,7 +95,7 @@ public class S3Service {
         }
 
         String s3Url = amazonS3.getUrl(savePath, s3FileName).toString();
-        return s3Url.replace("https://s3.ap-northeast-2.amazonaws.com", cdnDomain);
+        return s3Url.replace("https://s3.ap-northeast-2.amazonaws.com/"+bucketName, cdnDomain);
     }
 
     public void deleteImageFromS3(String imageAddress){
