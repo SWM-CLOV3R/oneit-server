@@ -1,4 +1,4 @@
-package clov3r.oneit_server.response;
+package clov3r.oneit_server.legacy.response;
 
 import lombok.Getter;
 
