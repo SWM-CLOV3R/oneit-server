@@ -10,7 +10,7 @@ import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.GiftboxUser;
 import clov3r.oneit_server.domain.entity.User;
-import clov3r.oneit_server.exception.BaseException;
+import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -24,7 +24,8 @@ import static clov3r.oneit_server.domain.entity.QGiftbox.giftbox;
 import static clov3r.oneit_server.domain.entity.QGiftboxProduct.giftboxProduct;
 import static clov3r.oneit_server.domain.entity.QGiftboxUser.giftboxUser;
 import static clov3r.oneit_server.domain.entity.QProduct.product;
-import static clov3r.oneit_server.response.BaseResponseStatus.*;
+import static clov3r.oneit_server.error.errorcode.CommonErrorCode.DATABASE_ERROR;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.DATABASE_ERROR_NOT_FOUND;
 
 
 @Repository
@@ -101,14 +102,14 @@ public class GiftboxRepository {
                 InvitationStatus.ACCEPTED);
             newGiftboxUser.createBaseEntity();
         } catch (Exception e) {
-            throw new BaseException(DATABASE_ERROR_NOT_FOUND);
+            throw new BaseExceptionV2(DATABASE_ERROR_NOT_FOUND);
         }
 
         try {
             // giftbox와 user를 연결
             em.persist(newGiftboxUser);
         } catch (Exception e) {
-            throw new BaseException(DATABASE_ERROR);
+            throw new BaseExceptionV2(DATABASE_ERROR);
         }
     }
 

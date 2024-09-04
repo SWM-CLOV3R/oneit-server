@@ -1,4 +1,4 @@
-package clov3r.oneit_server.controller;
+package clov3r.oneit_server.legacy;
 
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.config.security.TokenProvider;
@@ -11,11 +11,10 @@ import clov3r.oneit_server.domain.request.KakaoAccessToken;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.repository.AuthRepository;
 import clov3r.oneit_server.repository.UserRepository;
-import clov3r.oneit_server.response.BaseResponse;
+import clov3r.oneit_server.legacy.response.BaseResponse;
 import clov3r.oneit_server.service.AuthService;
 import clov3r.oneit_server.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

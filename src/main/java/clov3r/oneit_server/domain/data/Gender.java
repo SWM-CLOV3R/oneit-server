@@ -7,7 +7,7 @@ public enum Gender {
 
     public static boolean isValid(Gender gender) {
         // Check if gender is one of the specified enum values
-        return gender == Gender.FEMALE || gender == Gender.MALE || gender == Gender.UNISEX;
+        return gender.equals(Gender.FEMALE) || gender.equals(Gender.MALE) || gender.equals(Gender.UNISEX);
     }
 
     @Override

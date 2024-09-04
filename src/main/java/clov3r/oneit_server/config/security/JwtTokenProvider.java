@@ -1,6 +1,8 @@
 package clov3r.oneit_server.config.security;
-import clov3r.oneit_server.exception.AuthException;
-import clov3r.oneit_server.response.BaseResponseStatus;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_TOKEN;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.TOKEN_EXPIRED;
+
+import clov3r.oneit_server.error.exception.AuthExceptionV2;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -50,10 +52,10 @@ public class JwtTokenProvider {
         try {
             Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
             if (claims.getExpiration().before(new Date())) {
-                throw new AuthException(BaseResponseStatus.TOKEN_EXPIRED);
+                throw new AuthExceptionV2(TOKEN_EXPIRED);
             }
         } catch (Exception e) {
-            throw new AuthException(BaseResponseStatus.INVALID_TOKEN);
+            throw new AuthExceptionV2(INVALID_TOKEN);
         }
 
 

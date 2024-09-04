@@ -1,6 +1,6 @@
-package clov3r.oneit_server.exception;
+package clov3r.oneit_server.legacy.exception;
 
-import clov3r.oneit_server.response.BaseResponseStatus;
+import clov3r.oneit_server.legacy.response.BaseResponseStatus;
 import lombok.Getter;
 
 @Getter
