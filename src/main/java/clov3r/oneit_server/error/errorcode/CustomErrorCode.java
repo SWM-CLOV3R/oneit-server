@@ -15,6 +15,7 @@ public enum CustomErrorCode implements ErrorCode {
    */
   SUCCESS(OK, "요청에 성공하였습니다."),
 
+  // 400번대
   /**
    * Request 오류
    */
@@ -48,6 +49,13 @@ public enum CustomErrorCode implements ErrorCode {
   INVITATION_NOT_FOUND(NOT_FOUND, "초대를 찾을 수 없습니다."),
 
   /**
+   * FORBIDDEN
+   */
+  NOT_MANAGER_OF_GIFTBOX(FORBIDDEN, "선물바구니의 관리자가 아닙니다."),
+  NOT_PARTICIPANT_OF_GIFTBOX(FORBIDDEN,"선물바구니의 참여자가 아닙니다."),
+
+  // 500번대
+  /**
    * Service 오류
    *
    */
@@ -59,8 +67,7 @@ public enum CustomErrorCode implements ErrorCode {
   S3_PUT_OBJECT_ERROR(INTERNAL_SERVER_ERROR, "S3 이미지 객체 생성이 실패하였습니다."),
   FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL(INTERNAL_SERVER_ERROR, "선물바구니 이미지 URL 업데이트에 실패하였습니다."),
   FAIL_TO_UPDATE_GIFTBOX(INTERNAL_SERVER_ERROR, "선물바구니 업데이트에 실패하였습니다."),
-  NOT_MANAGER_OF_GIFTBOX(INTERNAL_SERVER_ERROR, "선물바구니의 관리자가 아닙니다."),
-  NOT_PARTICIPANT_OF_GIFTBOX(INTERNAL_SERVER_ERROR,"선물바구니의 참여자가 아닙니다."),
+
 
   SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버와의 연결에 실패하였습니다."),
   DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 연결에 실패하였습니다."),
