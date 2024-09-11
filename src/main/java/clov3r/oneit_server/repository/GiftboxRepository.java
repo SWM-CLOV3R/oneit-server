@@ -281,11 +281,10 @@ public class GiftboxRepository {
     }
 
     public boolean existsInvitationOfGiftbox(Long invitationIdx) {
-        // invitationIdx로 status가 PENDING인 giftboxUser가 존재하는지 확인
+        // invitationIdx로 giftboxUser가 존재하는지 확인
         return queryFactory.selectOne()
                 .from(giftboxUser)
-                .where(giftboxUser.idx.eq(invitationIdx),
-                        giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
+                .where(giftboxUser.idx.eq(invitationIdx))
                 .fetchFirst() != null;
     }
 
