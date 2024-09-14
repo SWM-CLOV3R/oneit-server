@@ -26,6 +26,9 @@ public enum CustomErrorCode implements ErrorCode {
   DATE_BEFORE_NOW(BAD_REQUEST, "현재 시간 이후의 날짜를 입력해주세요."),
   S3_REQUEST_ERROR(BAD_REQUEST,"S3 이미지 요청값이 잘못되었습니다."),
   S3_FILE_EXTENSION_ERROR(BAD_REQUEST, "S3 이미지 확장자가 유효하지 않습니다."),
+  NOT_EXIST_EMOJI(BAD_REQUEST, "존재하지 않는 이모지입니다."),
+  NOT_EXIST_INQUIRY(BAD_REQUEST, "존재하지 않는 물어보기입니다."),
+  NOT_EXIST_INQUIRY_PRODUCT(BAD_REQUEST, "존재하지 않는 물어보기 상품입니다."),
 
   /**
    * token 오류
@@ -47,6 +50,7 @@ public enum CustomErrorCode implements ErrorCode {
   ALREADY_USED_INVITATION(NOT_FOUND,"이미 초대가 완료되었습니다."),
   ALREADY_PARTICIPANT_OF_GIFTBOX(NOT_FOUND, "이미 선물바구니의 참여자입니다."),
   INVITATION_NOT_FOUND(NOT_FOUND, "초대를 찾을 수 없습니다."),
+  INQUIRY_NOT_FOUND(NOT_FOUND, "물어보기를 찾을 수 없습니다."),
 
   /**
    * FORBIDDEN

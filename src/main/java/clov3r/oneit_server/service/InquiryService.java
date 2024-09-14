@@ -1,10 +1,12 @@
 package clov3r.oneit_server.service;
 
+import clov3r.oneit_server.domain.data.ProductEmoji;
 import clov3r.oneit_server.domain.data.status.InquiryStatus;
 import clov3r.oneit_server.domain.entity.Inquiry;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.request.InquiryRequest;
 import clov3r.oneit_server.repository.InquiryRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,4 +30,10 @@ public class InquiryService {
     return saveInquiry.getIdx();
   }
 
+  @Transactional
+  public void addEmoji(Long inquiryIdx, List<ProductEmoji> productEmojiList) {
+    for (ProductEmoji productEmoji : productEmojiList) {
+      inquiryRepository.addEmojiToInquiry(inquiryIdx, productEmoji);
+    }
+  }
 }
