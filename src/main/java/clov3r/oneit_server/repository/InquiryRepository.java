@@ -4,14 +4,13 @@ import static clov3r.oneit_server.domain.entity.QEmoji.emoji;
 import static clov3r.oneit_server.domain.entity.QInquiry.inquiry;
 import static clov3r.oneit_server.domain.entity.QInquiryProduct.inquiryProduct;
 
-import clov3r.oneit_server.domain.data.ProductEmoji;
 import clov3r.oneit_server.domain.data.status.InquiryStatus;
+import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.Inquiry;
 import clov3r.oneit_server.domain.entity.InquiryProduct;
 import clov3r.oneit_server.domain.entity.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,22 +31,6 @@ public class InquiryRepository {
     return em.find(Inquiry.class, inquiryIdx);
   }
 
-  @Transactional
-  public void addProductToInquiry(Inquiry inquiry, Product product) {
-    InquiryProduct inquiryProduct = new InquiryProduct(
-        inquiry,
-        product
-    );
-    em.persist(inquiryProduct);
-  }
-
-  public List<Product> findProductListByInquiry(Inquiry inquiry) {
-    return queryFactory
-        .select(inquiryProduct.product)
-        .from(inquiryProduct)
-        .where(inquiryProduct.inquiry.eq(inquiry))
-        .fetch();
-  }
 
   public boolean existEmojiById(Long emojiIdx) {
     // check if emoji exists
@@ -58,16 +41,7 @@ public class InquiryRepository {
         .fetchFirst() != null;
   }
 
-  public void addEmojiToInquiry(Long inquiryIdx, ProductEmoji productEmoji) {
-    queryFactory
-        .update(inquiryProduct)
-        .set(inquiryProduct.emojiIdx, productEmoji.getEmojiIdx())
-        .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
-            .and(inquiryProduct.product.idx.eq(productEmoji.getProductIdx())))
-        .execute();
 
-    findByIdx(inquiryIdx).updateBaseEntity();
-  }
 
   public boolean existInquiry(Long inquiryIdx) {
     return queryFactory
@@ -86,14 +60,6 @@ public class InquiryRepository {
         .fetchFirst() != null;
   }
 
-  public Long findEmojiByInquiryAndProduct(Long inquiryIdx, Long productIdx) {
-    return queryFactory
-        .select(inquiryProduct.emojiIdx)
-        .from(inquiryProduct)
-        .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
-            .and(inquiryProduct.product.idx.eq(productIdx)))
-        .fetchFirst();
-  }
 
   public void changeInquiryStatus(Long inquiryIdx, InquiryStatus inquiryStatus) {
     queryFactory
@@ -107,4 +73,13 @@ public class InquiryRepository {
     // 이미 created
 
   }
+
+  public Giftbox findGiftboxByInquiry(Long inquiryIdx) {
+    return queryFactory
+        .select(inquiry.giftbox)
+        .from(inquiry)
+        .where(inquiry.idx.eq(inquiryIdx))
+        .fetchFirst();
+  }
+
 }

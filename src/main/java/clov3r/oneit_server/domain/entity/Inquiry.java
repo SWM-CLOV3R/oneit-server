@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,11 +26,13 @@ public class Inquiry extends BaseEntity {
   @Id @GeneratedValue(strategy = IDENTITY)
   private Long idx;
 
-  @Column(name = "giftbox_idx")
-  private Long giftboxIdx;
+  @ManyToOne
+  @JoinColumn(name = "giftbox_idx")
+  private Giftbox giftbox;
 
-  @Column(name = "user_idx")
-  private Long userIdx;
+  @ManyToOne
+  @JoinColumn(name = "user_idx")
+  private User user;
 
   @Column(name = "inquiry_status")
   @Enumerated(value = STRING)
@@ -36,9 +40,9 @@ public class Inquiry extends BaseEntity {
 
   private String target;
 
-  public Inquiry(Long giftboxIdx, Long userIdx, InquiryStatus inquiryStatus, String target) {
-    this.giftboxIdx = giftboxIdx;
-    this.userIdx = userIdx;
+  public Inquiry(Giftbox giftbox, User user, InquiryStatus inquiryStatus, String target) {
+    this.giftbox = giftbox;
+    this.user = user;
     this.inquiryStatus = inquiryStatus;
     this.target = target;
     this.createBaseEntity();

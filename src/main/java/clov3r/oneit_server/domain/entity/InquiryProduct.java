@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-public class InquiryProduct {
+public class InquiryProduct extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
@@ -29,11 +29,17 @@ public class InquiryProduct {
   @JoinColumn(name = "product_idx")
   private Product product;
 
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "giftbox_idx")
+  private Giftbox giftbox;
+
   @Column(name = "emoji_idx")
   private Long emojiIdx;
 
-  public InquiryProduct(Inquiry inquiry, Product product) {
+  public InquiryProduct(Inquiry inquiry, Product product, Giftbox giftbox) {
     this.inquiry = inquiry;
     this.product = product;
+    this.giftbox = giftbox;
+    createBaseEntity();
   }
 }

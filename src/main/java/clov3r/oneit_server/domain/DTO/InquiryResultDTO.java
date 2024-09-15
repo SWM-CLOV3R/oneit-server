@@ -6,19 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class InquiryResultDTO {
-  private Long idx;
   private Long giftboxIdx;
-  private String target;
-  private Long createUserIdx;
   private List<InquiryProductDTO> inquiryProducts;
 
-  public InquiryResultDTO(Inquiry inquiry, List<InquiryProductDTO> inquiryProductDTOS) {
-    this.idx = inquiry.getIdx();
-    this.giftboxIdx = inquiry.getGiftboxIdx();
-    this.target = inquiry.getTarget();
-    this.createUserIdx = inquiry.getUserIdx();
+  public InquiryResultDTO(Long giftboxIdx, List<InquiryProductDTO> inquiryProductDTOS) {
+    this.giftboxIdx = giftboxIdx;
     this.inquiryProducts = inquiryProductDTOS;
   }
 }
