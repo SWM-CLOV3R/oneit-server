@@ -148,7 +148,7 @@ public class InquiryController {
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
       throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE일 경우 해당 선물 바구니의 참여자만 조회 가능함
     }
-    List<Product> productList = inquiryProductRepository.findProductListByGiftbox(giftboxIdx);
+    List<Product> productList = giftboxRepository.findProductOfGiftbox(giftboxIdx);
     List<InquiryProductDTO> inquiryProductDTOS = productList.stream().map(product ->
         new InquiryProductDTO(
             product,
