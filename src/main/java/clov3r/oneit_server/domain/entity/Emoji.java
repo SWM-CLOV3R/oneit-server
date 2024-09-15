@@ -14,9 +14,6 @@ public class Emoji {
   @GeneratedValue
   private Long idx;
   private String name;
-
-  @Column(name = "emoji_image_url")
-  private String emojiImageUrl;
   private String content;
 
 }

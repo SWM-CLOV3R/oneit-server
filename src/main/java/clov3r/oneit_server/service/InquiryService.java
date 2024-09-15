@@ -36,4 +36,11 @@ public class InquiryService {
       inquiryRepository.addEmojiToInquiry(inquiryIdx, productEmoji);
     }
   }
+
+  @Transactional
+  public void completeInquiry(Long inquiryIdx) {
+
+    inquiryRepository.changeInquiryStatus(inquiryIdx, InquiryStatus.COMPLETE);
+
+  }
 }

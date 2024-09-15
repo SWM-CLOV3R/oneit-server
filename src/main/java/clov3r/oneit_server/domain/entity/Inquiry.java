@@ -32,14 +32,14 @@ public class Inquiry extends BaseEntity {
 
   @Column(name = "inquiry_status")
   @Enumerated(value = STRING)
-  private InquiryStatus InquiryStatus;
+  private InquiryStatus inquiryStatus;
 
   private String target;
 
   public Inquiry(Long giftboxIdx, Long userIdx, InquiryStatus inquiryStatus, String target) {
     this.giftboxIdx = giftboxIdx;
     this.userIdx = userIdx;
-    this.InquiryStatus = inquiryStatus;
+    this.inquiryStatus = inquiryStatus;
     this.target = target;
     this.createBaseEntity();
   }

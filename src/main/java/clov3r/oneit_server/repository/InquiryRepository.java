@@ -5,6 +5,7 @@ import static clov3r.oneit_server.domain.entity.QInquiry.inquiry;
 import static clov3r.oneit_server.domain.entity.QInquiryProduct.inquiryProduct;
 
 import clov3r.oneit_server.domain.data.ProductEmoji;
+import clov3r.oneit_server.domain.data.status.InquiryStatus;
 import clov3r.oneit_server.domain.entity.Inquiry;
 import clov3r.oneit_server.domain.entity.InquiryProduct;
 import clov3r.oneit_server.domain.entity.Product;
@@ -64,6 +65,8 @@ public class InquiryRepository {
         .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
             .and(inquiryProduct.product.idx.eq(productEmoji.getProductIdx())))
         .execute();
+
+    findByIdx(inquiryIdx).updateBaseEntity();
   }
 
   public boolean existInquiry(Long inquiryIdx) {
@@ -90,5 +93,18 @@ public class InquiryRepository {
         .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
             .and(inquiryProduct.product.idx.eq(productIdx)))
         .fetchFirst();
+  }
+
+  public void changeInquiryStatus(Long inquiryIdx, InquiryStatus inquiryStatus) {
+    queryFactory
+        .update(inquiry)
+        .set(inquiry.inquiryStatus, inquiryStatus)
+        .where(inquiry.idx.eq(inquiryIdx))
+        .execute();
+  }
+
+  public void updatedAt(Long inquiryIdx) {
+    // 이미 created
+
   }
 }
