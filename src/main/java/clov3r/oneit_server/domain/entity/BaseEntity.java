@@ -24,7 +24,9 @@ public class BaseEntity {
     }
 
     public void updateBaseEntity() {
-        this.updatedAt = LocalDateTime.now();
+        if (this.createdAt != null) {
+            this.updatedAt = LocalDateTime.now();
+        }
     }
 
     public void deleteBaseEntity() {

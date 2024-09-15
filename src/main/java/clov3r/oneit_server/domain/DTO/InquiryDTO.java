@@ -14,9 +14,9 @@ public class InquiryDTO {
 
   public InquiryDTO(Inquiry inquiry, List<ProductSummaryDTO> list) {
     this.idx = inquiry.getIdx();
-    this.giftboxIdx = inquiry.getGiftboxIdx();
+    this.giftboxIdx = inquiry.getGiftbox().getIdx();
     this.target = inquiry.getTarget();
-    this.createUserIdx = inquiry.getUserIdx();
+    this.createUserIdx = inquiry.getUser().getIdx();
     this.selectedProducts = list;
   }
 }
