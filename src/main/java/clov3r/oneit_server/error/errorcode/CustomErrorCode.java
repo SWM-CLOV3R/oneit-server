@@ -51,6 +51,7 @@ public enum CustomErrorCode implements ErrorCode {
   ALREADY_PARTICIPANT_OF_GIFTBOX(NOT_FOUND, "이미 선물바구니의 참여자입니다."),
   INVITATION_NOT_FOUND(NOT_FOUND, "초대를 찾을 수 없습니다."),
   INQUIRY_NOT_FOUND(NOT_FOUND, "물어보기를 찾을 수 없습니다."),
+  ALREADY_USED_INQUIRY(NOT_FOUND, "이미 응답한 물어보기입니다."),
 
   /**
    * FORBIDDEN
