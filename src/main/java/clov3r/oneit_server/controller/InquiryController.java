@@ -8,6 +8,7 @@ import clov3r.oneit_server.domain.DTO.InquiryProductDTO;
 import clov3r.oneit_server.domain.DTO.InquiryResultDTO;
 import clov3r.oneit_server.domain.DTO.ProductSummaryDTO;
 import clov3r.oneit_server.domain.data.ProductEmoji;
+import clov3r.oneit_server.domain.data.status.InquiryStatus;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.Inquiry;
 import clov3r.oneit_server.domain.entity.Product;
@@ -91,6 +92,12 @@ public class InquiryController {
   ) {
 
     Inquiry inquiry = inquiryRepository.findByIdx(inquiryIdx);
+    if (inquiry == null) {
+      throw new BaseExceptionV2(NOT_EXIST_INQUIRY);
+    }
+    if (inquiry.getInquiryStatus().equals(InquiryStatus.COMPLETE)) {
+      throw new BaseExceptionV2(ALREADY_USED_INQUIRY);
+    }
     List<Product> productList = inquiryProductRepository.findProductListByInquiry(inquiry);
     InquiryDTO inquiryDTO = new InquiryDTO(inquiry,
         productList.stream().map(ProductSummaryDTO::new).toList());
@@ -118,10 +125,13 @@ public class InquiryController {
       throw new BaseExceptionV2(NOT_EXIST_EMOJI);
     }
 
-    if (!inquiryRepository.existInquiry(inquiryIdx)) {
+    Inquiry inquiry = inquiryRepository.findByIdx(inquiryIdx);
+    if (inquiry == null) {
       throw new BaseExceptionV2(NOT_EXIST_INQUIRY);
     }
-
+    if (inquiry.getInquiryStatus().equals(InquiryStatus.COMPLETE)) {
+      throw new BaseExceptionV2(ALREADY_USED_INQUIRY);
+    }
     if (productEmojiList.stream().anyMatch(
         productEmoji -> !inquiryRepository.existInquiryProduct(inquiryIdx,
             productEmoji.getProductIdx()))) {
@@ -130,6 +140,7 @@ public class InquiryController {
 
     inquiryProductService.addEmoji(inquiryIdx, productEmojiList); // add emoji to inquiry product
     inquiryProductService.updateEmojiToGiftbox(inquiryIdx, productEmojiList);  //  add emoji to giftbox inquiry result
+    inquiryService.completeInquiry(inquiryIdx);
     return ResponseEntity.ok().build();
   }
 
@@ -162,24 +173,5 @@ public class InquiryController {
     return ResponseEntity.ok(inquiryReulstDTO);
   }
 
-//  @Tag(name = "물어보기 API", description = "물어보기 API 목록")
-//  @Operation(summary = "물어보기 완료", description = "물어보기를 완료하고, 물어보기 상태를 비활성화합니다.")
-//  @PatchMapping("/api/v2/inquiry/{inquiryIdx}/complete")
-//  public ResponseEntity<String> completeInquiry(
-//      @PathVariable("inquiryIdx") Long inquiryIdx,
-//      @Parameter(hidden = true) @Auth Long userIdx
-//  ) {
-//    Inquiry inquiry = inquiryRepository.findByIdx(inquiryIdx);
-//    if (inquiry == null) {
-//      throw new BaseExceptionV2(CustomErrorCode.INQUIRY_NOT_FOUND);
-//    }
-//    // 물어보기 완료는 해당 선물바구니의 관리자만 가능하다
-//    Giftbox giftbox = giftboxRepository.findById(inquiry.getGiftbox().getIdx());
-//    if (!giftboxRepository.isManagerOfGiftbox(userIdx, giftbox.getIdx())) {
-//      throw new BaseExceptionV2(NOT_MANAGER_OF_GIFTBOX);  // 해당 선물 바구니의 관리자만 물어보기 가능함
-//    }
-//    inquiryService.completeInquiry(inquiryIdx);
-//    return ResponseEntity.ok().build();
-//  }
 
 }
