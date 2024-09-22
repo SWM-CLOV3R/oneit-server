@@ -13,10 +13,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Builder
+@Getter
 @AllArgsConstructor
 @Table(name = "friendship")
 public class Friendship extends BaseEntity {

@@ -1,5 +1,7 @@
 package clov3r.oneit_server.service;
 
+import clov3r.oneit_server.domain.DTO.FriendReqDTO;
+import clov3r.oneit_server.domain.DTO.UserDTO;
 import clov3r.oneit_server.domain.data.status.FriendReqStatus;
 import clov3r.oneit_server.domain.data.status.Status;
 import clov3r.oneit_server.domain.entity.FriendReq;
@@ -7,6 +9,7 @@ import clov3r.oneit_server.domain.entity.Friendship;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.repository.FriendshipRepository;
 import clov3r.oneit_server.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,4 +87,34 @@ public class FriendService {
     FriendReq friendReq = friendReqRepository.findByFromIdxAndToIdx(userIdx, friendIdx);
     friendReqRepository.delete(friendReq);
   }
+
+  public List<FriendReqDTO> getFriendRequests(Long userIdx) {
+    List<FriendReq> friendReqs = friendReqRepository.findAllByToIdx(userIdx);
+    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
+      UserDTO fromUser = UserDTO.builder()
+          .idx(friendReq.getFrom().getIdx())
+          .name(friendReq.getFrom().getName())
+          .nickName(friendReq.getFrom().getNickname())
+          .profileImg(friendReq.getFrom().getProfileImgFromKakao())
+          .birthDate(friendReq.getFrom().getBirthDate())
+          .build();
+      System.out.println("friendReq.getCreatedAt().getClass().getName() = " + friendReq.getCreatedAt().getClass().getName());
+      return new FriendReqDTO(fromUser, friendReq.getCreatedAt());
+    }).toList();
+    return friendReqDTOList;
+  }
+
+  public List<UserDTO> getFriends(Long userIdx) {
+    List<Friendship> friendshipsList = friendshipRepository.findByUserIdx(userIdx);
+    return friendshipsList.stream()
+        .map(friendship -> UserDTO.builder()
+            .idx(friendship.getFriend().getIdx())
+            .name(friendship.getFriend().getName())
+            .nickName(friendship.getFriend().getNickname())
+            .profileImg(friendship.getFriend().getProfileImgFromKakao())
+            .birthDate(friendship.getFriend().getBirthDate())
+            .build())
+        .toList();
+  }
+
 }

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +32,12 @@ public class FriendController {
       @PathVariable Long friendIdx,
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
+    if (userIdx.equals(friendIdx)) {
+      return ResponseEntity.badRequest().body("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+    }
+    if (friendService.isFriend(userIdx, friendIdx)) {
+      return ResponseEntity.badRequest().body("이미 친구입니다.");
+    }
     FriendReq friendReq = friendReqRepository.findByFromIdxAndToIdx(userIdx, friendIdx);
     if (friendReq != null) {
       return ResponseEntity.badRequest().body("이미 친구 요청을 보냈습니다.");
@@ -94,21 +99,18 @@ public class FriendController {
   public ResponseEntity<List<FriendReqDTO>> getFriendRequests(
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    List<FriendReq> friendReqs = friendReqRepository.findAllByToIdx(userIdx);
-    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
-      UserDTO fromUser = UserDTO.builder()
-          .idx(friendReq.getFrom().getIdx())
-          .name(friendReq.getFrom().getName())
-          .nickName(friendReq.getFrom().getNickname())
-          .profileImg(friendReq.getFrom().getProfileImgFromKakao())
-          .birthDate(friendReq.getFrom().getBirthDate())
-          .build();
-      System.out.println("friendReq.getCreatedAt().getClass().getName() = " + friendReq.getCreatedAt().getClass().getName());
-      return new FriendReqDTO(fromUser, friendReq.getCreatedAt());
-    }).toList();
+    List<FriendReqDTO> friendReqDTOList = friendService.getFriendRequests(userIdx);
     return ResponseEntity.ok(friendReqDTOList);
   }
 
-
+  @Tag(name = "친구관리 API", description = "친구 관련 API")
+  @Operation(summary = "친구 목록 확인", description = "나의 친구 목록을 확인합니다.")
+  @GetMapping("/api/v2/friends")
+  public ResponseEntity<List<UserDTO>> getFriends(
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    List<UserDTO> friends = friendService.getFriends(userIdx);
+    return ResponseEntity.ok(friends);
+  }
 
 }
