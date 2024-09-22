@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,9 @@ public class FriendController {
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
     friendService.acceptFriend(userIdx, friendIdx);
-    friendService.createNewFriendship(userIdx, friendIdx);
+    if (!friendService.isFriend(userIdx, friendIdx)) {
+      friendService.createNewFriendship(userIdx, friendIdx);
+    }
     return ResponseEntity.ok("친구 요청 수락");
   }
 
@@ -57,6 +60,18 @@ public class FriendController {
     friendService.rejectFriend(userIdx, friendIdx);
     return ResponseEntity.ok("친구 요청 거절");
   }
+
+  @Tag(name = "친구관리 API", description = "친구 관련 API")
+  @Operation(summary = "친구 삭제", description = "친구 관계를 삭제합니다.")
+  @DeleteMapping("/api/v2/friends/{friendIdx}")
+  public ResponseEntity<String> deleteFriend(
+      @PathVariable Long friendIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    friendService.deleteFriend(userIdx, friendIdx);
+    return ResponseEntity.ok("친구 삭제");
+  }
+
 
 
 }

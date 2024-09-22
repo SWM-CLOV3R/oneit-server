@@ -1,6 +1,7 @@
 package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.domain.data.status.FriendReqStatus;
+import clov3r.oneit_server.domain.data.status.Status;
 import clov3r.oneit_server.domain.entity.FriendReq;
 import clov3r.oneit_server.domain.entity.Friendship;
 import clov3r.oneit_server.repository.FriendReqRepository;
@@ -47,6 +48,8 @@ public class FriendService {
         .user(userRepository.findById(friendIdx))
         .friend(userRepository.findById(userIdx))
         .build();
+    friendshipA.setStatus(Status.ACTIVE);
+    friendshipB.setStatus(Status.ACTIVE);
     friendshipA.createBaseEntity();
     friendshipB.createBaseEntity();
     friendshipRepository.save(friendshipA);
@@ -60,4 +63,20 @@ public class FriendService {
     friendReq.reject();
     friendReq.updateBaseEntity();
   }
+
+  @Transactional
+  public void deleteFriend(Long userIdx, Long friendIdx) {
+    Friendship friendshipA = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friendIdx);
+    Friendship friendshipB = friendshipRepository.findByUserIdxAndFriendIdx(friendIdx, userIdx);
+    friendshipA.setStatus(Status.DELETED);
+    friendshipB.setStatus(Status.DELETED);
+    friendshipA.deleteBaseEntity();
+    friendshipB.deleteBaseEntity();
+  }
+
+  public boolean isFriend(Long userIdx, Long friendIdx) {
+    Friendship friendship = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friendIdx);
+    return friendship != null;
+  }
+
 }
