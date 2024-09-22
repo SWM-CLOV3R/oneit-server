@@ -1,15 +1,20 @@
 package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.config.security.Auth;
+import clov3r.oneit_server.domain.DTO.FriendReqDTO;
+import clov3r.oneit_server.domain.DTO.UserDTO;
 import clov3r.oneit_server.domain.entity.FriendReq;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.service.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,6 +75,38 @@ public class FriendController {
   ) {
     friendService.deleteFriend(userIdx, friendIdx);
     return ResponseEntity.ok("친구 삭제");
+  }
+
+  @Tag(name = "친구관리 API", description = "친구 관련 API")
+  @Operation(summary = "친구 요청 취소", description = "친구 요청을 취소합니다.")
+  @DeleteMapping("/api/v2/friends/{friendIdx}/request")
+  public ResponseEntity<String> cancelFriendRequest(
+      @PathVariable Long friendIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    friendService.cancelFriendRequest(userIdx, friendIdx);
+    return ResponseEntity.ok("친구 요청 취소");
+  }
+
+  @Tag(name = "친구관리 API", description = "친구 관련 API")
+  @Operation(summary = "친구 요청 목록 확인", description = "나에게 친구를 요청한 목록을 확인합니다.")
+  @GetMapping("/api/v2/friends/requests")
+  public ResponseEntity<List<FriendReqDTO>> getFriendRequests(
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    List<FriendReq> friendReqs = friendReqRepository.findAllByToIdx(userIdx);
+    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
+      UserDTO fromUser = UserDTO.builder()
+          .idx(friendReq.getFrom().getIdx())
+          .name(friendReq.getFrom().getName())
+          .nickName(friendReq.getFrom().getNickname())
+          .profileImg(friendReq.getFrom().getProfileImgFromKakao())
+          .birthDate(friendReq.getFrom().getBirthDate())
+          .build();
+      System.out.println("friendReq.getCreatedAt().getClass().getName() = " + friendReq.getCreatedAt().getClass().getName());
+      return new FriendReqDTO(fromUser, friendReq.getCreatedAt());
+    }).toList();
+    return ResponseEntity.ok(friendReqDTOList);
   }
 
 

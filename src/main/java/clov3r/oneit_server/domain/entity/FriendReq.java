@@ -13,9 +13,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 @Entity
 @Builder
+@Getter
 @AllArgsConstructor
 @Table(name = "friend_req")
 public class FriendReq extends BaseEntity{

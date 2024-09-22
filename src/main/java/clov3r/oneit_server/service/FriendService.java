@@ -79,4 +79,9 @@ public class FriendService {
     return friendship != null;
   }
 
+  @Transactional
+  public void cancelFriendRequest(Long userIdx, Long friendIdx) {
+    FriendReq friendReq = friendReqRepository.findByFromIdxAndToIdx(userIdx, friendIdx);
+    friendReqRepository.delete(friendReq);
+  }
 }
