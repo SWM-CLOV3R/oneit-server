@@ -1,7 +1,6 @@
-package clov3r.oneit_server.exception;
+package clov3r.oneit_server.legacy.exception;
 
-import clov3r.oneit_server.response.BaseResponse;
-import clov3r.oneit_server.response.BaseResponseStatus;
+import clov3r.oneit_server.legacy.response.BaseResponse;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

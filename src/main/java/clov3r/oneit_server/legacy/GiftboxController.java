@@ -1,6 +1,6 @@
-package clov3r.oneit_server.controller;
+package clov3r.oneit_server.legacy;
 
-import static clov3r.oneit_server.response.BaseResponseStatus.*;
+import static clov3r.oneit_server.legacy.response.BaseResponseStatus.*;
 
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.GiftboxDTO;
@@ -14,8 +14,8 @@ import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.repository.UserRepository;
-import clov3r.oneit_server.response.BaseResponse;
-import clov3r.oneit_server.exception.BaseException;
+import clov3r.oneit_server.legacy.response.BaseResponse;
+import clov3r.oneit_server.legacy.exception.BaseException;
 import clov3r.oneit_server.service.GiftboxService;
 import clov3r.oneit_server.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;

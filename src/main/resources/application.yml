@@ -29,6 +29,9 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+cdn:
+  domain: ${CDN_DOMAIN}
+
 springdoc:
   swagger-ui:
     path: /api-swagger  # swagger-ui 접속 주소

@@ -1,4 +1,4 @@
-package clov3r.oneit_server.controller;
+package clov3r.oneit_server.legacy;
 
 import clov3r.oneit_server.domain.DTO.ProductDTO;
 import clov3r.oneit_server.domain.DTO.ProductDetailDTO;
@@ -9,7 +9,7 @@ import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.data.Gender;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.domain.collection.ProductSearch;
-import clov3r.oneit_server.response.BaseResponse;
+import clov3r.oneit_server.legacy.response.BaseResponse;
 import clov3r.oneit_server.service.CategoryService;
 import clov3r.oneit_server.service.KeywordService;
 import clov3r.oneit_server.service.ProductService;
@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static clov3r.oneit_server.domain.entity.QProduct.product;
-import static clov3r.oneit_server.response.BaseResponseStatus.*;
+import static clov3r.oneit_server.legacy.response.BaseResponseStatus.*;
 
 @RestController
 @RequiredArgsConstructor

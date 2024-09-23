@@ -1,7 +1,9 @@
 package clov3r.oneit_server.config.security;
 
-import clov3r.oneit_server.exception.AuthException;
-import clov3r.oneit_server.response.BaseResponseStatus;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_TOKEN;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.NO_AUTHORIZATION_HEADER;
+
+import clov3r.oneit_server.error.exception.AuthExceptionV2;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -55,11 +57,11 @@ public class AuthInterceptor implements HandlerInterceptor {
 
             String token = request.getHeader("Authorization");
             if (token == null || !token.startsWith("Bearer ")) {
-                throw new AuthException(BaseResponseStatus.NO_AUTHORIZATION_HEADER);
+                throw new AuthExceptionV2(NO_AUTHORIZATION_HEADER);
             }
             token = token.substring(7); // "Bearer " 제거
             if (!jwtTokenProvider.validateToken(token)) {
-                throw new AuthException(BaseResponseStatus.INVALID_TOKEN);
+                throw new AuthExceptionV2(INVALID_TOKEN);
             }
 
             request.setAttribute("userIdx", jwtTokenProvider.getUserIdFromToken(token));

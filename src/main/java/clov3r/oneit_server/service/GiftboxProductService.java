@@ -2,12 +2,9 @@ package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.domain.data.status.VoteStatus;
 import clov3r.oneit_server.domain.entity.GiftboxProductVote;
-import clov3r.oneit_server.exception.BaseException;
 import clov3r.oneit_server.repository.GiftboxProductRepository;
-import clov3r.oneit_server.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,18 +13,12 @@ public class GiftboxProductService {
   private final GiftboxProductRepository giftboxProductRepository;
 
   public VoteStatus voteProduct(GiftboxProductVote giftboxProductVote) {
-    try {
       VoteStatus previousStatus = giftboxProductRepository.voteProduct(giftboxProductVote);
       return previousStatus;
-    } catch (BaseException e) {
-      throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
-    }
   }
 
   public void updateVoteCount(Long giftboxIdx, Long productIdx, VoteStatus previousVote, VoteStatus newVote) {
 
-
-    try {
       // 이전 상태가 없는 경우
       if (previousVote == null) {
 
@@ -63,9 +54,6 @@ public class GiftboxProductService {
 
       }
 
-    } catch (BaseException e) {
-      throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
-    }
   }
 
 
