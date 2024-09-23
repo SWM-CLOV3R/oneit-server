@@ -98,7 +98,6 @@ public class FriendService {
           .profileImg(friendReq.getFrom().getProfileImgFromKakao())
           .birthDate(friendReq.getFrom().getBirthDate())
           .build();
-      System.out.println("friendReq.getCreatedAt().getClass().getName() = " + friendReq.getCreatedAt().getClass().getName());
       return new FriendReqDTO(fromUser, friendReq.getCreatedAt());
     }).toList();
     return friendReqDTOList;

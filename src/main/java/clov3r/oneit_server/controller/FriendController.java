@@ -1,9 +1,14 @@
 package clov3r.oneit_server.controller;
 
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.DUPLICATE_FRIEND;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_FRIEND_REQUEST;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_SELF_REQUEST;
+
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.FriendReqDTO;
 import clov3r.oneit_server.domain.DTO.UserDTO;
 import clov3r.oneit_server.domain.entity.FriendReq;
+import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.service.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,14 +38,14 @@ public class FriendController {
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
     if (userIdx.equals(friendIdx)) {
-      return ResponseEntity.badRequest().body("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+      throw new BaseExceptionV2(INVALID_SELF_REQUEST);
     }
     if (friendService.isFriend(userIdx, friendIdx)) {
-      return ResponseEntity.badRequest().body("이미 친구입니다.");
+      throw new BaseExceptionV2(DUPLICATE_FRIEND);
     }
     FriendReq friendReq = friendReqRepository.findByFromIdxAndToIdx(userIdx, friendIdx);
     if (friendReq != null) {
-      return ResponseEntity.badRequest().body("이미 친구 요청을 보냈습니다.");
+      throw new BaseExceptionV2(INVALID_FRIEND_REQUEST);
     }
     friendService.requestFriend(userIdx, friendIdx);
     return ResponseEntity.ok("From: " + userIdx + " -> To: " + friendIdx + " 친구 요청 성공");
