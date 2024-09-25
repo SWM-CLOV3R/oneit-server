@@ -22,7 +22,7 @@ public class FriendService {
   private final UserRepository userRepository;
   private final FriendshipRepository friendshipRepository;
 
-  public void requestFriend(Long userIdx, Long friendIdx) {
+  public FriendReq requestFriend(Long userIdx, Long friendIdx) {
 
     FriendReq friendReq = FriendReq.builder()
         .from(userRepository.findById(userIdx))
@@ -31,12 +31,12 @@ public class FriendService {
         .build();
     friendReq.createBaseEntity();
     friendReqRepository.save(friendReq);
+    return friendReq;
   }
 
   @Transactional
-  public void acceptFriend(Long userIdx, Long friendIdx) {
-
-    FriendReq friendReq = friendReqRepository.findByFromIdxAndToIdx(friendIdx, userIdx);
+  public void acceptFriend(Long requestIdx) {
+    FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReq.accept();
     friendReq.updateBaseEntity();
   }
@@ -60,9 +60,8 @@ public class FriendService {
   }
 
   @Transactional
-  public void rejectFriend(Long userIdx, Long friendIdx) {
-
-    FriendReq friendReq = friendReqRepository.findByFromIdxAndToIdx(friendIdx, userIdx);
+  public void rejectFriend(Long requestIdx) {
+    FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReq.reject();
     friendReq.updateBaseEntity();
   }
@@ -71,10 +70,8 @@ public class FriendService {
   public void deleteFriend(Long userIdx, Long friendIdx) {
     Friendship friendshipA = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friendIdx);
     Friendship friendshipB = friendshipRepository.findByUserIdxAndFriendIdx(friendIdx, userIdx);
-    friendshipA.setStatus(Status.DELETED);
-    friendshipB.setStatus(Status.DELETED);
-    friendshipA.deleteBaseEntity();
-    friendshipB.deleteBaseEntity();
+    friendshipRepository.delete(friendshipA);
+    friendshipRepository.delete(friendshipB);
   }
 
   public boolean isFriend(Long userIdx, Long friendIdx) {
@@ -83,12 +80,12 @@ public class FriendService {
   }
 
   @Transactional
-  public void cancelFriendRequest(Long userIdx, Long friendIdx) {
-    FriendReq friendReq = friendReqRepository.findByFromIdxAndToIdx(userIdx, friendIdx);
+  public void cancelFriendRequest(Long requestIdx) {
+    FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReqRepository.delete(friendReq);
   }
 
-  public List<FriendReqDTO> getFriendRequests(Long userIdx) {
+  public List<FriendReqDTO> getFriendRequestsToMe(Long userIdx) {
     List<FriendReq> friendReqs = friendReqRepository.findAllByToIdx(userIdx);
     List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
       UserDTO fromUser = UserDTO.builder()
@@ -102,6 +99,22 @@ public class FriendService {
     }).toList();
     return friendReqDTOList;
   }
+
+  public List<FriendReqDTO> getFriendRequestsFromMe(Long userIdx) {
+    List<FriendReq> friendReqs = friendReqRepository.findAllByFromIdx(userIdx);
+    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
+      UserDTO ToUser = UserDTO.builder()
+          .idx(friendReq.getTo().getIdx())
+          .name(friendReq.getTo().getName())
+          .nickName(friendReq.getTo().getNickname())
+          .profileImg(friendReq.getTo().getProfileImgFromKakao())
+          .birthDate(friendReq.getTo().getBirthDate())
+          .build();
+      return new FriendReqDTO(ToUser, friendReq.getCreatedAt());
+    }).toList();
+    return friendReqDTOList;
+  }
+
 
   public List<UserDTO> getFriends(Long userIdx) {
     List<Friendship> friendshipsList = friendshipRepository.findByUserIdx(userIdx);

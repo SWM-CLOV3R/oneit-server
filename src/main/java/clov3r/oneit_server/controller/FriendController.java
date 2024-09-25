@@ -6,8 +6,10 @@ import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_SELF_R
 
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.FriendReqDTO;
+import clov3r.oneit_server.domain.DTO.RequestFriendDTO;
 import clov3r.oneit_server.domain.DTO.UserDTO;
 import clov3r.oneit_server.domain.entity.FriendReq;
+import clov3r.oneit_server.domain.entity.Friendship;
 import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.service.FriendService;
@@ -33,7 +35,7 @@ public class FriendController {
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 요청", description = "친구 요청을 보냅니다.(서비스 가입 유저에게만 가능)")
   @PostMapping("/api/v2/friends/{friendIdx}/request")
-  public ResponseEntity<String> requestFriend(
+  public ResponseEntity<RequestFriendDTO> requestFriend(
       @PathVariable Long friendIdx,
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
@@ -47,18 +49,19 @@ public class FriendController {
     if (friendReq != null) {
       throw new BaseExceptionV2(INVALID_FRIEND_REQUEST);
     }
-    friendService.requestFriend(userIdx, friendIdx);
-    return ResponseEntity.ok("From: " + userIdx + " -> To: " + friendIdx + " 친구 요청 성공");
+    FriendReq newReq = friendService.requestFriend(userIdx, friendIdx);
+    return ResponseEntity.ok(new RequestFriendDTO(newReq.getIdx(), userIdx, friendIdx, newReq.getCreatedAt()));
   }
 
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 요청 수락", description = "친구 요청을 수락합니다.")
-  @PostMapping("/api/v2/friends/{friendIdx}/accept")
+  @PostMapping("/api/v2/friends/{friendIdx}/request/{requestIdx}/acceptance")
   public ResponseEntity<String> acceptFriend(
       @PathVariable Long friendIdx,
+      @PathVariable Long requestIdx,
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    friendService.acceptFriend(userIdx, friendIdx);
+    friendService.acceptFriend(requestIdx);
     if (!friendService.isFriend(userIdx, friendIdx)) {
       friendService.createNewFriendship(userIdx, friendIdx);
     }
@@ -67,12 +70,17 @@ public class FriendController {
 
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 요청 거절", description = "친구 요청을 거절합니다.")
-  @PostMapping("/api/v2/friends/{friendIdx}/reject")
+  @PostMapping("/api/v2/friends/{friendIdx}/request/{requestIdx}/rejection")
   public ResponseEntity<String> rejectFriend(
       @PathVariable Long friendIdx,
+      @PathVariable Long requestIdx,
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    friendService.rejectFriend(userIdx, friendIdx);
+    FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
+    if (!friendReq.getFrom().getIdx().equals(friendIdx) || !friendReq.getTo().getIdx().equals(userIdx)) {
+      throw new BaseExceptionV2(INVALID_FRIEND_REQUEST);
+    }
+    friendService.rejectFriend(requestIdx);
     return ResponseEntity.ok("친구 요청 거절");
   }
 
@@ -89,22 +97,37 @@ public class FriendController {
 
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 요청 취소", description = "친구 요청을 취소합니다.")
-  @DeleteMapping("/api/v2/friends/{friendIdx}/request")
+  @DeleteMapping("/api/v2/friends/{friendIdx}/request/{requestIdx}/cancel")
   public ResponseEntity<String> cancelFriendRequest(
+      @PathVariable Long requestIdx,
       @PathVariable Long friendIdx,
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    friendService.cancelFriendRequest(userIdx, friendIdx);
+    FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
+    if (!friendReq.getFrom().getIdx().equals(userIdx) || !friendReq.getTo().getIdx().equals(friendIdx)) {
+      throw new BaseExceptionV2(INVALID_FRIEND_REQUEST);
+    }
+    friendService.cancelFriendRequest(requestIdx);
     return ResponseEntity.ok("친구 요청 취소");
   }
 
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 요청 목록 확인", description = "나에게 친구를 요청한 목록을 확인합니다.")
-  @GetMapping("/api/v2/friends/requests")
-  public ResponseEntity<List<FriendReqDTO>> getFriendRequests(
+  @GetMapping("/api/v2/friends/requests-to-me")
+  public ResponseEntity<List<FriendReqDTO>> getFriendRequestsToMe(
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    List<FriendReqDTO> friendReqDTOList = friendService.getFriendRequests(userIdx);
+    List<FriendReqDTO> friendReqDTOList = friendService.getFriendRequestsToMe(userIdx);
+    return ResponseEntity.ok(friendReqDTOList);
+  }
+
+  @Tag(name = "친구관리 API", description = "친구 관련 API")
+  @Operation(summary = "내가 요청한 친구 요청 목록 확인", description = "내가 요청한 친구요청 목록을 확인합니다.")
+  @GetMapping("/api/v2/friends/requests-from-me")
+  public ResponseEntity<List<FriendReqDTO>> getFriendRequestsFromMe(
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    List<FriendReqDTO> friendReqDTOList = friendService.getFriendRequestsFromMe(userIdx);
     return ResponseEntity.ok(friendReqDTOList);
   }
 
