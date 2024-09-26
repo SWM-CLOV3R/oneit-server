@@ -95,7 +95,7 @@ public class FriendService {
           .profileImg(friendReq.getFrom().getProfileImgFromKakao())
           .birthDate(friendReq.getFrom().getBirthDate())
           .build();
-      return new FriendReqDTO(fromUser, friendReq.getCreatedAt());
+      return new FriendReqDTO(friendReq.getIdx(), fromUser, friendReq.getCreatedAt());
     }).toList();
     return friendReqDTOList;
   }
@@ -110,7 +110,7 @@ public class FriendService {
           .profileImg(friendReq.getTo().getProfileImgFromKakao())
           .birthDate(friendReq.getTo().getBirthDate())
           .build();
-      return new FriendReqDTO(ToUser, friendReq.getCreatedAt());
+      return new FriendReqDTO(friendReq.getIdx(), ToUser, friendReq.getCreatedAt());
     }).toList();
     return friendReqDTOList;
   }
