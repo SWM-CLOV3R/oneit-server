@@ -45,4 +45,7 @@ logging:
   level:
     org.springframework.boot.autoconfigure.logging: ERROR
 
+webhook:
+  slack:
+    url: ${WEBHOOK_SLACK_URL}
 

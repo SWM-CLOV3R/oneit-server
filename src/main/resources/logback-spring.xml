@@ -1,5 +1,5 @@
 <configuration>
-  <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger - %msg%n"/>
+  <property name="LOG_PATTERN" value="[%X{request_id:-startup}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger{36} - %msg%n"/>
   <property name="LOG_FILE_NAME" value="oneit-log"/>
   <timestamp key="ToDay" datePattern="yyyy-MM-dd"/>
 
