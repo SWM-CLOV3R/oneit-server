@@ -23,7 +23,6 @@ public class UserService {
     @Transactional
     public User signUp(SignupRequest signupRequest, Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
-        System.out.println("user = " + user);
         if (user == null) {
             throw new BaseExceptionV2(USER_NOT_FOUND);
         }
