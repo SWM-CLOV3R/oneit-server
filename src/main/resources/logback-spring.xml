@@ -10,10 +10,6 @@
       <appender-ref ref="CONSOLE"/>
     </root>
 
-    <include resource="log/file-info-appender.xml"/>
-    <root level="INFO">
-      <appender-ref ref="FILE-INFO"/>
-    </root>
   </springProfile>
 
   <!--dev-->

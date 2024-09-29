@@ -30,13 +30,13 @@ public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
     log.error("AuthException : {}, errorCode : {}", exception, errorCode, exception);
     return handleExceptionInternal(errorCode);
   }
-//
-//  @ExceptionHandler(BaseExceptionV2.class)
-//  public ResponseEntity<Object> handleBaseException(final BaseExceptionV2 exception) {
-//    final ErrorCode errorCode = exception.getErrorCode();
-//    log.error("BaseException : {}, errorCode : {}", exception, errorCode, exception);
-//    return handleExceptionInternal(errorCode, exception.getMessage());
-//  }
+
+  @ExceptionHandler(BaseExceptionV2.class)
+  public ResponseEntity<Object> handleBaseException(final BaseExceptionV2 exception) {
+    final ErrorCode errorCode = exception.getErrorCode();
+    log.error("BaseException : {}, errorCode : {}", exception, errorCode, exception);
+    return handleExceptionInternal(errorCode, exception.getMessage());
+  }
 
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException exception) {
