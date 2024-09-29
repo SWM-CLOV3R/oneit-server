@@ -60,6 +60,9 @@ dependencies {
     //s3
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+
+    // slack
+    implementation("com.slack.api:slack-api-client:1.40.0")
 }
 //tasks.withType<Test> {
 //    useJUnitPlatform()

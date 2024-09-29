@@ -3,53 +3,70 @@ package clov3r.oneit_server.error.exception;
 import clov3r.oneit_server.error.errorcode.CommonErrorCode;
 import clov3r.oneit_server.error.errorcode.ErrorCode;
 import clov3r.oneit_server.error.response.ErrorResponse;
+import clov3r.oneit_server.service.SlackService;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@RequiredArgsConstructor
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
 
+  private final SlackService slackService;
+
   @ExceptionHandler(AuthExceptionV2.class)
   public ResponseEntity<Object> handleAuthException(final AuthExceptionV2 exception) {
     final ErrorCode errorCode = exception.getErrorCode();
+    log.error("AuthException : {}, errorCode : {}", exception, errorCode, exception);
     return handleExceptionInternal(errorCode);
   }
+//
+//  @ExceptionHandler(BaseExceptionV2.class)
+//  public ResponseEntity<Object> handleBaseException(final BaseExceptionV2 exception) {
+//    final ErrorCode errorCode = exception.getErrorCode();
+//    log.error("BaseException : {}, errorCode : {}", exception, errorCode, exception);
+//    return handleExceptionInternal(errorCode, exception.getMessage());
+//  }
 
-  @ExceptionHandler(BaseExceptionV2.class)
-  public ResponseEntity<Object> handleBaseException(final BaseExceptionV2 exception) {
-    final ErrorCode errorCode = exception.getErrorCode();
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException exception) {
+    ErrorCode errorCode = CommonErrorCode.REQUEST_ERROR;
+    log.error("IllegalArgumentException : {}, errorCode : {}", exception, errorCode, exception);
     return handleExceptionInternal(errorCode, exception.getMessage());
   }
 
-  @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
-    log.warn("handleIllegalArgument", e);
-    ErrorCode errorCode = CommonErrorCode.REQUEST_ERROR;
-    return handleExceptionInternal(errorCode, e.getMessage());
-  }
-
-//  @Override
-//  public ResponseEntity<Object> handleMethodArgumentNotValid(
-//      MethodArgumentNotValidException e,
-//      HttpHeaders headers,
-//      HttpStatus status,
-//      WebRequest request) {
-//    log.warn("handleIllegalArgument", e);
-//    ErrorCode errorCode = CommonErrorCode.REQUEST_ERROR;
-//    return handleExceptionInternal(e, errorCode);
-//  }
-
   @ExceptionHandler({Exception.class})
-  public ResponseEntity<Object> handleAllException(Exception ex) {
-    log.warn("handleAllException", ex);
-    ErrorCode errorCode = CommonErrorCode.REQUEST_ERROR;
+  public ResponseEntity<Object> handleAllException(Exception exception) {
+    log.warn("handleAllException", exception);
+
+    HashMap<String, String> data = new HashMap<>();
+    String msg = String.format("[API] ERROR\n" +
+            "uri : %s \n" +
+            "method : %s \n" +
+            "params : %s \n" +
+            "auth : %s \n" +
+            "exceptionMessage : %s \n" +
+            "exceptionStackTrace : %s \n",
+        MDC.get("uri"),
+        MDC.get("method"),
+        MDC.get("params"),
+        MDC.get("auth"),
+        exception.getMessage(),
+        Arrays.toString(exception.getStackTrace()).substring(0, 2000));
+    data.put(exception.getClass().getName(), msg);
+    slackService.sendMessage("IllegalAllException", data);
+
+    ErrorCode errorCode = CommonErrorCode.SERVER_ERROR;
     return handleExceptionInternal(errorCode);
   }
 
@@ -67,6 +84,7 @@ public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
   }
 
   private ResponseEntity<Object> handleExceptionInternal(final ErrorCode errorCode, final String message) {
+
     return ResponseEntity.status(errorCode.getHttpStatus())
         .body(makeErrorResponse(errorCode));
   }
