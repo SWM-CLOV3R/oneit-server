@@ -10,7 +10,7 @@
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
       <fileNamePattern>
-        ./logs/prod-%d{yyyy-MM-dd}/${LOG_FILE_NAME}_%i.log
+        /home/ubuntu/oneit/logs/prod-%d{yyyy-MM-dd}/${LOG_FILE_NAME}_%i.log
       </fileNamePattern>
       <maxFileSize>50MB</maxFileSize>
       <maxHistory>30</maxHistory>
