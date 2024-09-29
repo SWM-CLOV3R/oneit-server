@@ -19,11 +19,6 @@
   <!--dev-->
   <springProfile name="dev">
 
-    <include resource="log/console-appender.xml"/>
-    <root level="INFO">
-      <appender-ref ref="CONSOLE"/>
-    </root>
-
     <include resource="log/file-info-appender.xml"/>
     <root level="INFO">
       <appender-ref ref="FILE-INFO"/>
@@ -38,10 +33,6 @@
 
   <!--prod-->
   <springProfile name="prod">
-    <include resource="log/console-appender.xml"/>
-    <root level="INFO">
-      <appender-ref ref="CONSOLE"/>
-    </root>
 
     <include resource="log/file-error-appender.xml"/>
     <root level="ERROR">
