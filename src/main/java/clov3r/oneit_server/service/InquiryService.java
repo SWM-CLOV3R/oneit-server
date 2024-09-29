@@ -1,15 +1,11 @@
 package clov3r.oneit_server.service;
 
-import clov3r.oneit_server.domain.data.ProductEmoji;
 import clov3r.oneit_server.domain.data.status.InquiryStatus;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.domain.entity.GiftboxInquiryResult;
 import clov3r.oneit_server.domain.entity.Inquiry;
 import clov3r.oneit_server.domain.entity.Product;
-import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.request.InquiryRequest;
-import clov3r.oneit_server.error.errorcode.CustomErrorCode;
-import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.InquiryProductRepository;
 import clov3r.oneit_server.repository.InquiryRepository;
@@ -34,7 +30,7 @@ public class InquiryService {
   public Long createInquiry(InquiryRequest inquiryRequest, Long userIdx) {
     Inquiry inquiry = new Inquiry(
         giftboxRepository.findById(inquiryRequest.getGiftboxIdx()),
-        userRepository.findUser(userIdx),
+        userRepository.findByUserIdx(userIdx),
         InquiryStatus.ACTIVE,
         inquiryRequest.getTarget()
     );

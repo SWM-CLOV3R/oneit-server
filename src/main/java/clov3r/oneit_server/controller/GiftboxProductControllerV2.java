@@ -65,7 +65,7 @@ public class GiftboxProductControllerV2 {
         throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
       }
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -142,7 +142,7 @@ public class GiftboxProductControllerV2 {
     if (giftboxRepository.findById(giftboxIdx) == null) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -197,7 +197,7 @@ public class GiftboxProductControllerV2 {
 //    }
 
     // 로그인 유저만 가능한 경우
-    if (userIdx == null || !userRepository.existsUser(userIdx)) {
+    if (userIdx == null || !userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, request.getGiftboxIdx())) {

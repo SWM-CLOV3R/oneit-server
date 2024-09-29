@@ -7,9 +7,8 @@ import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_SELF_R
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.FriendReqDTO;
 import clov3r.oneit_server.domain.DTO.RequestFriendDTO;
-import clov3r.oneit_server.domain.DTO.UserDTO;
+import clov3r.oneit_server.domain.DTO.FriendDTO;
 import clov3r.oneit_server.domain.entity.FriendReq;
-import clov3r.oneit_server.domain.entity.Friendship;
 import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.service.FriendService;
@@ -134,10 +133,10 @@ public class FriendController {
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 목록 확인", description = "나의 친구 목록을 확인합니다.")
   @GetMapping("/api/v2/friends")
-  public ResponseEntity<List<UserDTO>> getFriends(
+  public ResponseEntity<List<FriendDTO>> getFriends(
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    List<UserDTO> friends = friendService.getFriends(userIdx);
+    List<FriendDTO> friends = friendService.getFriends(userIdx);
     return ResponseEntity.ok(friends);
   }
 

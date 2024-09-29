@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 public class FriendReqDTO {
 
   private Long requestIdx;
-  private UserDTO fromUser;
+  private FriendDTO fromUser;
   private LocalDateTime requestDate;
 
-  public FriendReqDTO(Long requestIdx, UserDTO fromUser, LocalDateTime requestDate) {
+  public FriendReqDTO(Long requestIdx, FriendDTO fromUser, LocalDateTime requestDate) {
     this.requestIdx = requestIdx;
     this.fromUser = fromUser;
     this.requestDate = requestDate;
