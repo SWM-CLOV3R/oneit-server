@@ -51,12 +51,14 @@ public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
 
     HashMap<String, String> data = new HashMap<>();
     String msg = String.format("[API] ERROR\n" +
+            "env : %s \n" +
             "uri : %s \n" +
             "method : %s \n" +
             "params : %s \n" +
             "auth : %s \n" +
             "exceptionMessage : %s \n" +
             "exceptionStackTrace : %s \n",
+        MDC.get("env"),
         MDC.get("uri"),
         MDC.get("method"),
         MDC.get("params"),

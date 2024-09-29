@@ -24,6 +24,7 @@ public class MDCLoggingFilter implements Filter {
       params.append(name + "=" + request.getParameter(name) + "\n");
     });
 
+    MDC.put("env", System.getProperty("spring.profiles.active"));
     MDC.put("uri", request.getRequestURI());
     MDC.put("method", request.getMethod());
     MDC.put("params", params.toString());
