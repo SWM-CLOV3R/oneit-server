@@ -7,6 +7,7 @@ import clov3r.oneit_server.service.SlackService;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,24 +50,26 @@ public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleAllException(Exception exception) {
     log.warn("handleAllException", exception);
 
-    HashMap<String, String> data = new HashMap<>();
-    String msg = String.format("[API] ERROR\n" +
-            "env : %s \n" +
-            "uri : %s \n" +
-            "method : %s \n" +
-            "params : %s \n" +
-            "auth : %s \n" +
-            "exceptionMessage : %s \n" +
-            "exceptionStackTrace : %s \n",
-        MDC.get("env"),
-        MDC.get("uri"),
-        MDC.get("method"),
-        MDC.get("params"),
-        MDC.get("auth"),
-        exception.getMessage(),
-        Arrays.toString(exception.getStackTrace()).substring(0, 2000));
-    data.put(exception.getClass().getName(), msg);
-    slackService.sendMessage("IllegalAllException", data);
+    if (!Objects.equals(MDC.get("env"), "local")) {
+      HashMap<String, String> data = new HashMap<>();
+      String msg = String.format("[API] ERROR\n" +
+              "env : %s \n" +
+              "uri : %s \n" +
+              "method : %s \n" +
+              "params : %s \n" +
+              "auth : %s \n" +
+              "exceptionMessage : %s \n" +
+              "exceptionStackTrace : %s \n",
+          MDC.get("env"),
+          MDC.get("uri"),
+          MDC.get("method"),
+          MDC.get("params"),
+          MDC.get("auth"),
+          exception.getMessage(),
+          Arrays.toString(exception.getStackTrace()).substring(0, 2000));
+      data.put(exception.getClass().getName(), msg);
+      slackService.sendMessage("IllegalAllException", data);
+    }
 
     ErrorCode errorCode = CommonErrorCode.SERVER_ERROR;
     return handleExceptionInternal(errorCode);
