@@ -1,7 +1,7 @@
 package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.domain.DTO.FriendReqDTO;
-import clov3r.oneit_server.domain.DTO.UserDTO;
+import clov3r.oneit_server.domain.DTO.FriendDTO;
 import clov3r.oneit_server.domain.data.status.FriendReqStatus;
 import clov3r.oneit_server.domain.data.status.Status;
 import clov3r.oneit_server.domain.entity.FriendReq;
@@ -25,8 +25,8 @@ public class FriendService {
   public FriendReq requestFriend(Long userIdx, Long friendIdx) {
 
     FriendReq friendReq = FriendReq.builder()
-        .from(userRepository.findById(userIdx))
-        .to(userRepository.findById(friendIdx))
+        .from(userRepository.findByUserIdx(userIdx))
+        .to(userRepository.findByUserIdx(friendIdx))
         .friendReqStatus(FriendReqStatus.REQUESTED)
         .build();
     friendReq.createBaseEntity();
@@ -44,12 +44,12 @@ public class FriendService {
   @Transactional
   public void createNewFriendship(Long userIdx, Long friendIdx) {
     Friendship friendshipA = Friendship.builder()
-        .user(userRepository.findById(userIdx))
-        .friend(userRepository.findById(friendIdx))
+        .user(userRepository.findByUserIdx(userIdx))
+        .friend(userRepository.findByUserIdx(friendIdx))
         .build();
     Friendship friendshipB = Friendship.builder()
-        .user(userRepository.findById(friendIdx))
-        .friend(userRepository.findById(userIdx))
+        .user(userRepository.findByUserIdx(friendIdx))
+        .friend(userRepository.findByUserIdx(userIdx))
         .build();
     friendshipA.setStatus(Status.ACTIVE);
     friendshipB.setStatus(Status.ACTIVE);
@@ -88,11 +88,11 @@ public class FriendService {
   public List<FriendReqDTO> getFriendRequestsToMe(Long userIdx) {
     List<FriendReq> friendReqs = friendReqRepository.findAllByToIdx(userIdx);
     List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
-      UserDTO fromUser = UserDTO.builder()
+      FriendDTO fromUser = FriendDTO.builder()
           .idx(friendReq.getFrom().getIdx())
           .name(friendReq.getFrom().getName())
           .nickName(friendReq.getFrom().getNickname())
-          .profileImg(friendReq.getFrom().getProfileImgFromKakao())
+          .profileImg(friendReq.getFrom().getProfileImg())
           .birthDate(friendReq.getFrom().getBirthDate())
           .build();
       return new FriendReqDTO(friendReq.getIdx(), fromUser, friendReq.getCreatedAt());
@@ -103,11 +103,11 @@ public class FriendService {
   public List<FriendReqDTO> getFriendRequestsFromMe(Long userIdx) {
     List<FriendReq> friendReqs = friendReqRepository.findAllByFromIdx(userIdx);
     List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
-      UserDTO ToUser = UserDTO.builder()
+      FriendDTO ToUser = FriendDTO.builder()
           .idx(friendReq.getTo().getIdx())
           .name(friendReq.getTo().getName())
           .nickName(friendReq.getTo().getNickname())
-          .profileImg(friendReq.getTo().getProfileImgFromKakao())
+          .profileImg(friendReq.getTo().getProfileImg())
           .birthDate(friendReq.getTo().getBirthDate())
           .build();
       return new FriendReqDTO(friendReq.getIdx(), ToUser, friendReq.getCreatedAt());
@@ -116,14 +116,14 @@ public class FriendService {
   }
 
 
-  public List<UserDTO> getFriends(Long userIdx) {
+  public List<FriendDTO> getFriends(Long userIdx) {
     List<Friendship> friendshipsList = friendshipRepository.findByUserIdx(userIdx);
     return friendshipsList.stream()
-        .map(friendship -> UserDTO.builder()
+        .map(friendship -> FriendDTO.builder()
             .idx(friendship.getFriend().getIdx())
             .name(friendship.getFriend().getName())
             .nickName(friendship.getFriend().getNickname())
-            .profileImg(friendship.getFriend().getProfileImgFromKakao())
+            .profileImg(friendship.getFriend().getProfileImg())
             .birthDate(friendship.getFriend().getBirthDate())
             .build())
         .toList();

@@ -13,9 +13,9 @@ import clov3r.oneit_server.domain.request.PostGiftboxRequest;
 import clov3r.oneit_server.domain.entity.Giftbox;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
-import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.legacy.response.BaseResponse;
 import clov3r.oneit_server.legacy.exception.BaseException;
+import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.service.GiftboxService;
 import clov3r.oneit_server.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,7 +51,7 @@ public class GiftboxController {
       if (request.getName() == null || request.getDeadline() == null || userIdx == null) {
         return new BaseResponse<>(REQUEST_ERROR);
       }
-      if (!userRepository.existsUser(userIdx)) {
+      if (!userRepository.existsByUserIdx(userIdx)) {
         return new BaseResponse<>(USER_NOT_FOUND);
       }
       if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
@@ -107,7 +107,7 @@ public class GiftboxController {
               participant.getUser().getIdx(),
               participant.getUser().getNickname(),
               participant.getUser().getName(),
-              participant.getUser().getProfileImgFromKakao(),
+              participant.getUser().getProfileImg(),
               participant.getUserRole()
           ))
           .toList();
@@ -149,7 +149,7 @@ public class GiftboxController {
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
     // request validation
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
 
@@ -165,7 +165,7 @@ public class GiftboxController {
                     participant.getUser().getIdx(),
                     participant.getUser().getNickname(),
                     participant.getUser().getName(),
-                    participant.getUser().getProfileImgFromKakao(),
+                    participant.getUser().getProfileImg(),
                     participant.getUserRole()
                 ))
                 .toList();
@@ -198,7 +198,7 @@ public class GiftboxController {
     if (giftboxRepository.findById(giftboxIdx) == null) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isManagerOfGiftbox(userIdx, giftboxIdx)) {
@@ -231,7 +231,7 @@ public class GiftboxController {
       if (request.getName() == null || request.getDeadline() == null || userIdx == null) {
         return new BaseResponse<>(REQUEST_ERROR);
       }
-      if (!userRepository.existsUser(userIdx)) {
+      if (!userRepository.existsByUserIdx(userIdx)) {
         return new BaseResponse<>(USER_NOT_FOUND);
       }
       if (!giftboxRepository.isManagerOfGiftbox(userIdx, giftboxIdx)) {
@@ -277,7 +277,7 @@ public class GiftboxController {
     if (!giftboxRepository.existsById(giftboxIdx)) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -317,7 +317,7 @@ public class GiftboxController {
     if (!giftboxRepository.existsById(giftboxUser.getGiftbox().getIdx())) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
 
@@ -343,7 +343,7 @@ public class GiftboxController {
     if (!giftboxRepository.existsById(giftboxIdx)) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -357,7 +357,7 @@ public class GiftboxController {
               participant.getUser().getIdx(),
               participant.getUser().getNickname(),
               participant.getUser().getName(),
-              participant.getUser().getProfileImgFromKakao(),
+              participant.getUser().getProfileImg(),
               participant.getUserRole()
           ))
           .toList();
