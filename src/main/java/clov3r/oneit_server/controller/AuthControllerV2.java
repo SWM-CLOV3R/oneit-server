@@ -1,17 +1,21 @@
 package clov3r.oneit_server.controller;
 
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.DUPLICATE_NICKNAME;
+
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.config.security.TokenProvider;
 import clov3r.oneit_server.domain.DTO.KakaoFriendDTO;
 import clov3r.oneit_server.domain.DTO.KakaoLoginDTO;
 import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
 import clov3r.oneit_server.domain.DTO.FriendDTO;
+import clov3r.oneit_server.domain.DTO.NicknameCheckDTO;
 import clov3r.oneit_server.domain.DTO.UserDTO;
 import clov3r.oneit_server.domain.data.AuthToken;
 import clov3r.oneit_server.domain.data.status.UserStatus;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.request.KakaoAccessToken;
 import clov3r.oneit_server.domain.request.SignupRequest;
+import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.AuthRepository;
 import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.service.AuthService;
@@ -64,6 +68,21 @@ public class AuthControllerV2 {
         // return the user's info with access token (jwt)
         KakaoLoginDTO kakaoLoginDTO = new KakaoLoginDTO(isSignedUp, authToken.getAccessToken(), authToken.getRefreshToken());
         return ResponseEntity.ok(kakaoLoginDTO);
+    }
+
+    @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
+    @Operation(summary = "유저 닉네임 중복 검사", description = "유저의 닉네임이 중복되는지 검사합니다.")
+    @GetMapping("/api/v2/nickname/check")
+    public ResponseEntity<NicknameCheckDTO> checkNickname(
+        @Parameter(description = "검사할 닉네임") String nickname
+    ) {
+        NicknameCheckDTO nicknameCheckDTO = new NicknameCheckDTO(false);
+        if (userRepository.existsByNickname(nickname)) {
+            nicknameCheckDTO.setExist(true);
+            return ResponseEntity.badRequest().body(nicknameCheckDTO);
+        }
+
+        return ResponseEntity.ok(nicknameCheckDTO);
     }
 
     // 헤더에서 토큰을 가져와 검증한 뒤에 유효하다면 user idx를 꺼내서 유저의 정보를 반환하는 API
