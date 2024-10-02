@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("select u from User u where u.idx = :userIdx and u.status = 'ACTIVE'")
   User findByUserIdx(Long userIdx);
 
+  @Query("select count(u) > 0 from User u where u.nickname = :nickname and u.status = 'ACTIVE'")
+  boolean existsByNickname(String nickname);
 }
