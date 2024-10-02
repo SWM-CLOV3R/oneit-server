@@ -44,10 +44,16 @@ public class AuthControllerV2 {
     public ResponseEntity<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
         KakaoProfileDTO kakaoProfileDTO = authService.getKaKaoUserInfo(kakaoAccessToken.getAccessToken());
         User user;
+        Boolean isSignedUp = false;
         if (userRepository.existsByEmail(kakaoProfileDTO.getKakao_account().getEmail())) {
+            // 1. 이미 카카오 가입된 유저라면 status를 active로 변경
             user = userRepository.findByEmail(kakaoProfileDTO.getKakao_account().getEmail());
             if (!user.getStatus().equals(UserStatus.ACTIVE)) {
                 user.setStatus(UserStatus.ACTIVE); 
+            }
+            // 2. 자체 회원가입 유무 확인
+            if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null) {
+                isSignedUp = true;
             }
         } else {
             user = authService.createUserByKakao(kakaoProfileDTO);
@@ -56,7 +62,7 @@ public class AuthControllerV2 {
         authRepository.saveRefreshToken(authToken.getRefreshToken(), user.getEmail());
 
         // return the user's info with access token (jwt)
-        KakaoLoginDTO kakaoLoginDTO = new KakaoLoginDTO(authToken.getAccessToken(), authToken.getRefreshToken());
+        KakaoLoginDTO kakaoLoginDTO = new KakaoLoginDTO(isSignedUp, authToken.getAccessToken(), authToken.getRefreshToken());
         return ResponseEntity.ok(kakaoLoginDTO);
     }
 
