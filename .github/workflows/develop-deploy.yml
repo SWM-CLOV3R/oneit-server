@@ -19,8 +19,9 @@ jobs:
 
       - name: firebase notification
         run: |
-          mkdir -p firebase
-          echo "${{ secrets.FCM_ACCOUNT }}" > ./firebase/firebase-admin-sdk.json
+          mkdir -p ./src/main/resources/firebase
+          echo "${{ secrets.FCM_ACCOUNT }}" > ./src/main/resources/firebase/firebase-admin-sdk.json
+        shell: bash
 
       # gradle 실행 권한 부여
       - name: Grant execute permission for gradlew
