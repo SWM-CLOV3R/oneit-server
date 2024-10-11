@@ -49,3 +49,8 @@ webhook:
   slack:
     url: ${WEBHOOK_SLACK_URL}
 
+fcm:
+  config:
+    path: firebase-admin-sdk.json
+  base-url: https://fcm.googleapis.com/v1/projects/oneit-gpt/messages:send
+  auth-url: https://www.googleapis.com/auth/cloud-platform

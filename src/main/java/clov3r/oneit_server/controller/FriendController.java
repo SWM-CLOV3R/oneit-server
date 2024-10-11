@@ -12,9 +12,11 @@ import clov3r.oneit_server.domain.entity.FriendReq;
 import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.service.FriendService;
+import clov3r.oneit_server.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,7 @@ public class FriendController {
   public ResponseEntity<RequestFriendDTO> requestFriend(
       @PathVariable Long friendIdx,
       @Parameter(hidden = true) @Auth Long userIdx
-  ) {
+  ) throws IOException {
     if (userIdx.equals(friendIdx)) {
       throw new BaseExceptionV2(INVALID_SELF_REQUEST);
     }
@@ -59,7 +61,7 @@ public class FriendController {
       @PathVariable Long friendIdx,
       @PathVariable Long requestIdx,
       @Parameter(hidden = true) @Auth Long userIdx
-  ) {
+  ) throws IOException {
     friendService.acceptFriend(requestIdx);
     if (!friendService.isFriend(userIdx, friendIdx)) {
       friendService.createNewFriendship(userIdx, friendIdx);

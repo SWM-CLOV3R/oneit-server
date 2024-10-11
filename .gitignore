@@ -40,3 +40,4 @@ out/
 application-local.yml
 
 /logs
+**/firebase

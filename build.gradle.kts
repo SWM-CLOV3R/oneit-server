@@ -63,6 +63,10 @@ dependencies {
 
     // slack
     implementation("com.slack.api:slack-api-client:1.40.0")
+
+    // Google Firebase Admin
+    implementation("com.google.firebase:firebase-admin:9.2.0")
+
 }
 //tasks.withType<Test> {
 //    useJUnitPlatform()

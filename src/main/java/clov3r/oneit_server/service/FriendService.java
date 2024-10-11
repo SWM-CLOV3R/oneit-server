@@ -6,9 +6,11 @@ import clov3r.oneit_server.domain.data.status.FriendReqStatus;
 import clov3r.oneit_server.domain.data.status.Status;
 import clov3r.oneit_server.domain.entity.FriendReq;
 import clov3r.oneit_server.domain.entity.Friendship;
+import clov3r.oneit_server.repository.DeviceRepository;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.repository.FriendshipRepository;
 import clov3r.oneit_server.repository.UserRepository;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,11 @@ public class FriendService {
   private final FriendReqRepository friendReqRepository;
   private final UserRepository userRepository;
   private final FriendshipRepository friendshipRepository;
+  private final NotificationService notificationService;
+  private final FCMService fcmService;
+  private final DeviceRepository deviceRepository;
 
-  public FriendReq requestFriend(Long userIdx, Long friendIdx) {
+  public FriendReq requestFriend(Long userIdx, Long friendIdx) throws IOException {
 
     FriendReq friendReq = FriendReq.builder()
         .from(userRepository.findByUserIdx(userIdx))
@@ -31,6 +36,10 @@ public class FriendService {
         .build();
     friendReq.createBaseEntity();
     friendReqRepository.save(friendReq);
+    notificationService.sendFreindRequestNotification(friendReq);
+    String deviceToken = deviceRepository.findByUserId(friendIdx).getDeviceToken();
+    fcmService.sendMessageTo(deviceToken, "친구 요청", friendReq.getFrom().getNickname() + "님이 친구 요청을 보냈습니다.");
+
     return friendReq;
   }
 
@@ -39,10 +48,11 @@ public class FriendService {
     FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReq.accept();
     friendReq.updateBaseEntity();
+    notificationService.sendFriendAcceptanceNotification(friendReq);
   }
 
   @Transactional
-  public void createNewFriendship(Long userIdx, Long friendIdx) {
+  public void createNewFriendship(Long userIdx, Long friendIdx) throws IOException {
     Friendship friendshipA = Friendship.builder()
         .user(userRepository.findByUserIdx(userIdx))
         .friend(userRepository.findByUserIdx(friendIdx))
@@ -57,6 +67,9 @@ public class FriendService {
     friendshipB.createBaseEntity();
     friendshipRepository.save(friendshipA);
     friendshipRepository.save(friendshipB);
+
+    String deviceToken = deviceRepository.findByUserId(friendIdx).getDeviceToken();
+    fcmService.sendMessageTo(deviceToken, "친구 요청 수락", userRepository.findByUserIdx(userIdx).getNickname() + "님이 친구 요청을 수락했습니다.");
   }
 
   @Transactional
