@@ -20,7 +20,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Table(name = "friend_req")
-public class FriendReq extends BaseEntity{
+public class FriendReq extends BaseEntity {
 
   @Id @GeneratedValue(strategy = IDENTITY)
   private Long idx;
