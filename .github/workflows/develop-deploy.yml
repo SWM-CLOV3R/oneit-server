@@ -55,12 +55,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
-    steps:
-      - name: firebase notification
-        run: |
-          mkdir -p firebase
-          echo "${{ secrets.FCM_ACCOUNT }}" > ./firebase/firebase-admin-sdk.json
+    
       # AWS 사용자 정보 입력
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
