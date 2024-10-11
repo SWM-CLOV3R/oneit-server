@@ -62,4 +62,10 @@ public class ProductService {
     public List<ProductSummaryDTO> getProductListPagination(Long lastProductIdx, int pageSize) {
         return productRepository.findProductListPagination(lastProductIdx, pageSize);
     }
+
+  public List<ProductSummaryDTO> searchProduct(String searchKeyword) {
+    List<Product> products = productRepository.searchProduct(searchKeyword);
+    return products.stream()
+        .map(ProductSummaryDTO::new).toList();
+  }
 }

@@ -33,6 +33,7 @@ public enum CustomErrorCode implements ErrorCode {
   INVALID_FRIEND_REQUEST(BAD_REQUEST, "이미 친구 요청을 보낸 상태입니다."),
   DUPLICATE_FRIEND(BAD_REQUEST, "이미 친구 관계 상태이기 때문에 요청을 보낼 수 없습니다."),
   DUPLICATE_NICKNAME(BAD_REQUEST, "중복된 닉네임입니다."),
+  SEARCH_KEYWORD_ERROR(BAD_REQUEST, "검색 키워드 입력값은 2글자 이상이어야 합니다."),
 
   /**
    * token 오류

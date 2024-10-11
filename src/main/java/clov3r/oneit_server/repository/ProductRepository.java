@@ -279,5 +279,12 @@ public class ProductRepository {
 
     }
 
+    public List<Product> searchProduct(String searchKeyword) {
+        return jpaQueryFactory.selectFrom(product)
+                .where(product.name.contains(searchKeyword)
+                        .or(product.brandName.contains(searchKeyword)))
+                .fetch();
+    }
+
 }
 
