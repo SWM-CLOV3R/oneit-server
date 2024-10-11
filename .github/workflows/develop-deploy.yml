@@ -20,7 +20,7 @@ jobs:
       - name: firebase notification
         run: |
           mkdir -p ./src/main/resources/firebase
-          echo "${{ secrets.FCM_ACCOUNT }}" > ./src/main/resources/firebase/firebase-admin-sdk.json
+          echo "${{ secrets.FCM_ACCOUNT }}" | base64 --decode > ./src/main/resources/firebase/firebase-admin-sdk.json
         shell: bash
 
       - name: Check firebase-admin-sdk.json content
