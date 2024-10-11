@@ -23,6 +23,10 @@ jobs:
           echo "${{ secrets.FCM_ACCOUNT }}" > ./src/main/resources/firebase/firebase-admin-sdk.json
         shell: bash
 
+      - name: Check firebase-admin-sdk.json content
+        run: cat ./src/main/resources/firebase/firebase-admin-sdk.json
+        shell: bash
+
       # gradle 실행 권한 부여
       - name: Grant execute permission for gradlew
         run: |
