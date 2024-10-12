@@ -1,6 +1,7 @@
 package clov3r.oneit_server.controller;
 
 import clov3r.oneit_server.config.security.Auth;
+import clov3r.oneit_server.domain.DTO.NotificationDTO;
 import clov3r.oneit_server.repository.DeviceRepository;
 import clov3r.oneit_server.service.FCMService;
 import clov3r.oneit_server.service.NotificationService;
@@ -8,7 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +42,11 @@ public class NotificationController {
   @Tag(name = "알림 API", description = "알림 관련 API")
   @Operation(summary = "알림 리스트 조회", description = "알림 리스트를 조회합니다.")
   @GetMapping("/list")
-  public void getNotificationList(
+  public ResponseEntity<List<NotificationDTO>> getNotificationList(
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    notificationService.getNotificationList(userIdx);
+    List<NotificationDTO> result = notificationService.getNotificationList(userIdx);
+    return ResponseEntity.ok(result);
   }
 
   @Tag(name = "알림 API", description = "알림 관련 API")

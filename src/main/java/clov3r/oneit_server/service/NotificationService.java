@@ -1,5 +1,6 @@
 package clov3r.oneit_server.service;
 
+import clov3r.oneit_server.domain.DTO.NotificationDTO;
 import clov3r.oneit_server.domain.entity.Device;
 import clov3r.oneit_server.domain.entity.FriendReq;
 import clov3r.oneit_server.domain.entity.Notification;
@@ -7,6 +8,7 @@ import clov3r.oneit_server.repository.DeviceRepository;
 import clov3r.oneit_server.repository.NotificationRepository;
 import clov3r.oneit_server.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,9 +56,12 @@ public class NotificationService {
     notificationRepository.save(notification);
   }
 
-  public void getNotificationList(Long userIdx) {
+  public List<NotificationDTO> getNotificationList(Long userIdx) {
 
-    notificationRepository.findAllByUserId(userIdx);
+    List<Notification> notificationList= notificationRepository.findAllByUserId(userIdx);
+    return notificationList.stream()
+        .map(NotificationDTO::new)
+        .toList();
   }
 
   @Transactional
