@@ -5,7 +5,7 @@ import clov3r.oneit_server.domain.entity.GiftboxProductVote;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GiftboxProductCustomRepository {
+public interface GiftboxProductCustomVoteRepository {
 
   VoteStatus voteProduct(GiftboxProductVote giftboxProductVote);
 
