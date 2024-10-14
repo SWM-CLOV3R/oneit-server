@@ -17,7 +17,7 @@ import clov3r.oneit_server.domain.entity.GiftboxProductVote;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.VoteProductRequest;
 import clov3r.oneit_server.legacy.exception.BaseException;
-import clov3r.oneit_server.repository.GiftboxProductRepository;
+import clov3r.oneit_server.repository.GiftboxProductVoteRepository;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.legacy.response.BaseResponse;
@@ -44,7 +44,7 @@ public class GiftboxProductController {
 
   private final GiftboxService giftboxService;
   private final GiftboxRepository giftboxRepository;
-  private final GiftboxProductRepository giftboxProductRepository;
+  private final GiftboxProductVoteRepository giftboxProductVoteRepository;
   private final GiftboxProductService giftboxProductService;
   private final UserRepository userRepository;
   private final ProductRepository productRepository;

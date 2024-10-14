@@ -4,7 +4,6 @@ import static jakarta.persistence.FetchType.*;
 
 import clov3r.oneit_server.domain.data.GiftboxUserRole;
 import clov3r.oneit_server.domain.data.status.InvitationStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
