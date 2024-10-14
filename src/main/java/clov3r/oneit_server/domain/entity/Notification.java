@@ -1,7 +1,10 @@
 package clov3r.oneit_server.domain.entity;
 
+import clov3r.oneit_server.domain.data.status.NotiStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,17 +28,25 @@ public class Notification {
   private Long idx;
 
   @ManyToOne
-  @JoinColumn(name = "user_idx")
-  private User user;
+  @JoinColumn(name = "receiver_idx")
+  private User receiver;
+
+  @ManyToOne
+  @JoinColumn(name = "sender_idx")
+  private User sender;
+
   private String title;
   private String body;
 
   @Column(name = "created_at")
   private LocalDateTime createdAt;
-
   @Setter
   private LocalDateTime readAt;
+  @Setter
+  private LocalDateTime sentAt;
 
-
-
+  @Setter
+  @Column(name = "noti_status")
+  @Enumerated(EnumType.STRING)
+  private NotiStatus notiStatus;
 }

@@ -3,6 +3,7 @@ package clov3r.oneit_server.controller;
 import static clov3r.oneit_server.error.errorcode.CustomErrorCode.DUPLICATE_FRIEND;
 import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_FRIEND_REQUEST;
 import static clov3r.oneit_server.error.errorcode.CustomErrorCode.INVALID_SELF_REQUEST;
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
 import clov3r.oneit_server.config.security.Auth;
 import clov3r.oneit_server.domain.DTO.FriendReqDTO;
@@ -11,6 +12,7 @@ import clov3r.oneit_server.domain.DTO.FriendDTO;
 import clov3r.oneit_server.domain.entity.FriendReq;
 import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.FriendReqRepository;
+import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.service.FriendService;
 import clov3r.oneit_server.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +34,7 @@ public class FriendController {
 
   private final FriendService friendService;
   private final FriendReqRepository friendReqRepository;
+  private final UserRepository userRepository;
 
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 요청", description = "친구 요청을 보냅니다.(서비스 가입 유저에게만 가능)")
@@ -42,6 +45,9 @@ public class FriendController {
   ) throws IOException {
     if (userIdx.equals(friendIdx)) {
       throw new BaseExceptionV2(INVALID_SELF_REQUEST);
+    }
+    if (!userRepository.existsByUserIdx(friendIdx) || !userRepository.existsByUserIdx(userIdx)) {
+      throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (friendService.isFriend(userIdx, friendIdx)) {
       throw new BaseExceptionV2(DUPLICATE_FRIEND);
@@ -62,6 +68,9 @@ public class FriendController {
       @PathVariable Long requestIdx,
       @Parameter(hidden = true) @Auth Long userIdx
   ) throws IOException {
+    if (!userRepository.existsByUserIdx(friendIdx) || !userRepository.existsByUserIdx(userIdx)) {
+      throw new BaseExceptionV2(USER_NOT_FOUND);
+    }
     friendService.acceptFriend(requestIdx);
     if (!friendService.isFriend(userIdx, friendIdx)) {
       friendService.createNewFriendship(userIdx, friendIdx);
