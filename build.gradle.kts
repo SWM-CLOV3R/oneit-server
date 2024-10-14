@@ -67,6 +67,9 @@ dependencies {
     // Google Firebase Admin
     implementation("com.google.firebase:firebase-admin:9.2.0")
 
+    // Sentry
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:7.9.0")
+
 }
 //tasks.withType<Test> {
 //    useJUnitPlatform()
