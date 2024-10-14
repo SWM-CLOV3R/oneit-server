@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-  @Query("SELECT n FROM Notification n WHERE n.user.idx = :userIdx and n.readAt = null")
+  @Query("SELECT n FROM Notification n WHERE n.receiver.idx = :userIdx and n.notiStatus != 'READ'")
   List<Notification> findAllByUserId(Long userIdx);
 
 }

@@ -58,15 +58,4 @@ public class NotificationController {
     notificationService.readNotification(notificationIdx);
   }
 
-//
-//  @Tag(name = "FCM API", description = "FCM 관련 API")
-//  @GetMapping("/fcm")
-//  public void sendFcm(
-//      @RequestParam String token
-//  ) throws IOException {
-//    String title = "FCM TEST";
-//    String body = "안녕하십니까!";
-//    fcmService.sendMessageTo(token, title, body);
-//  }
-
 }

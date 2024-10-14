@@ -6,6 +6,7 @@ import clov3r.oneit_server.domain.data.status.FriendReqStatus;
 import clov3r.oneit_server.domain.data.status.Status;
 import clov3r.oneit_server.domain.entity.FriendReq;
 import clov3r.oneit_server.domain.entity.Friendship;
+import clov3r.oneit_server.domain.entity.Notification;
 import clov3r.oneit_server.repository.DeviceRepository;
 import clov3r.oneit_server.repository.FriendReqRepository;
 import clov3r.oneit_server.repository.FriendshipRepository;
@@ -36,19 +37,22 @@ public class FriendService {
         .build();
     friendReq.createBaseEntity();
     friendReqRepository.save(friendReq);
-    notificationService.sendFreindRequestNotification(friendReq);
-    String deviceToken = deviceRepository.findByUserId(friendIdx).getDeviceToken();
-    fcmService.sendMessageTo(deviceToken, "친구 요청", friendReq.getFrom().getNickname() + "님이 친구 요청을 보냈습니다.");
+    Notification notification = notificationService.sendFreindRequestNotification(friendReq);
+    String deviceToken = deviceRepository.findByUserId(notification.getReceiver().getIdx()).getDeviceToken();
+    fcmService.sendMessageTo(deviceToken, "친구 요청", notification.getSender().getNickname() + "님이 친구 요청을 보냈습니다.");
 
     return friendReq;
   }
 
   @Transactional
-  public void acceptFriend(Long requestIdx) {
+  public void acceptFriend(Long requestIdx) throws IOException {
     FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReq.accept();
     friendReq.updateBaseEntity();
-    notificationService.sendFriendAcceptanceNotification(friendReq);
+    Notification notification = notificationService.sendFriendAcceptanceNotification(friendReq);
+    String deviceToken = deviceRepository.findByUserId(notification.getReceiver().getIdx()).getDeviceToken();
+    fcmService.sendMessageTo(deviceToken, "친구 요청 수락", notification.getSender().getNickname() + "님이 친구 요청을 수락했습니다.");
+
   }
 
   @Transactional
@@ -67,10 +71,7 @@ public class FriendService {
     friendshipB.createBaseEntity();
     friendshipRepository.save(friendshipA);
     friendshipRepository.save(friendshipB);
-
-    String deviceToken = deviceRepository.findByUserId(friendIdx).getDeviceToken();
-    fcmService.sendMessageTo(deviceToken, "친구 요청 수락", userRepository.findByUserIdx(userIdx).getNickname() + "님이 친구 요청을 수락했습니다.");
-  }
+}
 
   @Transactional
   public void rejectFriend(Long requestIdx) {
