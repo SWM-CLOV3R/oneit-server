@@ -5,12 +5,16 @@ on:
     branches: ["develop"]
 
 jobs:
-  build:
+  build-api:
+    name: Build API Server
     runs-on: ubuntu-latest
     
     steps:
+      # Checkout the repository
+      - name : Checkout the repository
+        uses: actions/checkout@v3
+
       # jdk 17 설치
-      - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -21,10 +25,6 @@ jobs:
         run: |
           mkdir -p ./src/main/resources/firebase
           echo "${{ secrets.FCM_ACCOUNT }}" | base64 --decode > ./src/main/resources/firebase/firebase-admin-sdk.json
-        shell: bash
-
-      - name: Check firebase-admin-sdk.json content
-        run: cat ./src/main/resources/firebase/firebase-admin-sdk.json
         shell: bash
 
       # gradle 실행 권한 부여
@@ -57,12 +57,12 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip --source .
 
-  deploy:
-    needs: build
+  deploy-api:
+    needs: build-api
+    name : Deploy Api server
     runs-on: ubuntu-latest
     
     steps:
-
       # AWS 사용자 정보 입력
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
