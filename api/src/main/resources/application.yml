@@ -1,0 +1,56 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: api
+  request:
+    url: ${REQUEST_URL}
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  cloud:
+    aws:
+      s3:
+        bucket: ${AWS_S3_BUCKET_NAME}
+      credentials:
+        access-key: ${AWS_S3_ACCESS_KEY}
+        secret-key: ${AWS_S3_SECRET_ACCESS_KEY}
+      region:
+        static: ${AWS_REGION}
+      stack:
+        auto: false
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+cdn:
+  domain: ${CDN_DOMAIN}
+
+springdoc:
+  swagger-ui:
+    path: /api-swagger  # swagger-ui ?? ??
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+  paths-to-match:
+    - /api/** # swagger-ui? ??? api? ????? ??
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure.logging: ERROR
+
+webhook:
+  slack:
+    url: ${WEBHOOK_SLACK_URL}
+
+fcm:
+  config:
+    path: firebase-admin-sdk.json
+  base-url: https://fcm.googleapis.com/v1/projects/oneit-gpt/messages:send
+  auth-url: https://www.googleapis.com/auth/cloud-platform
