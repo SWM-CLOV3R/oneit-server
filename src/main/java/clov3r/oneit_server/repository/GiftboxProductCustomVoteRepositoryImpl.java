@@ -11,7 +11,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GiftboxProductCustomRepositoryImpl implements GiftboxProductCustomRepository {
+public class GiftboxProductCustomVoteRepositoryImpl implements GiftboxProductCustomVoteRepository {
 
   @PersistenceContext
   private final EntityManager em;

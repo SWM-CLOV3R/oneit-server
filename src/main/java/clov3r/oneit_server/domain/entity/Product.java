@@ -10,10 +10,10 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @RequiredArgsConstructor
 @Getter
 @Setter
+@Entity
 @Table(name = "product")
 public class Product extends BaseEntity {
 

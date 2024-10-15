@@ -7,9 +7,9 @@ import lombok.Setter;
 
 import static jakarta.persistence.FetchType.LAZY;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @Table(name = "product_keyword")
 public class ProductKeyword {
 
