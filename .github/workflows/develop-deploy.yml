@@ -23,8 +23,8 @@ jobs:
 
       - name: firebase notification
         run: |
-          mkdir -p ./src/main/resources/firebase
-          echo "${{ secrets.FCM_ACCOUNT }}" | base64 --decode > ./src/main/resources/firebase/firebase-admin-sdk.json
+          mkdir -p ./api/src/main/resources/firebase
+          echo "${{ secrets.FCM_ACCOUNT }}" | base64 --decode > ./api/src/main/resources/firebase/firebase-admin-sdk.json
         shell: bash
 
       # gradle 실행 권한 부여
