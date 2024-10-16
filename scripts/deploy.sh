@@ -24,7 +24,7 @@ sudo apt-get install jq -y
 export PROJECT_ID=$(aws secretsmanager get-secret-value --secret-id "PROJECT_ID" --query "SecretString" --output text | jq -r .PROJECT_ID)
 export CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id "CLIENT_ID" --query "SecretString" --output text | jq -r .CLIENT_ID)
 export CLIENT_SECRET=$(aws secretsmanager get-secret-value --secret-id "CLIENT_SECRET" --query "SecretString" --output text | jq -r .CLIENT_SECRET)
-export ACTIVE_ENV=dev
+export ACTIVE_ENV=prod
 
 # 3. INFISICAL_TOKEN 받아오기 (infisical 로그인 with client id and client secret)
 export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id=$CLIENT_ID --client-secret=$CLIENT_SECRET --silent --plain)
@@ -52,4 +52,4 @@ JAR_NAME=$(ls $REPOSITORY/api/build/libs/ | grep '.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/api/build/libs/$JAR_NAME
 
 echo "> $JAR_PATH deploy"
-nohup java -jar -Dspring.profiles.active=dev $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &
+nohup java -jar -Dspring.profiles.active=prod $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &
