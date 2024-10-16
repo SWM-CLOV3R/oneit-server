@@ -32,7 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "https://www.oneit.gift",
                         "https://client-dev.oneit.gift",
                         "https://api.oneit.gift",
-                        "https://dev-api.oneit.gift")
+                        "https://dev-api.oneit.gift",
+                        "https://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
                 .allowedHeaders("*");
     }
