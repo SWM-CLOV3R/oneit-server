@@ -12,6 +12,7 @@ import clov3r.oneit_server.domain.data.Gender;
 import clov3r.oneit_server.domain.entity.Category;
 import clov3r.oneit_server.domain.entity.Keyword;
 import clov3r.oneit_server.domain.entity.Product;
+import clov3r.oneit_server.error.errorcode.ErrorCode;
 import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.ProductRepository;
 import clov3r.oneit_server.service.CategoryService;
@@ -52,7 +53,6 @@ public class ProductControllerV2 {
     public ResponseEntity<List<ProductDTO>> extractProductsWithCategory(@RequestBody ProductSearch productSearch) {
 
         // check gender
-        System.out.println("productSearch = " + productSearch);
         if (!Gender.isValid(productSearch.getGender())) {
             log.info(REQUEST_GENDER_ERROR.getMessage());
             throw new BaseExceptionV2(REQUEST_GENDER_ERROR);
@@ -122,5 +122,16 @@ public class ProductControllerV2 {
         return ResponseEntity.ok(products);
     }
 
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 검색", description = "상품 이름을 검색하여 상품 리스트를 반환합니다. " +
+            "검색어가 2글자 미만인 경우 에러를 반환합니다.")
+    @GetMapping("/api/v2/products/search")
+    public ResponseEntity<List<ProductSummaryDTO>> searchProduct(@RequestParam String searchKeyword) {
+        if (searchKeyword.length() < 2) {
+            throw new BaseExceptionV2(SEARCH_KEYWORD_ERROR);
+        }
+        List<ProductSummaryDTO> products = productService.searchProduct(searchKeyword);
+        return ResponseEntity.ok(products);
+    }
 
 }

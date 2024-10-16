@@ -38,6 +38,10 @@ awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if
 # 6. .env 파일을 읽어 환경변수 설정
 export $(cat /home/ubuntu/oneit/.env | xargs)
 
+# 7. ./firebase/firebase-admin-sdk.json 파일 생성
+export FCM_JSON_NAME="fcm-admin-sdk"
+export FCM_ACCOUNT=$(aws secretsmanager get-secret-value --secret-id $FCM_JSON_NAME --query SecretString --output text)
+echo $FCM_ACCOUNT > $REPOSITORY/src/main/resources/firebase/firebase-admin-sdk.json
 
 echo "> start applications"
 

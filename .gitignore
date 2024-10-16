@@ -38,3 +38,6 @@ out/
 
 ### local file ###
 application-local.yml
+
+/logs
+**/firebase

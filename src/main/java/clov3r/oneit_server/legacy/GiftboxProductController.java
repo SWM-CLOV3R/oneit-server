@@ -17,11 +17,11 @@ import clov3r.oneit_server.domain.entity.GiftboxProductVote;
 import clov3r.oneit_server.domain.entity.Product;
 import clov3r.oneit_server.domain.request.VoteProductRequest;
 import clov3r.oneit_server.legacy.exception.BaseException;
-import clov3r.oneit_server.repository.GiftboxProductRepository;
+import clov3r.oneit_server.repository.GiftboxProductVoteRepository;
 import clov3r.oneit_server.repository.GiftboxRepository;
 import clov3r.oneit_server.repository.ProductRepository;
-import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.legacy.response.BaseResponse;
+import clov3r.oneit_server.repository.UserRepository;
 import clov3r.oneit_server.service.GiftboxProductService;
 import clov3r.oneit_server.service.GiftboxService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +44,7 @@ public class GiftboxProductController {
 
   private final GiftboxService giftboxService;
   private final GiftboxRepository giftboxRepository;
-  private final GiftboxProductRepository giftboxProductRepository;
+  private final GiftboxProductVoteRepository giftboxProductVoteRepository;
   private final GiftboxProductService giftboxProductService;
   private final UserRepository userRepository;
   private final ProductRepository productRepository;
@@ -68,7 +68,7 @@ public class GiftboxProductController {
         return new BaseResponse<>(PRODUCT_NOT_FOUND);
       }
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -152,7 +152,7 @@ public class GiftboxProductController {
     if (giftboxRepository.findById(giftboxIdx) == null) {
       return new BaseResponse<>(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -206,7 +206,7 @@ public class GiftboxProductController {
 //    }
 
     // 로그인 유저만 가능한 경우
-    if (userIdx == null || !userRepository.existsUser(userIdx)) {
+    if (userIdx == null || !userRepository.existsByUserIdx(userIdx)) {
       return new BaseResponse<>(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, request.getGiftboxIdx())) {

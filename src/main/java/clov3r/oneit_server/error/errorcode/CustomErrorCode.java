@@ -29,6 +29,12 @@ public enum CustomErrorCode implements ErrorCode {
   NOT_EXIST_EMOJI(BAD_REQUEST, "존재하지 않는 이모지입니다."),
   NOT_EXIST_INQUIRY(BAD_REQUEST, "존재하지 않는 물어보기입니다."),
   NOT_EXIST_INQUIRY_PRODUCT(BAD_REQUEST, "존재하지 않는 물어보기 상품입니다."),
+  INVALID_SELF_REQUEST(BAD_REQUEST, "자신에게 친구 요청을 보낼 수 없습니다."),
+  INVALID_FRIEND_REQUEST(BAD_REQUEST, "이미 친구 요청을 보낸 상태입니다."),
+  DUPLICATE_FRIEND(BAD_REQUEST, "이미 친구 관계 상태이기 때문에 요청을 보낼 수 없습니다."),
+  DUPLICATE_NICKNAME(BAD_REQUEST, "중복된 닉네임입니다."),
+  SEARCH_KEYWORD_ERROR(BAD_REQUEST, "검색 키워드 입력값은 2글자 이상이어야 합니다."),
+  CANNOT_DELETE_OTHERS_COMMENT(BAD_REQUEST, "다른 사용자의 댓글은 삭제할 수 없습니다."),
 
   /**
    * token 오류
@@ -52,6 +58,7 @@ public enum CustomErrorCode implements ErrorCode {
   INVITATION_NOT_FOUND(NOT_FOUND, "초대를 찾을 수 없습니다."),
   INQUIRY_NOT_FOUND(NOT_FOUND, "물어보기를 찾을 수 없습니다."),
   ALREADY_USED_INQUIRY(NOT_FOUND, "이미 응답한 물어보기입니다."),
+  COMMENT_NOT_FOUND(NOT_FOUND, "댓글을 찾을 수 없습니다."),
 
   /**
    * FORBIDDEN

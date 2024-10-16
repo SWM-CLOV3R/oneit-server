@@ -1,9 +1,13 @@
 package clov3r.oneit_server.service;
 
+import static clov3r.oneit_server.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
+
 import clov3r.oneit_server.domain.DTO.KakaoFriendDTO;
 import clov3r.oneit_server.domain.data.status.UserStatus;
 import clov3r.oneit_server.domain.entity.User;
 import clov3r.oneit_server.domain.DTO.KakaoProfileDTO;
+import clov3r.oneit_server.domain.request.SignupRequest;
+import clov3r.oneit_server.error.exception.BaseExceptionV2;
 import clov3r.oneit_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;

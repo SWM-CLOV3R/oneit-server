@@ -58,7 +58,7 @@ public class GiftboxControllerV2 {
     if (request.getName() == null || request.getDeadline() == null || userIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
@@ -110,7 +110,7 @@ public class GiftboxControllerV2 {
             participant.getUser().getIdx(),
             participant.getUser().getNickname(),
             participant.getUser().getName(),
-            participant.getUser().getProfileImgFromKakao(),
+            participant.getUser().getProfileImg(),
             participant.getUserRole()
         ))
         .toList();
@@ -136,7 +136,7 @@ public class GiftboxControllerV2 {
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
     // request validation
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
 
@@ -151,7 +151,7 @@ public class GiftboxControllerV2 {
                   participant.getUser().getIdx(),
                   participant.getUser().getNickname(),
                   participant.getUser().getName(),
-                  participant.getUser().getProfileImgFromKakao(),
+                  participant.getUser().getProfileImg(),
                   participant.getUserRole()
               ))
               .toList();
@@ -181,7 +181,7 @@ public class GiftboxControllerV2 {
     if (giftboxRepository.findById(giftboxIdx) == null) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isManagerOfGiftbox(userIdx, giftboxIdx)) {
@@ -209,7 +209,7 @@ public class GiftboxControllerV2 {
     if (request.getName() == null || request.getDeadline() == null || userIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isManagerOfGiftbox(userIdx, giftboxIdx)) {
@@ -250,7 +250,7 @@ public class GiftboxControllerV2 {
     if (!giftboxRepository.existsById(giftboxIdx)) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -289,7 +289,7 @@ public class GiftboxControllerV2 {
     if (!giftboxRepository.existsById(giftboxUser.getGiftbox().getIdx())) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
 
@@ -313,7 +313,7 @@ public class GiftboxControllerV2 {
     if (!giftboxRepository.existsById(giftboxIdx)) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
-    if (!userRepository.existsUser(userIdx)) {
+    if (!userRepository.existsByUserIdx(userIdx)) {
       throw new BaseExceptionV2(USER_NOT_FOUND);
     }
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
@@ -326,7 +326,7 @@ public class GiftboxControllerV2 {
             participant.getUser().getIdx(),
             participant.getUser().getNickname(),
             participant.getUser().getName(),
-            participant.getUser().getProfileImgFromKakao(),
+            participant.getUser().getProfileImg(),
             participant.getUserRole()
         ))
         .toList();

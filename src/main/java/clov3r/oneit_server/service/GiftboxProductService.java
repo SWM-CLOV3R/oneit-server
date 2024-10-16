@@ -2,7 +2,7 @@ package clov3r.oneit_server.service;
 
 import clov3r.oneit_server.domain.data.status.VoteStatus;
 import clov3r.oneit_server.domain.entity.GiftboxProductVote;
-import clov3r.oneit_server.repository.GiftboxProductRepository;
+import clov3r.oneit_server.repository.GiftboxProductVoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GiftboxProductService {
 
-  private final GiftboxProductRepository giftboxProductRepository;
+  private final GiftboxProductVoteRepository giftboxProductVoteRepository;
 
   public VoteStatus voteProduct(GiftboxProductVote giftboxProductVote) {
-      VoteStatus previousStatus = giftboxProductRepository.voteProduct(giftboxProductVote);
+      VoteStatus previousStatus = giftboxProductVoteRepository.voteProduct(giftboxProductVote);
       return previousStatus;
   }
 
@@ -24,10 +24,10 @@ public class GiftboxProductService {
 
         if (newVote.equals(VoteStatus.LIKE)) {
           // like +1
-          giftboxProductRepository.updateLikeCount(giftboxIdx, productIdx, 1);
+          giftboxProductVoteRepository.updateLikeCount(giftboxIdx, productIdx, 1);
         } else if (newVote.equals(VoteStatus.DISLIKE)) {
           // dislike +1
-          giftboxProductRepository.updateDislikeCount(giftboxIdx, productIdx, 1);
+          giftboxProductVoteRepository.updateDislikeCount(giftboxIdx, productIdx, 1);
         }
       } else {
 
@@ -37,18 +37,18 @@ public class GiftboxProductService {
         if (!previousVote.equals(newVote)) {
           if (previousVote.equals(VoteStatus.LIKE)) {
             // like -1
-            giftboxProductRepository.updateLikeCount(giftboxIdx, productIdx, -1);
+            giftboxProductVoteRepository.updateLikeCount(giftboxIdx, productIdx, -1);
           } else if (previousVote.equals(VoteStatus.DISLIKE)) {
             // dislike -1
-            giftboxProductRepository.updateDislikeCount(giftboxIdx, productIdx, -1);
+            giftboxProductVoteRepository.updateDislikeCount(giftboxIdx, productIdx, -1);
           }
 
           if (newVote.equals(VoteStatus.LIKE)) {
             // like +1
-            giftboxProductRepository.updateLikeCount(giftboxIdx, productIdx, 1);
+            giftboxProductVoteRepository.updateLikeCount(giftboxIdx, productIdx, 1);
           } else if (newVote.equals(VoteStatus.DISLIKE)) {
             // dislike +1
-            giftboxProductRepository.updateDislikeCount(giftboxIdx, productIdx, 1);
+            giftboxProductVoteRepository.updateDislikeCount(giftboxIdx, productIdx, 1);
           }
         }
 
@@ -58,7 +58,7 @@ public class GiftboxProductService {
 
 
   public VoteStatus getVoteStatusOfUser(Long userIdx, Long giftboxIdx, Long idx) {
-    VoteStatus voteStatus = giftboxProductRepository.getVoteStatusOfUser(userIdx, giftboxIdx, idx);
+    VoteStatus voteStatus = giftboxProductVoteRepository.getVoteStatusOfUser(userIdx, giftboxIdx, idx);
     if (voteStatus == null || voteStatus == VoteStatus.NONE) {
       return VoteStatus.NONE;
     }
