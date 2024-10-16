@@ -48,8 +48,8 @@ echo "> start applications"
 #!/bin/bash
 REPOSITORY=/home/ubuntu/oneit
 
-JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.jar' | tail -n 1)
-JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
+JAR_NAME=$(ls $REPOSITORY/api/build/libs/ | grep '.jar' | tail -n 1)
+JAR_PATH=$REPOSITORY/api/build/libs/$JAR_NAME
 
 echo "> $JAR_PATH deploy"
 nohup java -jar -Dspring.profiles.active=prod $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &

@@ -60,6 +60,16 @@ dependencies {
     //s3
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+
+    // slack
+    implementation("com.slack.api:slack-api-client:1.40.0")
+
+    // Google Firebase Admin
+    implementation("com.google.firebase:firebase-admin:9.2.0")
+
+    // Sentry
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:7.9.0")
+
 }
 //tasks.withType<Test> {
 //    useJUnitPlatform()
