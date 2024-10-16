@@ -41,7 +41,7 @@ export $(cat /home/ubuntu/oneit/.env | xargs)
 # 7. ./firebase/firebase-admin-sdk.json 파일 생성
 export FCM_JSON_NAME="fcm-admin-sdk"
 export FCM_ACCOUNT=$(aws secretsmanager get-secret-value --secret-id $FCM_JSON_NAME --query SecretString --output text)
-echo $FCM_ACCOUNT > $REPOSITORY/src/main/resources/firebase/firebase-admin-sdk.json
+echo $FCM_ACCOUNT > $REPOSITORY/api/src/main/resources/firebase/firebase-admin-sdk.json
 
 echo "> start applications"
 
