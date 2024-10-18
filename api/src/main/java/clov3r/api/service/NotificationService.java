@@ -23,14 +23,15 @@ public class NotificationService {
   private final DeviceRepository deviceRepository;
 
   @Transactional
-  public void saveDeviceToken(Long userIdx, String token) {
+  public void saveDeviceToken(Long userIdx, String deviceToken, String deviceType) {
     Device device = deviceRepository.findByUserId(userIdx);
     if (device != null) {
       device.updateLoginAt(LocalDateTime.now());
     } else {
       device = Device.builder()
           .user(userRepository.findByUserIdx(userIdx))
-          .deviceToken(token)
+          .deviceToken(deviceToken)
+          .deviceType(deviceType)
           .lastLoggedInAt(LocalDateTime.now())
           .build();
       deviceRepository.save(device);
