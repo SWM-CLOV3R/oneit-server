@@ -4,6 +4,7 @@ import clov3r.api.domain.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.relational.core.sql.In;
 
 @Getter
 @AllArgsConstructor
@@ -11,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class ProductSummaryDTO {
     private Long idx;
     private String name;
-    private int originalPrice;
-    private int currentPrice;
-    private int discountRate;
+    private Integer originalPrice;
+//    private Integer currentPrice;
+//    private Integer discountRate;
     private String thumbnailUrl;
     private int likeCount;
 
@@ -22,8 +23,8 @@ public class ProductSummaryDTO {
         this.idx = product.getIdx();
         this.name = product.getName();
         this.originalPrice = product.getOriginalPrice();
-        this.currentPrice = product.getCurrentPrice();
-        this.discountRate = product.getDiscountRate();
+//        this.currentPrice = product.getCurrentPrice();
+//        this.discountRate = product.getDiscountRate();
         this.thumbnailUrl = product.getThumbnailUrl();
     }
 }

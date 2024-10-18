@@ -17,9 +17,9 @@ public class ProductDTO {
     private Long idx;
     private String name;
     private String description;
-    private int originalPrice;
-    private int currentPrice;
-    private int discountRate;
+    private Integer originalPrice;
+//    private Integer currentPrice;
+//    private Integer discountRate;
     private String thumbnailUrl;
     private String mallName;
     private String productUrl;
@@ -32,8 +32,8 @@ public class ProductDTO {
         this.name = product.getName();
         this.description = product.getDescription();
         this.originalPrice = product.getOriginalPrice();
-        this.currentPrice = product.getCurrentPrice();
-        this.discountRate = product.getDiscountRate();
+//        this.currentPrice = product.getCurrentPrice();
+//        this.discountRate = product.getDiscountRate();
         this.thumbnailUrl = product.getThumbnailUrl();
         this.mallName = product.getMallName();
         this.productUrl = product.getProductUrl();
