@@ -75,7 +75,7 @@ public class AuthControllerV2 {
         NicknameCheckDTO nicknameCheckDTO = new NicknameCheckDTO(false);
         if (userRepository.existsByNickname(nickname)) {
             nicknameCheckDTO.setExist(true);
-            return ResponseEntity.badRequest().body(nicknameCheckDTO); // TODO: 200 OK로 변경
+            return ResponseEntity.ok(nicknameCheckDTO);
         }
 
         return ResponseEntity.ok(nicknameCheckDTO);
