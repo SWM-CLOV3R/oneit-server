@@ -113,8 +113,6 @@ public class GiftboxProductControllerV2 {
             giftboxProduct.getProduct().getName(),
             giftboxProduct.getProduct().getDescription(),
             giftboxProduct.getProduct().getOriginalPrice(),
-            giftboxProduct.getProduct().getCurrentPrice(),
-            giftboxProduct.getProduct().getDiscountRate(),
             giftboxProduct.getProduct().getThumbnailUrl(),
             giftboxProduct.getLikeCount(),
             giftboxProductService.getVoteStatusOfUser(userIdx, giftboxIdx,

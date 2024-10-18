@@ -16,8 +16,8 @@ public class GiftboxProductDTO {
   private String name;
   private String description;
   private int originalPrice;
-  private int currentPrice;
-  private int discountRate;
+//  private int currentPrice;
+//  private int discountRate;
   private String thumbnailUrl;
   private int likeCount;
   private VoteStatus voteStatus;
