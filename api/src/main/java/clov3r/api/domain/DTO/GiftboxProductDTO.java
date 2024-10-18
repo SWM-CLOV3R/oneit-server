@@ -1,5 +1,6 @@
 package clov3r.api.domain.DTO;
 
+import clov3r.api.domain.data.status.PurchaseStatus;
 import clov3r.api.domain.data.status.VoteStatus;
 import clov3r.api.domain.entity.Product;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class GiftboxProductDTO {
   private String thumbnailUrl;
   private int likeCount;
   private VoteStatus voteStatus;
+  private PurchaseStatus purchaseStatus;
 
   public GiftboxProductDTO(Product product, int likeCount, VoteStatus voteStatus) {
     this.idx = product.getIdx();

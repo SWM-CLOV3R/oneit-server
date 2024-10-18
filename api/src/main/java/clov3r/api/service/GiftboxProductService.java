@@ -2,15 +2,19 @@ package clov3r.api.service;
 
 import clov3r.api.domain.data.status.VoteStatus;
 import clov3r.api.domain.entity.GiftboxProductVote;
+import clov3r.api.repository.GiftboxProductRepository;
 import clov3r.api.repository.GiftboxProductVoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class GiftboxProductService {
 
   private final GiftboxProductVoteRepository giftboxProductVoteRepository;
+  private final GiftboxProductRepository giftboxProductRepository;
 
   public VoteStatus voteProduct(GiftboxProductVote giftboxProductVote) {
       VoteStatus previousStatus = giftboxProductVoteRepository.voteProduct(giftboxProductVote);
@@ -65,4 +69,7 @@ public class GiftboxProductService {
     return voteStatus;
   }
 
+  public void purchaseProduct(Long giftboxIdx, Long productIdx, Long userIdx) {
+    giftboxProductRepository.purchaseProduct(giftboxIdx, productIdx);
+  }
 }
