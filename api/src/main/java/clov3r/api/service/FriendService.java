@@ -7,17 +7,18 @@ import clov3r.api.domain.data.status.Status;
 import clov3r.api.domain.entity.FriendReq;
 import clov3r.api.domain.entity.Friendship;
 import clov3r.api.domain.entity.Notification;
-import clov3r.api.repository.DeviceRepository;
 import clov3r.api.repository.FriendReqRepository;
 import clov3r.api.repository.FriendshipRepository;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.UserRepository;
-import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FriendService {
 
@@ -25,10 +26,10 @@ public class FriendService {
   private final UserRepository userRepository;
   private final FriendshipRepository friendshipRepository;
   private final NotificationService notificationService;
-  private final FCMService fcmService;
-  private final DeviceRepository deviceRepository;
+  private final ApplicationEventPublisher applicationEventPublisher;
+  private final NotificationRepository notificationRepository;
 
-  public FriendReq requestFriend(Long userIdx, Long friendIdx) throws IOException {
+  public FriendReq requestFriend(Long userIdx, Long friendIdx) {
 
     FriendReq friendReq = FriendReq.builder()
         .from(userRepository.findByUserIdx(userIdx))
@@ -37,26 +38,28 @@ public class FriendService {
         .build();
     friendReq.createBaseEntity();
     friendReqRepository.save(friendReq);
-    Notification notification = notificationService.sendFreindRequestNotification(friendReq);
-    String deviceToken = deviceRepository.findByUserId(notification.getReceiver().getIdx()).getDeviceToken();
-    fcmService.sendMessageTo(deviceToken, "친구 요청", notification.getSender().getNickname() + "님이 친구 요청을 보냈습니다.");
 
+    // Send notification
+    Notification notification = notificationService.sendFriendRequestNotification(friendReq);
+    applicationEventPublisher.publishEvent(notification);
+    notificationRepository.save(notification);
     return friendReq;
   }
 
   @Transactional
-  public void acceptFriend(Long requestIdx) throws IOException {
+  public void acceptFriend(Long requestIdx) {
     FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReq.accept();
     friendReq.updateBaseEntity();
-    Notification notification = notificationService.sendFriendAcceptanceNotification(friendReq);
-    String deviceToken = deviceRepository.findByUserId(notification.getReceiver().getIdx()).getDeviceToken();
-    fcmService.sendMessageTo(deviceToken, "친구 요청 수락", notification.getSender().getNickname() + "님이 친구 요청을 수락했습니다.");
 
+    // Send notification
+    Notification notification = notificationService.sendFriendAcceptanceNotification(friendReq);
+    applicationEventPublisher.publishEvent(notification);
+    notificationRepository.save(notification);
   }
 
   @Transactional
-  public void createNewFriendship(Long userIdx, Long friendIdx) throws IOException {
+  public void createNewFriendship(Long userIdx, Long friendIdx) {
     Friendship friendshipA = Friendship.builder()
         .user(userRepository.findByUserIdx(userIdx))
         .friend(userRepository.findByUserIdx(friendIdx))
@@ -101,7 +104,7 @@ public class FriendService {
 
   public List<FriendReqDTO> getFriendRequestsToMe(Long userIdx) {
     List<FriendReq> friendReqs = friendReqRepository.findAllByToIdx(userIdx);
-    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
+    return friendReqs.stream().map(friendReq -> {
       FriendDTO fromUser = FriendDTO.builder()
           .idx(friendReq.getFrom().getIdx())
           .name(friendReq.getFrom().getName())
@@ -111,12 +114,11 @@ public class FriendService {
           .build();
       return new FriendReqDTO(friendReq.getIdx(), fromUser, friendReq.getCreatedAt());
     }).toList();
-    return friendReqDTOList;
   }
 
   public List<FriendReqDTO> getFriendRequestsFromMe(Long userIdx) {
     List<FriendReq> friendReqs = friendReqRepository.findAllByFromIdx(userIdx);
-    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
+    return friendReqs.stream().map(friendReq -> {
       FriendDTO ToUser = FriendDTO.builder()
           .idx(friendReq.getTo().getIdx())
           .name(friendReq.getTo().getName())
@@ -126,7 +128,6 @@ public class FriendService {
           .build();
       return new FriendReqDTO(friendReq.getIdx(), ToUser, friendReq.getCreatedAt());
     }).toList();
-    return friendReqDTOList;
   }
 
 

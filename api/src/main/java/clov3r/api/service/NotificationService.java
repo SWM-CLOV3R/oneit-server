@@ -1,6 +1,7 @@
 package clov3r.api.service;
 
 import clov3r.api.domain.DTO.NotificationDTO;
+import clov3r.api.domain.data.ActionType;
 import clov3r.api.domain.data.status.NotiStatus;
 import clov3r.api.domain.entity.Device;
 import clov3r.api.domain.entity.FriendReq;
@@ -23,39 +24,43 @@ public class NotificationService {
   private final DeviceRepository deviceRepository;
 
   @Transactional
-  public void saveDeviceToken(Long userIdx, String token) {
+  public void saveDeviceToken(Long userIdx, String deviceToken, String deviceType) {
     Device device = deviceRepository.findByUserId(userIdx);
     if (device != null) {
       device.updateLoginAt(LocalDateTime.now());
     } else {
       device = Device.builder()
           .user(userRepository.findByUserIdx(userIdx))
-          .deviceToken(token)
+          .deviceToken(deviceToken)
+          .deviceType(deviceType)
           .lastLoggedInAt(LocalDateTime.now())
           .build();
       deviceRepository.save(device);
     }
   }
 
-  public Notification sendFreindRequestNotification(FriendReq friendReq) {
-    Notification notification = Notification.builder()
+  public Notification sendFriendRequestNotification(FriendReq friendReq) {
+    return Notification.builder()
         .receiver(friendReq.getTo())
         .sender(friendReq.getFrom())
+        .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
         .title("친구 요청")
         .body(friendReq.getFrom().getNickname() + "님이 친구 요청을 보냈습니다.")
+        .actionType(ActionType.FRIEND_REQUEST)
+        .platformType("FCM")
         .createdAt(LocalDateTime.now())
         .notiStatus(NotiStatus.CREATED)
         .build();
-    notificationRepository.save(notification);
-    return notification;
   }
 
   public Notification sendFriendAcceptanceNotification(FriendReq friendReq) {
     Notification notification = Notification.builder()
         .receiver(friendReq.getFrom())
         .sender(friendReq.getTo())
+        .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
         .title("친구 요청 수락")
         .body(friendReq.getTo().getNickname() + "님이 친구 요청을 수락했습니다.")
+        .actionType(ActionType.FRIEND_ACCEPTANCE)
         .createdAt(LocalDateTime.now())
         .notiStatus(NotiStatus.CREATED)
         .build();

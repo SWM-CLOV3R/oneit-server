@@ -30,12 +30,12 @@ public class ProductRepository {
     // save Product
     /**
      * 가격과 성별을 기준으로 상품을 필터링해서 해당하는 상품 리스트를 반환합니다.
-     * @param productSearch
      * @return List<Product>
      */
     public List<Product> filterProductsByPriceAndGender(ProductSearch productSearch) {
         // First Query: Filter by price and gender
-        String jpql = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
+        String jpql = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice and p.status = 'ACTIVE'";
+
 
         if (!productSearch.getGender().equals(Gender.UNISEX)) {
             jpql += " and p.gender <> :excludedGender";

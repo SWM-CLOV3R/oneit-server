@@ -14,10 +14,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "giftbox_user")
@@ -33,6 +37,10 @@ public class GiftboxUser extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_idx")
     private User user;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "sender_idx")
+    private User sender;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role")

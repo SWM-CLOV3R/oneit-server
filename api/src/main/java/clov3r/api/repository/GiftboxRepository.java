@@ -32,6 +32,7 @@ import org.springframework.stereotype.Repository;
 public class GiftboxRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
+    private final UserRepository userRepository;
 
     @Transactional
     public Giftbox save(Giftbox giftbox) {
@@ -228,14 +229,14 @@ public class GiftboxRepository {
     }
 
     @Transactional
-    public Long createPendingInvitation(Long giftboxIdx) {
+    public Long createPendingInvitation(Long giftboxIdx, Long userIdx) {
         // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
-        GiftboxUser giftboxUser = new GiftboxUser(
-            em.find(Giftbox.class, giftboxIdx),
-            null,
-            GiftboxUserRole.PARTICIPANT,
-            InvitationStatus.PENDING
-        );
+        GiftboxUser giftboxUser = GiftboxUser.builder()
+            .giftbox(em.find(Giftbox.class, giftboxIdx))
+            .sender(userRepository.findByUserIdx(userIdx))
+            .userRole(GiftboxUserRole.PARTICIPANT)
+            .invitationStatus(InvitationStatus.PENDING)
+            .build();
         giftboxUser.createBaseEntity();
         em.persist(giftboxUser);
         return giftboxUser.getIdx();
