@@ -35,7 +35,8 @@ public class ProductRepository {
      */
     public List<Product> filterProductsByPriceAndGender(ProductSearch productSearch) {
         // First Query: Filter by price and gender
-        String jpql = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
+        String jpql = "select distinct p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice and p.status = 'ACTIVE'";
+
 
         if (!productSearch.getGender().equals(Gender.UNISEX)) {
             jpql += " and p.gender <> :excludedGender";

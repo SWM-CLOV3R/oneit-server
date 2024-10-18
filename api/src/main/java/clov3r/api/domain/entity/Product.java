@@ -40,10 +40,10 @@ public class Product extends BaseEntity {
     private int originalPrice;
 
     @Column(name = "current_price")
-    private int currentPrice;
+    private Integer currentPrice;
 
     @Column(name = "discount_rate")
-    private int discountRate;
+    private Integer discountRate;
 
     @Column(name = "mall_name")
     private String mallName;
