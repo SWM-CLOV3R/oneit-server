@@ -37,7 +37,7 @@ public class Product extends BaseEntity {
     private String name;
 
     @Column(name = "original_price")
-    private int originalPrice;
+    private Integer originalPrice;
 
     @Column(name = "current_price")
     private Integer currentPrice;
