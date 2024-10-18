@@ -41,7 +41,6 @@ public class GiftboxProductControllerV2 {
 
   private final GiftboxService giftboxService;
   private final GiftboxRepository giftboxRepository;
-  private final GiftboxProductVoteRepository giftboxProductVoteRepository;
   private final GiftboxProductService giftboxProductService;
   private final UserRepository userRepository;
   private final ProductRepository productRepository;
@@ -77,7 +76,7 @@ public class GiftboxProductControllerV2 {
       giftboxService.addProductToGiftbox(giftboxIdx, productIdx);
     }
     return ResponseEntity.ok(giftboxIdx + "번 선물 바구니에 상품" +
-        productIdxList.toString() + "이 추가되었습니다.");
+        productIdxList + "이 추가되었습니다.");
   }
 
   // 선물 바구니의 상품 리스트 조회 API
@@ -164,7 +163,7 @@ public class GiftboxProductControllerV2 {
       }
     }
     return ResponseEntity.ok(giftboxIdx + "번 선물 바구니의 상품" +
-        productIdxList.toString()
+        productIdxList
         + "이 삭제되었습니다.");
   }
 
@@ -249,7 +248,7 @@ public class GiftboxProductControllerV2 {
     }
 
     // purchase product
-    giftboxProductService.purchaseProduct(giftboxIdx, productIdx, userIdx);
+    giftboxProductService.purchaseProduct(giftboxIdx, productIdx);
     return ResponseEntity.ok("제품을 구매했습니다.");
   }
 

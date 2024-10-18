@@ -17,8 +17,7 @@ public class GiftboxProductService {
   private final GiftboxProductRepository giftboxProductRepository;
 
   public VoteStatus voteProduct(GiftboxProductVote giftboxProductVote) {
-      VoteStatus previousStatus = giftboxProductVoteRepository.voteProduct(giftboxProductVote);
-      return previousStatus;
+    return giftboxProductVoteRepository.voteProduct(giftboxProductVote);
   }
 
   public void updateVoteCount(Long giftboxIdx, Long productIdx, VoteStatus previousVote, VoteStatus newVote) {
@@ -69,7 +68,7 @@ public class GiftboxProductService {
     return voteStatus;
   }
 
-  public void purchaseProduct(Long giftboxIdx, Long productIdx, Long userIdx) {
+  public void purchaseProduct(Long giftboxIdx, Long productIdx) {
     giftboxProductRepository.purchaseProduct(giftboxIdx, productIdx);
   }
 }

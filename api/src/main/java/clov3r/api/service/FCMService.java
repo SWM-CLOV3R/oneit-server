@@ -41,7 +41,7 @@ public class FCMService {
     return googleCredentials.getAccessToken().getTokenValue();
   }
 
-  private String makeMessage(String token, String title, String body) throws JsonParseException, JsonProcessingException {
+  private String makeMessage(String token, String title, String body) throws JsonProcessingException {
     FcmMessageDTO fcmMessage = FcmMessageDTO.builder()
         .message(FcmMessageDTO.Message.builder()
             .token(token)

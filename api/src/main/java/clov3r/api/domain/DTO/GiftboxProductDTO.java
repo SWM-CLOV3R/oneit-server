@@ -24,16 +24,4 @@ public class GiftboxProductDTO {
   private VoteStatus voteStatus;
   private PurchaseStatus purchaseStatus;
 
-  public GiftboxProductDTO(Product product, int likeCount, VoteStatus voteStatus) {
-    this.idx = product.getIdx();
-    this.name = product.getName();
-    this.description = product.getDescription();
-    this.originalPrice = product.getOriginalPrice();
-    this.currentPrice = product.getCurrentPrice();
-    this.discountRate = product.getDiscountRate();
-    this.thumbnailUrl = product.getThumbnailUrl();
-    this.likeCount = likeCount;
-    this.voteStatus = voteStatus;
-  }
-
 }

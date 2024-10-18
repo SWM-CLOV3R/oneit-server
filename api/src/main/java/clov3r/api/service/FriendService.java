@@ -28,12 +28,10 @@ public class FriendService {
   private final UserRepository userRepository;
   private final FriendshipRepository friendshipRepository;
   private final NotificationService notificationService;
-  private final FCMService fcmService;
-  private final DeviceRepository deviceRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final NotificationRepository notificationRepository;
 
-  public FriendReq requestFriend(Long userIdx, Long friendIdx) throws IOException {
+  public FriendReq requestFriend(Long userIdx, Long friendIdx) {
 
     FriendReq friendReq = FriendReq.builder()
         .from(userRepository.findByUserIdx(userIdx))
@@ -51,7 +49,7 @@ public class FriendService {
   }
 
   @Transactional
-  public void acceptFriend(Long requestIdx) throws IOException {
+  public void acceptFriend(Long requestIdx) {
     FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReq.accept();
     friendReq.updateBaseEntity();
@@ -63,7 +61,7 @@ public class FriendService {
   }
 
   @Transactional
-  public void createNewFriendship(Long userIdx, Long friendIdx) throws IOException {
+  public void createNewFriendship(Long userIdx, Long friendIdx) {
     Friendship friendshipA = Friendship.builder()
         .user(userRepository.findByUserIdx(userIdx))
         .friend(userRepository.findByUserIdx(friendIdx))
@@ -108,7 +106,7 @@ public class FriendService {
 
   public List<FriendReqDTO> getFriendRequestsToMe(Long userIdx) {
     List<FriendReq> friendReqs = friendReqRepository.findAllByToIdx(userIdx);
-    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
+    return friendReqs.stream().map(friendReq -> {
       FriendDTO fromUser = FriendDTO.builder()
           .idx(friendReq.getFrom().getIdx())
           .name(friendReq.getFrom().getName())
@@ -118,12 +116,11 @@ public class FriendService {
           .build();
       return new FriendReqDTO(friendReq.getIdx(), fromUser, friendReq.getCreatedAt());
     }).toList();
-    return friendReqDTOList;
   }
 
   public List<FriendReqDTO> getFriendRequestsFromMe(Long userIdx) {
     List<FriendReq> friendReqs = friendReqRepository.findAllByFromIdx(userIdx);
-    List<FriendReqDTO> friendReqDTOList = friendReqs.stream().map(friendReq -> {
+    return friendReqs.stream().map(friendReq -> {
       FriendDTO ToUser = FriendDTO.builder()
           .idx(friendReq.getTo().getIdx())
           .name(friendReq.getTo().getName())
@@ -133,7 +130,6 @@ public class FriendService {
           .build();
       return new FriendReqDTO(friendReq.getIdx(), ToUser, friendReq.getCreatedAt());
     }).toList();
-    return friendReqDTOList;
   }
 
 

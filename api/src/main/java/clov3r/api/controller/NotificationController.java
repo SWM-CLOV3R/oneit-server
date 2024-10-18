@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/notification")
 public class NotificationController {
 
-  private final FCMService fcmService;
   private final NotificationService notificationService;
 
   @Tag(name = "알림 API", description = "알림 관련 API")

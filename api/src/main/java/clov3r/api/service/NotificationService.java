@@ -40,7 +40,7 @@ public class NotificationService {
   }
 
   public Notification sendFriendRequestNotification(FriendReq friendReq) {
-    Notification notification = Notification.builder()
+    return Notification.builder()
         .receiver(friendReq.getTo())
         .sender(friendReq.getFrom())
         .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
@@ -51,7 +51,6 @@ public class NotificationService {
         .createdAt(LocalDateTime.now())
         .notiStatus(NotiStatus.CREATED)
         .build();
-    return notification;
   }
 
   public Notification sendFriendAcceptanceNotification(FriendReq friendReq) {
