@@ -1,5 +1,6 @@
 package clov3r.api.domain.entity;
 
+import clov3r.api.domain.data.ActionType;
 import clov3r.api.domain.data.status.NotiStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,7 +44,8 @@ public class Notification {
   private String body;
 
   @Column(name = "action_type")
-  private String actionType;
+  @Enumerated(EnumType.STRING)
+  private ActionType actionType;
 
   @Column(name = "platform_type")
   private String platformType;

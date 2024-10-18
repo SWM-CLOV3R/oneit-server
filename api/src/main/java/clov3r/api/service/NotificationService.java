@@ -1,6 +1,7 @@
 package clov3r.api.service;
 
 import clov3r.api.domain.DTO.NotificationDTO;
+import clov3r.api.domain.data.ActionType;
 import clov3r.api.domain.data.status.NotiStatus;
 import clov3r.api.domain.entity.Device;
 import clov3r.api.domain.entity.FriendReq;
@@ -45,7 +46,7 @@ public class NotificationService {
         .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
         .title("친구 요청")
         .body(friendReq.getFrom().getNickname() + "님이 친구 요청을 보냈습니다.")
-        .actionType("FRIEND_REQUEST")
+        .actionType(ActionType.FRIEND_REQUEST)
         .platformType("FCM")
         .createdAt(LocalDateTime.now())
         .notiStatus(NotiStatus.CREATED)
@@ -60,7 +61,7 @@ public class NotificationService {
         .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
         .title("친구 요청 수락")
         .body(friendReq.getTo().getNickname() + "님이 친구 요청을 수락했습니다.")
-        .actionType("FRIEND_ACCEPT")
+        .actionType(ActionType.FRIEND_ACCEPTANCE)
         .createdAt(LocalDateTime.now())
         .notiStatus(NotiStatus.CREATED)
         .build();
