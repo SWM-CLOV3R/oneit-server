@@ -3,7 +3,6 @@ package clov3r.api.controller;
 import clov3r.api.config.security.Auth;
 import clov3r.api.domain.DTO.NotificationDTO;
 import clov3r.api.domain.request.saveDeviceTokenRequest;
-import clov3r.api.service.FCMService;
 import clov3r.api.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

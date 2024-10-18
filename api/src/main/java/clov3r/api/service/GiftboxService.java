@@ -4,20 +4,29 @@ import static clov3r.api.error.errorcode.CommonErrorCode.DATABASE_ERROR;
 import static clov3r.api.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX;
 import static clov3r.api.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
 
+import clov3r.api.domain.data.GiftboxUserRole;
+import clov3r.api.domain.data.status.InvitationStatus;
 import clov3r.api.domain.data.status.Status;
 import clov3r.api.domain.entity.Giftbox;
+import clov3r.api.domain.entity.GiftboxUser;
 import clov3r.api.domain.request.PostGiftboxRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
 import clov3r.api.repository.GiftboxRepository;
+import clov3r.api.repository.GiftboxUserRepository;
 import clov3r.api.repository.ProductRepository;
+import clov3r.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class GiftboxService {
 
   private final GiftboxRepository giftboxRepository;
+  private final GiftboxUserRepository giftboxUserRepository;
+  private final UserRepository userRepository;
   private final ProductRepository productRepository;
 
   public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
@@ -69,7 +78,16 @@ public class GiftboxService {
     }
   }
 
-  public Long inviteUserToGiftBox(Long giftboxIdx) {
-    return giftboxRepository.createPendingInvitation(giftboxIdx);
+  public Long inviteUserToGiftBox(Long giftboxIdx, Long userIdx) {
+    // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
+    GiftboxUser giftboxUser = GiftboxUser.builder()
+        .giftbox(giftboxRepository.findById(giftboxIdx))
+        .sender(userRepository.findByUserIdx(userIdx))
+        .userRole(GiftboxUserRole.PARTICIPANT)
+        .invitationStatus(InvitationStatus.PENDING)
+        .build();
+    giftboxUser.createBaseEntity();
+    giftboxUserRepository.save(giftboxUser);
+    return giftboxRepository.createPendingInvitation(giftboxIdx, userIdx);
   }
 }

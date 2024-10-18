@@ -2,7 +2,6 @@ package clov3r.api.domain.DTO;
 
 import clov3r.api.domain.data.status.PurchaseStatus;
 import clov3r.api.domain.data.status.VoteStatus;
-import clov3r.api.domain.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

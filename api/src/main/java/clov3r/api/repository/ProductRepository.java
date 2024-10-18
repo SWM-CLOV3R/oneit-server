@@ -30,7 +30,6 @@ public class ProductRepository {
     // save Product
     /**
      * 가격과 성별을 기준으로 상품을 필터링해서 해당하는 상품 리스트를 반환합니다.
-     * @param productSearch
      * @return List<Product>
      */
     public List<Product> filterProductsByPriceAndGender(ProductSearch productSearch) {

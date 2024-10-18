@@ -2,7 +2,6 @@ package clov3r.api.service;
 
 import clov3r.api.domain.DTO.FcmMessageDTO;
 import clov3r.api.domain.DTO.PushNotificationRequest;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;

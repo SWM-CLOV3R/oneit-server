@@ -14,7 +14,6 @@ import clov3r.api.domain.entity.GiftboxProductVote;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.domain.request.VoteProductRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
-import clov3r.api.repository.GiftboxProductVoteRepository;
 import clov3r.api.repository.GiftboxRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
