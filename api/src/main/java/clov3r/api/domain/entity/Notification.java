@@ -35,8 +35,18 @@ public class Notification {
   @JoinColumn(name = "sender_idx")
   private User sender;
 
+  @ManyToOne
+  @JoinColumn(name = "device_idx")
+  private Device device;
+
   private String title;
   private String body;
+
+  @Column(name = "action_type")
+  private String actionType;
+
+  @Column(name = "platform_type")
+  private String platformType;
 
   @Column(name = "created_at")
   private LocalDateTime createdAt;

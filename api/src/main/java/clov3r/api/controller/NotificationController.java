@@ -27,7 +27,7 @@ public class NotificationController {
 
   @Tag(name = "알림 API", description = "알림 관련 API")
   @Operation(summary = "FCM 토큰 저장", description = "유저 로그인시 알림 허용을 했다면, FCM 토큰을 저장합니다.")
-  @GetMapping("/token")
+  @GetMapping("/token")   // TODO: POST로 변경, token을 body에 담아서 입력받기, device type도 함께 입력받기
   public void sendFCMNotification(
       @RequestParam String token,
       @Parameter(hidden = true) @Auth Long userIdx

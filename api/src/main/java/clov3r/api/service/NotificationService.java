@@ -37,16 +37,18 @@ public class NotificationService {
     }
   }
 
-  public Notification sendFreindRequestNotification(FriendReq friendReq) {
+  public Notification sendFriendRequestNotification(FriendReq friendReq) {
     Notification notification = Notification.builder()
         .receiver(friendReq.getTo())
         .sender(friendReq.getFrom())
+        .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
         .title("친구 요청")
         .body(friendReq.getFrom().getNickname() + "님이 친구 요청을 보냈습니다.")
+        .actionType("FRIEND_REQUEST")
+        .platformType("FCM")
         .createdAt(LocalDateTime.now())
         .notiStatus(NotiStatus.CREATED)
         .build();
-    notificationRepository.save(notification);
     return notification;
   }
 
@@ -54,8 +56,10 @@ public class NotificationService {
     Notification notification = Notification.builder()
         .receiver(friendReq.getFrom())
         .sender(friendReq.getTo())
+        .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
         .title("친구 요청 수락")
         .body(friendReq.getTo().getNickname() + "님이 친구 요청을 수락했습니다.")
+        .actionType("FRIEND_ACCEPT")
         .createdAt(LocalDateTime.now())
         .notiStatus(NotiStatus.CREATED)
         .build();

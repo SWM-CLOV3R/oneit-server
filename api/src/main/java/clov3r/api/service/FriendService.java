@@ -10,14 +10,17 @@ import clov3r.api.domain.entity.Notification;
 import clov3r.api.repository.DeviceRepository;
 import clov3r.api.repository.FriendReqRepository;
 import clov3r.api.repository.FriendshipRepository;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.UserRepository;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FriendService {
 
@@ -27,6 +30,8 @@ public class FriendService {
   private final NotificationService notificationService;
   private final FCMService fcmService;
   private final DeviceRepository deviceRepository;
+  private final ApplicationEventPublisher applicationEventPublisher;
+  private final NotificationRepository notificationRepository;
 
   public FriendReq requestFriend(Long userIdx, Long friendIdx) throws IOException {
 
@@ -37,10 +42,11 @@ public class FriendService {
         .build();
     friendReq.createBaseEntity();
     friendReqRepository.save(friendReq);
-    Notification notification = notificationService.sendFreindRequestNotification(friendReq);
-    String deviceToken = deviceRepository.findByUserId(notification.getReceiver().getIdx()).getDeviceToken();
-    fcmService.sendMessageTo(deviceToken, "친구 요청", notification.getSender().getNickname() + "님이 친구 요청을 보냈습니다.");
 
+    // Send notification
+    Notification notification = notificationService.sendFriendRequestNotification(friendReq);
+    applicationEventPublisher.publishEvent(notification);
+    notificationRepository.save(notification);
     return friendReq;
   }
 
@@ -49,10 +55,11 @@ public class FriendService {
     FriendReq friendReq = friendReqRepository.findByIdx(requestIdx);
     friendReq.accept();
     friendReq.updateBaseEntity();
-    Notification notification = notificationService.sendFriendAcceptanceNotification(friendReq);
-    String deviceToken = deviceRepository.findByUserId(notification.getReceiver().getIdx()).getDeviceToken();
-    fcmService.sendMessageTo(deviceToken, "친구 요청 수락", notification.getSender().getNickname() + "님이 친구 요청을 수락했습니다.");
 
+    // Send notification
+    Notification notification = notificationService.sendFriendAcceptanceNotification(friendReq);
+    applicationEventPublisher.publishEvent(notification);
+    notificationRepository.save(notification);
   }
 
   @Transactional

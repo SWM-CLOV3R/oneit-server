@@ -1,6 +1,7 @@
 package clov3r.api.service;
 
 import clov3r.api.domain.DTO.FcmMessageDTO;
+import clov3r.api.domain.DTO.PushNotificationRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +56,7 @@ public class FCMService {
 
   public void sendMessageTo(String targetToken, String title, String body) throws IOException {
     String message = makeMessage(targetToken, title, body);
+    System.out.println("message = " + message);
 
     OkHttpClient client = new OkHttpClient();
 
@@ -67,7 +69,32 @@ public class FCMService {
         .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
         .build();
 
-    Response response = client.newCall(request).execute();
+    try (Response response = client.newCall(request).execute()) {
+      if (!response.isSuccessful()) {
+        throw new IOException("Unexpected code " + response);
+      }
+    }
   }
 
+  public void sendMessageTo(PushNotificationRequest pushNotificationRequest) throws IOException {
+    String message = makeMessage(pushNotificationRequest.getToken(),
+        pushNotificationRequest.getTitle(), pushNotificationRequest.getBody());
+
+    OkHttpClient client = new OkHttpClient();
+
+    RequestBody requestBody = RequestBody.create(message,
+        MediaType.get("application/json; charset=utf-8"));
+    Request request = new Request.Builder()
+        .url(API_URL)
+        .post(requestBody)
+        .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+        .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
+        .build();
+
+    try (Response response = client.newCall(request).execute()) {
+      if (!response.isSuccessful()) {
+        throw new IOException("Unexpected code " + response);
+      }
+    }
+  }
 }
