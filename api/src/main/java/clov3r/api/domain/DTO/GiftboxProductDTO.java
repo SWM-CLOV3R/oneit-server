@@ -27,8 +27,8 @@ public class GiftboxProductDTO {
     this.name = product.getName();
     this.description = product.getDescription();
     this.originalPrice = product.getOriginalPrice();
-    this.currentPrice = product.getCurrentPrice();
-    this.discountRate = product.getDiscountRate();
+    // this.currentPrice = product.getCurrentPrice();
+    // this.discountRate = product.getDiscountRate();
     this.thumbnailUrl = product.getThumbnailUrl();
     this.likeCount = likeCount;
     this.voteStatus = voteStatus;
