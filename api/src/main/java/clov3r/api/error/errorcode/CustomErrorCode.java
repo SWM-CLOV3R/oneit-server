@@ -59,6 +59,7 @@ public enum CustomErrorCode implements ErrorCode {
   INQUIRY_NOT_FOUND(NOT_FOUND, "물어보기를 찾을 수 없습니다."),
   ALREADY_USED_INQUIRY(NOT_FOUND, "이미 응답한 물어보기입니다."),
   COMMENT_NOT_FOUND(NOT_FOUND, "댓글을 찾을 수 없습니다."),
+  GIFTBOX_PRODUCT_NOT_FOUND(NOT_FOUND, "선물바구니 상품을 찾을 수 없습니다."),
 
   /**
    * FORBIDDEN

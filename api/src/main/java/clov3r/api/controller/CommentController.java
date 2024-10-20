@@ -49,6 +49,9 @@ public class CommentController {
       throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);
     }
     Long giftboxProductIdx = giftboxProductRepository.findGiftboxProductIdxByGiftboxIdxAndProductIdx(giftboxIdx, productIdx);
+    if (giftboxProductIdx == null) {
+      throw new BaseExceptionV2(CustomErrorCode.GIFTBOX_PRODUCT_NOT_FOUND);
+    }
     Comment comment = commentService.createComment(userIdx, giftboxProductIdx, request);
     CommentDTO commentDTO = new CommentDTO(comment);
     return ResponseEntity.ok(commentDTO);
@@ -85,6 +88,9 @@ public class CommentController {
       throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);
     }
     Long giftboxProductIdx = giftboxProductRepository.findGiftboxProductIdxByGiftboxIdxAndProductIdx(giftboxIdx, productIdx);
+    if (giftboxProductIdx == null) {
+      throw new BaseExceptionV2(CustomErrorCode.GIFTBOX_PRODUCT_NOT_FOUND);
+    }
     List<CommentDTO> commentDTOList = commentService.getCommentList(giftboxProductIdx);
     return ResponseEntity.ok(commentDTOList);
   }
