@@ -26,7 +26,7 @@ import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
 import clov3r.api.service.GiftboxService;
 import clov3r.api.service.NotificationService;
-import clov3r.api.service.S3Service;
+import clov3r.api.service.common.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

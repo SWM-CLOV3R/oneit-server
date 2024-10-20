@@ -3,7 +3,7 @@ package clov3r.api.error.exception;
 import clov3r.api.error.errorcode.CommonErrorCode;
 import clov3r.api.error.errorcode.ErrorCode;
 import clov3r.api.error.response.ErrorResponse;
-import clov3r.api.service.SlackService;
+import clov3r.api.service.common.SlackService;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
