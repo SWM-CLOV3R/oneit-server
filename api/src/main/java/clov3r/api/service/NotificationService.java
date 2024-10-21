@@ -5,8 +5,11 @@ import clov3r.api.domain.data.ActionType;
 import clov3r.api.domain.data.status.NotiStatus;
 import clov3r.api.domain.entity.Device;
 import clov3r.api.domain.entity.FriendReq;
+import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.Notification;
 import clov3r.api.repository.DeviceRepository;
+import clov3r.api.repository.GiftboxRepository;
+import clov3r.api.repository.GiftboxUserRepository;
 import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -22,6 +25,8 @@ public class NotificationService {
   private final NotificationRepository notificationRepository;
   private final UserRepository userRepository;
   private final DeviceRepository deviceRepository;
+  private final GiftboxRepository giftboxRepository;
+  private final GiftboxUserRepository giftboxUserRepository;
 
   @Transactional
   public void saveDeviceToken(Long userIdx, String deviceToken, String deviceType) {
@@ -83,5 +88,38 @@ public class NotificationService {
     notification.setReadAt(LocalDateTime.now());
     notification.setNotiStatus(NotiStatus.READ);
     notificationRepository.save(notification);
+  }
+
+  public Notification sendGiftboxInvitationAcceptanceNotification(Long invitationIdx, Long giftboxIdx, Long userIdx) {
+//    List<Long> participants = giftboxRepository.findParticipantsByGiftboxIdx(giftboxIdx);
+    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    // 선물바구니 참여자들에게 전송
+//    for (Long participantIdx : participants) {
+//      Notification notification = Notification.builder()
+//          .receiver(userRepository.findByUserIdx(participantIdx))
+//          .sender(userRepository.findByUserIdx(userIdx))
+//          .device(deviceRepository.findByUserId(participantIdx))
+//          .title("선물바구니 ["+giftbox.getName()+"] 초대 수락")
+//          .body(userRepository.findByUserIdx(userIdx).getNickname() + "님이 ["+giftbox.getName()+"] 선물바구니 초대를 수락했습니다.")
+//          .actionType(ActionType.GIFTBOX_ACCEPTANCE)
+//          .platformType("FCM")
+//          .createdAt(LocalDateTime.now())
+//          .notiStatus(NotiStatus.CREATED)
+//          .build();
+//    }
+    // 선물바구니 초대장을 보낸 이에게 전송
+    Long invitationSenderIdx = giftboxUserRepository.findSenderByInvitationIdx(invitationIdx);
+    Notification notification = Notification.builder()
+        .receiver(userRepository.findByUserIdx(invitationSenderIdx))
+        .sender(userRepository.findByUserIdx(userIdx))
+        .device(deviceRepository.findByUserId(invitationSenderIdx))
+        .title("선물바구니 ["+giftbox.getName()+"] 초대 수락")
+        .body(userRepository.findByUserIdx(userIdx).getNickname() + "님이 ["+giftbox.getName()+"] 선물바구니 초대를 수락했습니다.")
+        .actionType(ActionType.GIFTBOX_ACCEPTANCE)
+        .platformType("FCM")
+        .createdAt(LocalDateTime.now())
+        .notiStatus(NotiStatus.CREATED)
+        .build();
+    return notification;
   }
 }

@@ -9,13 +9,16 @@ import clov3r.api.domain.data.status.InvitationStatus;
 import clov3r.api.domain.data.status.Status;
 import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.GiftboxUser;
+import clov3r.api.domain.entity.Notification;
 import clov3r.api.domain.request.PostGiftboxRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
 import clov3r.api.repository.GiftboxRepository;
 import clov3r.api.repository.GiftboxUserRepository;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +30,9 @@ public class GiftboxService {
   private final GiftboxRepository giftboxRepository;
   private final GiftboxUserRepository giftboxUserRepository;
   private final UserRepository userRepository;
-  private final ProductRepository productRepository;
+  private final NotificationRepository notificationRepository;
+  private final NotificationService notificationService;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
 
@@ -88,6 +93,15 @@ public class GiftboxService {
         .build();
     giftboxUser.createBaseEntity();
     giftboxUserRepository.save(giftboxUser);
-    return giftboxRepository.createPendingInvitation(giftboxIdx, userIdx);
+    return giftboxUser.getIdx();
+  }
+
+  public void acceptInvitationToGiftBox(GiftboxUser giftboxUser, Long userIdx, Long invitationIdx) {
+    giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
+
+    // send notification
+    Notification notification = notificationService.sendGiftboxInvitationAcceptanceNotification(invitationIdx, giftboxUser.getGiftbox().getIdx(), userIdx);
+    applicationEventPublisher.publishEvent(notification);
+    notificationRepository.save(notification);
   }
 }

@@ -297,4 +297,12 @@ public class GiftboxRepository {
                 .fetch();
     }
 
+    public List<Long> findParticipantsByGiftboxIdx(Long giftboxIdx) {
+        return queryFactory.select(giftboxUser.user.idx)
+                .from(giftboxUser)
+                .where(giftboxUser.giftbox.idx.eq(giftboxIdx),
+                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                .fetch();
+    }
+
 }
