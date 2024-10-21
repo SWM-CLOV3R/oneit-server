@@ -122,4 +122,22 @@ public class NotificationService {
         .build();
     return notification;
   }
+
+  public List<Notification> sendInquiryCompleteNotification(Long inquiryIdx) {
+    Giftbox giftbox = giftboxRepository.findByInquiryIdx(inquiryIdx);
+    List<Long> participants = giftboxRepository.findParticipantsByGiftboxIdx(giftbox.getIdx());
+    // 선물바구니 참여자들에게 전송
+    return participants.stream().map(participantIdx -> {
+      return Notification.builder()
+          .receiver(userRepository.findByUserIdx(participantIdx))
+          .device(deviceRepository.findByUserId(participantIdx))
+          .title("선물바구니 ["+giftbox.getName()+"] 물어보기 완료")
+          .body("선물바구니 ["+giftbox.getName()+"] 에서 받고 싶은 선물 물어보기가 완료되었습니다.")
+          .actionType(ActionType.GIFT_ASK_COMPLETE)
+          .platformType("FCM")
+          .createdAt(LocalDateTime.now())
+          .notiStatus(NotiStatus.CREATED)
+          .build();
+    }).toList();
+  }
 }

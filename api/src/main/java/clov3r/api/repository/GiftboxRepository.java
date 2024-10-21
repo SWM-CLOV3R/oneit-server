@@ -3,6 +3,7 @@ package clov3r.api.repository;
 import static clov3r.api.domain.entity.QGiftbox.giftbox;
 import static clov3r.api.domain.entity.QGiftboxProduct.giftboxProduct;
 import static clov3r.api.domain.entity.QGiftboxUser.giftboxUser;
+import static clov3r.api.domain.entity.QInquiry.inquiry;
 import static clov3r.api.domain.entity.QProduct.product;
 import static clov3r.api.error.errorcode.CommonErrorCode.DATABASE_ERROR;
 import static clov3r.api.error.errorcode.CustomErrorCode.DATABASE_ERROR_NOT_FOUND;
@@ -305,4 +306,10 @@ public class GiftboxRepository {
                 .fetch();
     }
 
+    public Giftbox findByInquiryIdx(Long inquiryIdx) {
+        return queryFactory.select(giftbox)
+                .from(inquiry)
+                .where(inquiry.idx.eq(inquiryIdx))
+                .fetchOne();
+    }
 }
