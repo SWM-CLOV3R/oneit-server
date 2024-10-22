@@ -1,5 +1,6 @@
 package clov3r.api.domain.DTO;
 
+import clov3r.api.domain.data.status.ProductStatus;
 import clov3r.api.domain.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class ProductSummaryDTO {
 //    private Integer discountRate;
     private String thumbnailUrl;
     private int likeCount;
+    private ProductStatus status;
 
     // 리스트 조회시 사용
     public ProductSummaryDTO(Product product) {
@@ -26,5 +28,6 @@ public class ProductSummaryDTO {
 //        this.currentPrice = product.getCurrentPrice();
 //        this.discountRate = product.getDiscountRate();
         this.thumbnailUrl = product.getThumbnailUrl();
+        this.status = product.getStatus();
     }
 }
