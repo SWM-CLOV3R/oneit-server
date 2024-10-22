@@ -150,6 +150,9 @@ public class ProductControllerV2 {
         @RequestParam int minPrice,
         @RequestParam int maxPrice
     ) {
+        if (minPrice < 0 || maxPrice < 0 || minPrice > maxPrice) {
+            throw new BaseExceptionV2(REQUEST_PRICE_ERROR);
+        }
         ProductFilter productFilter = new ProductFilter(minPrice, maxPrice);
         List<ProductSummaryDTO> products = productService.filterProducts(productFilter);
         return ResponseEntity.ok(products);
