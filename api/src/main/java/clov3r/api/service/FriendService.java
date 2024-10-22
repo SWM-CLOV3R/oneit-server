@@ -26,8 +26,7 @@ public class FriendService {
   private final UserRepository userRepository;
   private final FriendshipRepository friendshipRepository;
   private final NotificationService notificationService;
-  private final ApplicationEventPublisher applicationEventPublisher;
-  private final NotificationRepository notificationRepository;
+
 
   public FriendReq requestFriend(Long userIdx, Long friendIdx) {
 
@@ -40,9 +39,8 @@ public class FriendService {
     friendReqRepository.save(friendReq);
 
     // Send notification
-    Notification notification = notificationService.sendFriendRequestNotification(friendReq);
-    applicationEventPublisher.publishEvent(notification);
-    notificationRepository.save(notification);
+    notificationService.sendFriendRequestNotification(friendReq);
+
     return friendReq;
   }
 
@@ -53,9 +51,8 @@ public class FriendService {
     friendReq.updateBaseEntity();
 
     // Send notification
-    Notification notification = notificationService.sendFriendAcceptanceNotification(friendReq);
-    applicationEventPublisher.publishEvent(notification);
-    notificationRepository.save(notification);
+    notificationService.sendFriendAcceptanceNotification(friendReq);
+
   }
 
   @Transactional

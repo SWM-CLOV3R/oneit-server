@@ -90,16 +90,15 @@ public class GiftboxProductControllerV2 {
     if (giftboxIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
-    if (giftboxRepository.findById(giftboxIdx) == null) {
-      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
-    }
-
     // check if the user is a participant of the giftbox
     Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    if (giftbox == null) {
+      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
+    }
     if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE)) {
       if (userIdx == null || !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-        throw new BaseExceptionV2(
-            NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
+        // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
+        throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);
       }
     }
 

@@ -4,15 +4,18 @@ import clov3r.api.domain.data.status.InquiryStatus;
 import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.GiftboxInquiryResult;
 import clov3r.api.domain.entity.Inquiry;
+import clov3r.api.domain.entity.Notification;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.domain.request.InquiryRequest;
 import clov3r.api.repository.GiftboxRepository;
 import clov3r.api.repository.InquiryProductRepository;
 import clov3r.api.repository.InquiryRepository;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,9 @@ public class InquiryService {
   private final InquiryRepository inquiryRepository;
   private final InquiryProductRepository inquiryProductRepository;
   private final UserRepository userRepository;
+  private final NotificationRepository notificationRepository;
+  private final NotificationService notificationService;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Transactional
   public Long createInquiry(InquiryRequest inquiryRequest, Long userIdx) {
@@ -43,8 +49,10 @@ public class InquiryService {
 
   @Transactional
   public void completeInquiry(Long inquiryIdx) {
-
     inquiryRepository.changeInquiryStatus(inquiryIdx, InquiryStatus.COMPLETE);
+
+    // send notification
+    notificationService.sendInquiryCompleteNotification(inquiryIdx);
 
   }
 

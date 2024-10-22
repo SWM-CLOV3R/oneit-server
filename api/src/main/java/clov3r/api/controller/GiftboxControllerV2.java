@@ -19,9 +19,11 @@ import clov3r.api.domain.data.status.AccessStatus;
 import clov3r.api.domain.data.status.InvitationStatus;
 import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.GiftboxUser;
+import clov3r.api.domain.entity.Notification;
 import clov3r.api.domain.request.PostGiftboxRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
 import clov3r.api.repository.GiftboxRepository;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
 import clov3r.api.service.GiftboxService;
@@ -33,6 +35,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,8 +56,7 @@ public class GiftboxControllerV2 {
   private final GiftboxRepository giftboxRepository;
   private final S3Service s3Service;
   private final UserRepository userRepository;
-  private final ProductRepository productRepository;
-  private final NotificationService notificationService;
+
 
   @Tag(name = "선물바구니 API", description = "선물바구니 CRUD API 목록")
   @Operation(summary = "선물바구니 생성", description = "선물 바구니 생성, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")
@@ -304,11 +306,7 @@ public class GiftboxControllerV2 {
     }
 
     // accept invitation to giftbox
-    giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
-
-    // send notification
-//    notificationService.sendGiftboxInvitationAcceptanceNotification(giftboxUser.getGiftbox().getIdx(), userIdx);
-
+    giftboxService.acceptInvitationToGiftBox(giftboxUser, userIdx, invitationIdx);
     return ResponseEntity.ok(
         "유저 " + userIdx + "님이 " + giftboxUser.getGiftbox().getIdx() + "번 선물 바구니에 참여하였습니다.");
   }

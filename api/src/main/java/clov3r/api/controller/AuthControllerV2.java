@@ -19,6 +19,7 @@ import clov3r.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,8 @@ public class AuthControllerV2 {
             // 1. 이미 카카오 가입된 유저라면 status를 active로 변경
             user = userRepository.findByEmail(kakaoProfileDTO.getKakao_account().getEmail());
             if (!user.getStatus().equals(UserStatus.ACTIVE)) {
-                user.setStatus(UserStatus.ACTIVE); 
+                user.setStatus(UserStatus.ACTIVE);
+                user.setUpdatedAt(LocalDateTime.now());
             }
             // 2. 자체 회원가입 유무 확인
             if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null) {
@@ -120,6 +122,16 @@ public class AuthControllerV2 {
             .birthDate(user.getBirthDate())
             .build();
         return ResponseEntity.ok(newUser);
+    }
+
+    @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
+    @PostMapping("/api/v2/withdraw")
+    public ResponseEntity<String> withdraw(
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        userService.withdraw(userIdx);
+        return ResponseEntity.ok("탈퇴가 완료되었습니다.");
     }
 
 }
