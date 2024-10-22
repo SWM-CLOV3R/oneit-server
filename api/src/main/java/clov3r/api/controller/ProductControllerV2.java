@@ -7,6 +7,7 @@ import static clov3r.api.error.errorcode.CommonErrorCode.*;
 import clov3r.api.domain.DTO.ProductDTO;
 import clov3r.api.domain.DTO.ProductDetailDTO;
 import clov3r.api.domain.DTO.ProductSummaryDTO;
+import clov3r.api.domain.collection.ProductFilter;
 import clov3r.api.domain.collection.ProductSearch;
 import clov3r.api.domain.data.Gender;
 import clov3r.api.domain.entity.Category;
@@ -87,6 +88,7 @@ public class ProductControllerV2 {
         return ResponseEntity.ok(productDTOs);
     }
 
+
     @Tag(name = "상품 API", description = "상품 관련 API 목록")
     @Operation(summary = "상품 상세 정보 조회")
     @GetMapping("/api/v2/products/{productIdx}")
@@ -115,7 +117,10 @@ public class ProductControllerV2 {
             "LastproductIdx가 null 일 경우 처음부터 페이지네이션됩니다. " +
             "즉, 첫 페이지에서는 LastProductIdx를 입력하지 않아야 합니다.")
     @GetMapping("/api/v2/products")
-    public ResponseEntity<List<ProductSummaryDTO>> getProductListPagination(@RequestParam(required = false) Long LastProductIdx, @RequestParam(required = false) Integer pageSize) {
+    public ResponseEntity<List<ProductSummaryDTO>> getProductListPagination(
+        @RequestParam(required = false) Long LastProductIdx,
+        @RequestParam(required = false) Integer pageSize)
+    {
 
         if (LastProductIdx == null && pageSize == null) {
             return ResponseEntity.ok(productService.getAllProducts());
@@ -133,6 +138,20 @@ public class ProductControllerV2 {
             throw new BaseExceptionV2(SEARCH_KEYWORD_ERROR);
         }
         List<ProductSummaryDTO> products = productService.searchProduct(searchKeyword);
+        return ResponseEntity.ok(products);
+    }
+
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 가격 필터링", description = "상품 가격을 필터링합니다. " +
+            "최소 가격과 최대 가격을 입력받아 해당하는 상품 리스트를 반환합니다. " +
+            "최소 가격이 음수이거나 최대 가격이 음수이거나 최소 가격이 최대 가격보다 큰 경우 에러를 반환합니다.")
+    @GetMapping("/api/v2/products/filter/price")
+    public ResponseEntity<List<ProductSummaryDTO>> filterProductByPrice(
+        @RequestParam int minPrice,
+        @RequestParam int maxPrice
+    ) {
+        ProductFilter productFilter = new ProductFilter(minPrice, maxPrice);
+        List<ProductSummaryDTO> products = productService.filterProducts(productFilter);
         return ResponseEntity.ok(products);
     }
 

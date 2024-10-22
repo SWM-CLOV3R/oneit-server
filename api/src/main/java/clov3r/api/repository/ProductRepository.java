@@ -4,9 +4,11 @@ import static clov3r.api.domain.entity.QProduct.product;
 
 import clov3r.api.domain.DTO.ProductSummaryDTO;
 import clov3r.api.domain.collection.MatchedProduct;
+import clov3r.api.domain.collection.ProductFilter;
 import clov3r.api.domain.collection.ProductSearch;
 import clov3r.api.domain.collection.QuestionCategory;
 import clov3r.api.domain.data.Gender;
+import clov3r.api.domain.data.status.ProductStatus;
 import clov3r.api.domain.entity.Product;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -25,7 +27,7 @@ public class ProductRepository {
 
     private final EntityManager em;
     private final KeywordRepository keywordRepository;
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory queryFactory;
 
     // save Product
     /**
@@ -59,17 +61,17 @@ public class ProductRepository {
 
     /**
      * 가격을 기준으로 상품을 필터링해서 해당하는 상품 리스트를 반환합니다.
-     * @param productSearch
+     * @param productFilter
      * @return List<Product>
      */
-    public List<Product> filterProductsByPrice(ProductSearch productSearch) {
+    public List<Product> filterProductsByPrice(ProductFilter productFilter) {
         // Filter by price
-        String jpql = "select p from Product p where p.originalPrice > :minPrice and p.originalPrice < :maxPrice";
-        TypedQuery<Product> query = em.createQuery(jpql, Product.class);
-        query.setParameter("minPrice", productSearch.getMinPrice());
-        query.setParameter("maxPrice", productSearch.getMaxPrice());
-
-        return query.getResultList();
+        return queryFactory.select(product)
+                .from(product)
+                .where(product.originalPrice.goe(productFilter.getMinPrice())
+                        .and(product.originalPrice.loe(productFilter.getMaxPrice()))
+                        .and(product.status.eq(ProductStatus.ACTIVE)))
+                .fetch();
     }
 
     /**
@@ -238,7 +240,7 @@ public class ProductRepository {
      * @return
      */
     public List<ProductSummaryDTO> findProductListPagination(Long productIdx, int pageSize) {
-        return jpaQueryFactory
+        return queryFactory
                 .select(
                     Projections.fields(ProductSummaryDTO.class,
                         product.idx,
@@ -272,7 +274,7 @@ public class ProductRepository {
 
     public boolean existsProduct(Long productIdx) {
         // productIdx로 status가 ACTIVE인 product가 존재하는지 확인
-        return jpaQueryFactory.selectOne()
+        return queryFactory.selectOne()
                 .from(product)
                 .where(product.idx.eq(productIdx))
                 .fetchFirst() != null;
@@ -280,7 +282,7 @@ public class ProductRepository {
     }
 
     public List<Product> searchProduct(String searchKeyword) {
-        return jpaQueryFactory.selectFrom(product)
+        return queryFactory.selectFrom(product)
                 .where(product.name.contains(searchKeyword)
                         .or(product.brandName.contains(searchKeyword)))
                 .fetch();

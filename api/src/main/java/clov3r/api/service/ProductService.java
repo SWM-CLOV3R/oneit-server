@@ -1,6 +1,7 @@
 package clov3r.api.service;
 
 import clov3r.api.domain.DTO.ProductSummaryDTO;
+import clov3r.api.domain.collection.ProductFilter;
 import clov3r.api.domain.collection.ProductSearch;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.repository.KeywordRepository;
@@ -19,16 +20,17 @@ public class ProductService {
     private final KeywordRepository keywordRepository;
 
 
-    public List<Product> filterProducts(ProductSearch productSearch) {
+    public List<ProductSummaryDTO> filterProducts(ProductFilter productFilter) {
         // First Query: Filter by price and gender
-        List<Product> initialFilteredProducts = productRepository.filterProductsByPriceAndGender(productSearch);
+        List<Product> products = productRepository.filterProductsByPrice(productFilter);
+        return products.stream()
+            .map(ProductSummaryDTO::new).toList();
 
-        // Second Query: Further filter by keywords if applicable
-        if (!productSearch.getKeywords().isEmpty()) {
-            return productRepository.filterProductsByKeywords(initialFilteredProducts, productSearch.getKeywords());
-        }
+//        // Second Query: Further filter by keywords if applicable
+//        if (!productSearch.getKeywords().isEmpty()) {
+//            return productRepository.filterProductsByKeywords(initialFilteredProducts, productSearch.getKeywords());
+//        }
 
-        return initialFilteredProducts;
     }
 
     public Product getProductByIdx(Long productIdx) {
