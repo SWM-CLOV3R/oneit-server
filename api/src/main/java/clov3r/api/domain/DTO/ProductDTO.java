@@ -1,6 +1,7 @@
 package clov3r.api.domain.DTO;
 
 import clov3r.api.domain.data.Gender;
+import clov3r.api.domain.data.status.ProductStatus;
 import clov3r.api.domain.entity.Category;
 import clov3r.api.domain.entity.Keyword;
 import clov3r.api.domain.entity.Product;
@@ -26,6 +27,7 @@ public class ProductDTO {
     private Category category;
     private List<Keyword> keywords  = new ArrayList<>();
     private Gender gender;
+    private ProductStatus status;
 
     public ProductDTO(Product product, List<Keyword> keywords) {
         this.idx = product.getIdx();
@@ -40,5 +42,6 @@ public class ProductDTO {
         this.category = product.getCategory();
         this.keywords.addAll(keywords);
         this.gender = product.getGender();
+        this.status = product.getStatus();
     }
 }
