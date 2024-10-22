@@ -2,19 +2,12 @@ package clov3r.api.service;
 
 import static clov3r.api.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
-import clov3r.api.domain.DTO.KakaoProfileDTO;
-import clov3r.api.domain.DTO.kakao.KakaoAlarmResponseDTO;
-import clov3r.api.domain.DTO.kakao.KakaoButton;
-import clov3r.api.domain.data.kakao.SIGNUP_COMPLETE;
-import clov3r.api.domain.data.status.Status;
 import clov3r.api.domain.data.status.UserStatus;
-import clov3r.api.domain.entity.Notification;
 import clov3r.api.domain.entity.User;
 import clov3r.api.domain.request.SignupRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
 import clov3r.api.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

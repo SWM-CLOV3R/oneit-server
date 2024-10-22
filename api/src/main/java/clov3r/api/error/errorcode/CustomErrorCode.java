@@ -84,7 +84,8 @@ public enum CustomErrorCode implements ErrorCode {
 
   SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버와의 연결에 실패하였습니다."),
   DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 연결에 실패하였습니다."),
-  DATABASE_ERROR_QUERY(INTERNAL_SERVER_ERROR, "데이터베이스 쿼리 실행이 실패하였습니다."),;
+  DATABASE_ERROR_QUERY(INTERNAL_SERVER_ERROR, "데이터베이스 쿼리 실행이 실패하였습니다."),
+  KAKAO_ALARM_ERROR(INTERNAL_SERVER_ERROR, "카카오 알람 전송에 실패하였습니다."),;
 
   private final HttpStatus httpStatus;
   private final String message;

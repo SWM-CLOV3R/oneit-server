@@ -5,7 +5,7 @@ import static clov3r.api.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERROR;
 import clov3r.api.domain.DTO.NotificationDTO;
 import clov3r.api.domain.DTO.kakao.KakaoAlarmResponseDTO;
 import clov3r.api.domain.data.ActionType;
-import clov3r.api.domain.data.kakao.SIGNUP_COMPLETE;
+import clov3r.api.domain.data.kakao.signupCompleteTemplate;
 import clov3r.api.domain.data.status.NotiStatus;
 import clov3r.api.domain.entity.Device;
 import clov3r.api.domain.entity.FriendReq;
@@ -209,7 +209,7 @@ public class NotificationService {
         .receiver(user)
         .build();
 
-    SIGNUP_COMPLETE signupComplete = new SIGNUP_COMPLETE();
+    signupCompleteTemplate signupComplete = new signupCompleteTemplate();
     KakaoAlarmResponseDTO kakaoAlarmResponseDTO = kakaoAlarmService.sendKakaoAlarmTalk(
         notification, signupComplete);
     if (!kakaoAlarmResponseDTO.getStatus().equals("OK")) {
