@@ -52,11 +52,8 @@ public class InquiryService {
     inquiryRepository.changeInquiryStatus(inquiryIdx, InquiryStatus.COMPLETE);
 
     // send notification
-    List<Notification> notificationList = notificationService.sendInquiryCompleteNotification(inquiryIdx);
-    for (Notification notification : notificationList) {
-      applicationEventPublisher.publishEvent(notification);
-      notificationRepository.save(notification);
-    }
+    notificationService.sendInquiryCompleteNotification(inquiryIdx);
+
   }
 
   @Transactional

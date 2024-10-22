@@ -42,7 +42,7 @@ public class UserService {
         user.setBirthDate(signupRequest.getBirthDate());
         userRepository.save(user);
 
-        notificationService.sendSignupCompleteNotification(user);
+//        notificationService.sendSignupCompleteNotification(user);
         return user;
     }
 
@@ -51,10 +51,6 @@ public class UserService {
         User user = userRepository.findByUserIdx(userIdx);
         user.setStatus(UserStatus.INACTIVE);
         user.setDeletedAt(LocalDateTime.now());
-    }
-
-    public User loginByKakao(KakaoProfileDTO kakaoProfileDTO) {
-        return null;
     }
 
 }

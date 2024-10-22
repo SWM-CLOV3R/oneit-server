@@ -20,9 +20,8 @@ public class AuthService {
 
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
-
     /**
-     * 카카오 API 서버로부터 거져온 사용자 정보를 저장하는 메소드
+     * 카카오 API 서버로부터 가져온 사용자 정보를 저장하는 메소드
      * @param kakaoProfileDTO
      * @return
      */

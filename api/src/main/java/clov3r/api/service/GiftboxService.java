@@ -100,8 +100,7 @@ public class GiftboxService {
     giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
 
     // send notification
-    Notification notification = notificationService.sendGiftboxInvitationAcceptanceNotification(invitationIdx, giftboxUser.getGiftbox().getIdx(), userIdx);
-    applicationEventPublisher.publishEvent(notification);
-    notificationRepository.save(notification);
+    notificationService.sendGiftboxInvitationAcceptanceNotification(invitationIdx, giftboxUser.getGiftbox().getIdx(), userIdx);
+
   }
 }
