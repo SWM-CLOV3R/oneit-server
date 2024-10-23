@@ -3,6 +3,7 @@ package clov3r.api.domain.DTO;
 import clov3r.api.domain.data.status.AccessStatus;
 import clov3r.api.domain.entity.Giftbox;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +19,9 @@ public class GiftboxDTO {
     private Long createdUserIdx;
     private AccessStatus accessStatus;
     private List<ParticipantsDTO> participants;
+    private LocalDateTime createdAt;
 
-    public GiftboxDTO(Long idx, String name, String description, LocalDate deadline, String imageUrl, Long createdUserIdx, AccessStatus accessStatus, List<ParticipantsDTO> participants) {
+    public GiftboxDTO(Long idx, String name, String description, LocalDate deadline, String imageUrl, Long createdUserIdx, AccessStatus accessStatus, List<ParticipantsDTO> participants, LocalDateTime createdAt) {
         this.idx = idx;
         this.name = name;
         this.description = description;
@@ -28,9 +30,10 @@ public class GiftboxDTO {
         this.createdUserIdx = createdUserIdx;
         this.accessStatus = accessStatus;
         this.participants = participants;
+        this.createdAt = createdAt;
     }
 
-    public GiftboxDTO(Giftbox giftbox) {
+    public GiftboxDTO(Giftbox giftbox, List<ParticipantsDTO> participants) {
         this.idx = giftbox.getIdx();
         this.name = giftbox.getName();
         this.description = giftbox.getDescription();
@@ -38,6 +41,8 @@ public class GiftboxDTO {
         this.imageUrl = giftbox.getImageUrl();
         this.createdUserIdx = giftbox.getCreatedUserIdx();
         this.accessStatus = giftbox.getAccessStatus();
+        this.participants = participants;
+        this.createdAt = giftbox.getCreatedAt();
     }
 
 }

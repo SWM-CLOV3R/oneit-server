@@ -128,16 +128,7 @@ public class GiftboxControllerV2 {
         .toList();
 
     // make giftbox detail dto
-    GiftboxDTO giftboxDTO = new GiftboxDTO(
-        giftbox.getIdx(),
-        giftbox.getName(),
-        giftbox.getDescription(),
-        giftbox.getDeadline(),
-        giftbox.getImageUrl(),
-        giftbox.getCreatedUserIdx(),
-        giftbox.getAccessStatus(),
-        participantsDTOList
-    );
+    GiftboxDTO giftboxDTO = new GiftboxDTO(giftbox, participantsDTOList);
     return ResponseEntity.ok(giftboxDTO);
   }
 
@@ -167,16 +158,7 @@ public class GiftboxControllerV2 {
                   participant.getUserRole()
               ))
               .toList();
-          return new GiftboxDTO(
-              giftbox.getIdx(),
-              giftbox.getName(),
-              giftbox.getDescription(),
-              giftbox.getDeadline(),
-              giftbox.getImageUrl(),
-              giftbox.getCreatedUserIdx(),
-              giftbox.getAccessStatus(),
-              participantsDTOList
-          );
+          return new GiftboxDTO(giftbox, participantsDTOList);
         })
         .toList();
     return ResponseEntity.ok(giftboxDTOList);
