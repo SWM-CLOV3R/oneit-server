@@ -312,4 +312,18 @@ public class GiftboxRepository {
                 .where(inquiry.idx.eq(inquiryIdx))
                 .fetchOne();
     }
+
+    public List<Product> searchProductInGiftbox(String searchKeyword, Long giftboxIdx) {
+        // giftboxIdx로 status가 ACTIVE인 product 중 검색어가 포함된 product 조회
+        return queryFactory.select(product)
+                .from(giftbox)
+                .join(giftbox.products, giftboxProduct)
+                .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
+                        product.idx.eq(giftboxProduct.product.idx),
+                        product.status.eq(ProductStatus.ACTIVE),
+                        giftboxProduct.status.eq(Status.ACTIVE),
+                        product.name.contains(searchKeyword))
+                .fetch();
+    }
+
 }
