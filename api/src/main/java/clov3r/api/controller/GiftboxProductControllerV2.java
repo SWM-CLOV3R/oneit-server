@@ -86,7 +86,7 @@ public class GiftboxProductControllerV2 {
   @GetMapping("/api/v2/giftbox/{giftboxIdx}/products")
   public ResponseEntity<List<GiftboxProductDTO>> getProductOfGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
-      @Parameter(hidden = true) @Auth(required = false) Long userIdx
+      @Parameter(hidden = true) @Auth Long userIdx
   ) {
     // request validation
     if (giftboxIdx == null) {
@@ -97,11 +97,8 @@ public class GiftboxProductControllerV2 {
     if (giftbox == null) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
-    if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      if (userIdx == null || !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-        // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
-        throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);
-      }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX); // 해당 선물 바구니의 참여자만 조회 가능함
     }
 
     // get product list of the giftbox

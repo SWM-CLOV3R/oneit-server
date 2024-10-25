@@ -121,13 +121,16 @@ public class GiftboxService {
 
   public List<GiftboxProductDTO> findGiftboxProductList(Long giftboxIdx, Long userIdx) {
     List<GiftboxProduct> giftboxProductList = giftboxRepository.findGiftboxProductList(giftboxIdx);
-    List<InquiryProduct> inquiryProductList = inquiryRepository.findInquiryProductList(giftboxIdx);
+//    List<InquiryProduct> inquiryProductList = inquiryRepository.findInquiryProductList(giftboxIdx);
     List<GiftboxProductDTO> giftboxProductDTOList = giftboxProductList.stream()
-        .map(GiftboxProductDTO::new).toList();
-
-    for (InquiryProduct inquiryProduct : inquiryProductList) {
-
-    }
+        .map(giftboxProduct ->
+            new GiftboxProductDTO(
+                giftboxProduct,
+                giftboxProductService.getVoteStatusOfUser(
+                    userIdx,
+                    giftboxProduct.getGiftbox().getIdx(),
+                    giftboxProduct.getProduct().getIdx())
+            )).toList();
     return giftboxProductDTOList;
   }
 }
