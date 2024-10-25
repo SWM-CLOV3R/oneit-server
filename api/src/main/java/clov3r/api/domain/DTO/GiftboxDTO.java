@@ -20,6 +20,7 @@ public class GiftboxDTO {
     private AccessStatus accessStatus;
     private List<ParticipantsDTO> participants;
     private LocalDateTime createdAt;
+    private int dDay;
 
     public GiftboxDTO(Long idx, String name, LocalDate deadline, String imageUrl, Long createdUserIdx, List<ParticipantsDTO> participants, LocalDateTime createdAt) {
         this.idx = idx;
@@ -31,6 +32,7 @@ public class GiftboxDTO {
 //        this.accessStatus = accessStatus;
         this.participants = participants;
         this.createdAt = createdAt;
+        this.dDay = getDDay();
     }
 
     public GiftboxDTO(Giftbox giftbox, List<ParticipantsDTO> participants) {
@@ -41,6 +43,11 @@ public class GiftboxDTO {
         this.createdUserIdx = giftbox.getCreatedUserIdx();
         this.participants = participants;
         this.createdAt = giftbox.getCreatedAt();
+        this.dDay = getDDay();
+    }
+
+    public int getDDay() {
+        return (int) LocalDate.now().until(deadline, java.time.temporal.ChronoUnit.DAYS);
     }
 
 }
