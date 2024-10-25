@@ -117,7 +117,7 @@ public class NotificationService {
     Notification notification = Notification.builder()
         .receiver(friendReq.getFrom())
         .sender(friendReq.getTo())
-        .device(deviceRepository.findByUserId(friendReq.getTo().getIdx()))
+        .device(deviceRepository.findByUserId(friendReq.getFrom().getIdx()))
         .title("친구 요청 수락")
         .body(friendReq.getTo().getNickname() + "님이 친구 요청을 수락했습니다.")
         .actionType(ActionType.FRIEND_ACCEPTANCE)
