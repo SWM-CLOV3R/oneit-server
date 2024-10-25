@@ -4,6 +4,7 @@ import static clov3r.api.error.errorcode.CommonErrorCode.DATABASE_ERROR_NOT_FOUN
 import static clov3r.api.error.errorcode.CustomErrorCode.*;
 import static clov3r.api.error.errorcode.CommonErrorCode.*;
 
+import clov3r.api.config.security.Auth;
 import clov3r.api.domain.DTO.ProductDTO;
 import clov3r.api.domain.DTO.ProductDetailDTO;
 import clov3r.api.domain.DTO.ProductSummaryDTO;
@@ -20,6 +21,7 @@ import clov3r.api.service.CategoryService;
 import clov3r.api.service.KeywordService;
 import clov3r.api.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +80,11 @@ public class ProductControllerV2 {
             products = products.subList(0, 5);
         }
         List<ProductDTO> productDTOs = products.stream()
-                .map(product -> new ProductDTO(product, keywordService.getKeywordsByIdx(product.getIdx())))
+                .map(product ->
+                    new ProductDTO(
+                        product,
+                        keywordService.getKeywordsByIdx(product.getIdx())
+                    ))
                 .toList();
 
         if (productDTOs.isEmpty()) {
@@ -156,6 +162,22 @@ public class ProductControllerV2 {
         ProductFilter productFilter = new ProductFilter(minPrice, maxPrice);
         List<ProductSummaryDTO> products = productService.filterProducts(productFilter);
         return ResponseEntity.ok(products);
+    }
+
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 좋아요", description = "상품 좋아요를 누릅니다.")
+    @PostMapping("/api/v2/products/{productIdx}/like")
+    public ResponseEntity<ProductSummaryDTO> likeProduct(
+        @PathVariable Long productIdx,
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        if (!productRepository.existsProduct(productIdx)) {
+            throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
+        }
+        productService.likeProduct(productIdx, userIdx);
+        Product product = productService.getProductByIdx(productIdx);
+        ProductSummaryDTO productSummaryDTO = new ProductSummaryDTO(product);
+        return ResponseEntity.ok(productSummaryDTO);
     }
 
 }

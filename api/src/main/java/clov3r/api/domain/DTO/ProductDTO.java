@@ -28,6 +28,7 @@ public class ProductDTO {
     private List<Keyword> keywords  = new ArrayList<>();
     private Gender gender;
     private ProductStatus status;
+    private int likeCount;
 
     public ProductDTO(Product product, List<Keyword> keywords) {
         this.idx = product.getIdx();
@@ -43,5 +44,6 @@ public class ProductDTO {
         this.keywords.addAll(keywords);
         this.gender = product.getGender();
         this.status = product.getStatus();
+        this.likeCount = product.getLikeCount();
     }
 }

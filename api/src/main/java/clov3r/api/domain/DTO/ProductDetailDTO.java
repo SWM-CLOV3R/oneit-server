@@ -28,6 +28,7 @@ public class ProductDetailDTO {
 
     private List<String> keywords = new ArrayList<>();
     private ProductStatus status;
+    private int likeCount;
 
     // 상세 조회시 사용
     public ProductDetailDTO(Product product, List<Keyword> keywords, Category category) {
@@ -45,5 +46,6 @@ public class ProductDetailDTO {
         this.categoryDisplayName = product.getCategoryDisplayName();
         this.keywords.addAll(keywords.stream().map(Keyword::getName).toList());
         this.status = product.getStatus();
+        this.likeCount = product.getLikeCount();
     }
 }

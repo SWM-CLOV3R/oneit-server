@@ -29,5 +29,6 @@ public class ProductSummaryDTO {
 //        this.discountRate = product.getDiscountRate();
         this.thumbnailUrl = product.getThumbnailUrl();
         this.status = product.getStatus();
+        this.likeCount = product.getLikeCount();
     }
 }

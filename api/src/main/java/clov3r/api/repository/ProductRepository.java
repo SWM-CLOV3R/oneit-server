@@ -288,5 +288,12 @@ public class ProductRepository {
                 .fetch();
     }
 
+    public void updateProductLikeCount(Long productIdx, int likeCount) {
+        queryFactory.update(product)
+                .set(product.likeCount, likeCount)
+                .where(product.idx.eq(productIdx))
+                .execute();
+
+    }
 }
 
