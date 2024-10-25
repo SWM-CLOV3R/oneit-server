@@ -158,7 +158,8 @@ public class GiftboxRepository {
                 .where(giftboxUser.user.idx.eq(userIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED),
                         giftbox.status.eq(Status.ACTIVE))
-                .orderBy(giftbox.createdAt.desc())
+//                .orderBy(giftbox.createdAt.desc())
+                .orderBy(giftbox.deadline.asc())
                 .fetch();
     }
 
