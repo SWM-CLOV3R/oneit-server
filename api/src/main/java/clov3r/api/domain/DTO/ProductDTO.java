@@ -1,6 +1,7 @@
 package clov3r.api.domain.DTO;
 
 import clov3r.api.domain.data.Gender;
+import clov3r.api.domain.data.status.LikeStatus;
 import clov3r.api.domain.data.status.ProductStatus;
 import clov3r.api.domain.entity.Category;
 import clov3r.api.domain.entity.Keyword;
@@ -29,8 +30,9 @@ public class ProductDTO {
     private Gender gender;
     private ProductStatus status;
     private int likeCount;
+    private LikeStatus likeStatus;
 
-    public ProductDTO(Product product, List<Keyword> keywords) {
+    public ProductDTO(Product product, List<Keyword> keywords, LikeStatus likeStatus) {
         this.idx = product.getIdx();
         this.name = product.getName();
         this.description = product.getDescription();
@@ -45,5 +47,6 @@ public class ProductDTO {
         this.gender = product.getGender();
         this.status = product.getStatus();
         this.likeCount = product.getLikeCount();
+        this.likeStatus = likeStatus;
     }
 }

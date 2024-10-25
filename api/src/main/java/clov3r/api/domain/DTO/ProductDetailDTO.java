@@ -1,5 +1,6 @@
 package clov3r.api.domain.DTO;
 
+import clov3r.api.domain.data.status.LikeStatus;
 import clov3r.api.domain.data.status.ProductStatus;
 import clov3r.api.domain.entity.Category;
 import clov3r.api.domain.entity.Keyword;
@@ -29,9 +30,10 @@ public class ProductDetailDTO {
     private List<String> keywords = new ArrayList<>();
     private ProductStatus status;
     private int likeCount;
+    private LikeStatus likeStatus;
 
     // 상세 조회시 사용
-    public ProductDetailDTO(Product product, List<Keyword> keywords, Category category) {
+    public ProductDetailDTO(Product product, List<Keyword> keywords, Category category, LikeStatus likeStatus) {
         this.idx = product.getIdx();
         this.name = product.getName();
         this.description = product.getDescription();
@@ -47,5 +49,6 @@ public class ProductDetailDTO {
         this.keywords.addAll(keywords.stream().map(Keyword::getName).toList());
         this.status = product.getStatus();
         this.likeCount = product.getLikeCount();
+        this.likeStatus = likeStatus;
     }
 }

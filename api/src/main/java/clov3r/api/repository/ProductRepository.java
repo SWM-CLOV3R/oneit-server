@@ -239,16 +239,9 @@ public class ProductRepository {
      * @param pageSize
      * @return
      */
-    public List<ProductSummaryDTO> findProductListPagination(Long productIdx, int pageSize) {
+    public List<Product> findProductListPagination(Long productIdx, int pageSize) {
         return queryFactory
-                .select(
-                    Projections.fields(ProductSummaryDTO.class,
-                        product.idx,
-                        product.name,
-                        product.originalPrice,
-                        product.currentPrice,
-                        product.discountRate,
-                        product.thumbnailUrl))
+                .select(product)
                 .from(product)
                 .where(ltProduct(productIdx))
                 .orderBy(product.idx.desc())
