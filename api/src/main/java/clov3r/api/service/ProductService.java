@@ -24,11 +24,14 @@ public class ProductService {
   private final ProductLikeRepository productLikeRepository;
 
 
-  public List<ProductSummaryDTO> filterProducts(ProductFilter productFilter) {
+  public List<ProductSummaryDTO> filterProducts(ProductFilter productFilter, Long userIdx) {
     // First Query: Filter by price and gender
     List<Product> products = productRepository.filterProductsByPrice(productFilter);
     return products.stream()
-        .map(ProductSummaryDTO::new).toList();
+        .map(product -> new ProductSummaryDTO(
+            product,
+            getLikeStatus(product.getIdx(), userIdx)
+        )).toList();
 
 //        // Second Query: Further filter by keywords if applicable
 //        if (!productSearch.getKeywords().isEmpty()) {
@@ -60,20 +63,33 @@ public class ProductService {
     return initialFilteredProducts;
   }
 
-  public List<ProductSummaryDTO> getAllProducts() {
+  public List<ProductSummaryDTO> getAllProducts(Long userIdx) {
     List<Product> products = productRepository.findAll();
     return products.stream()
-        .map(ProductSummaryDTO::new).toList();
+        .map(product ->
+            new ProductSummaryDTO(
+                product,
+                getLikeStatus(product.getIdx(), userIdx)
+            )).toList();
   }
 
-  public List<ProductSummaryDTO> getProductListPagination(Long lastProductIdx, int pageSize) {
-    return productRepository.findProductListPagination(lastProductIdx, pageSize);
+  public List<ProductSummaryDTO> getProductListPagination(Long lastProductIdx, int pageSize, Long userIdx) {
+    List<Product> products = productRepository.findProductListPagination(lastProductIdx, pageSize);
+    return products.stream()
+        .map(product ->
+            new ProductSummaryDTO(
+                product,
+                getLikeStatus(product.getIdx(), userIdx)
+            )).toList();
   }
 
-  public List<ProductSummaryDTO> searchProduct(String searchKeyword) {
+  public List<ProductSummaryDTO> searchProduct(String searchKeyword, Long userIdx) {
     List<Product> products = productRepository.searchProduct(searchKeyword);
     return products.stream()
-        .map(ProductSummaryDTO::new).toList();
+        .map(product -> new ProductSummaryDTO(
+            product,
+            getLikeStatus(product.getIdx(), userIdx)
+        )).toList();
   }
 
   @Transactional
@@ -103,6 +119,17 @@ public class ProductService {
 
   public void updateProductLikeCount(Long productIdx) {
     productRepository.updateProductLikeCount(productIdx, getLikeCount(productIdx));
+  }
+
+  public LikeStatus getLikeStatus(Long productIdx, Long userIdx) {
+    if (userIdx == null) {
+      return LikeStatus.NONE;
+    }
+    ProductLike productLike = productLikeRepository.findProductLike(productIdx, userIdx);
+    if (productLike == null) {
+      return LikeStatus.NONE;
+    }
+    return productLike.getLikeStatus();
   }
 
 }
