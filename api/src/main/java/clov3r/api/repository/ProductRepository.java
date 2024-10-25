@@ -239,18 +239,16 @@ public class ProductRepository {
      * @param pageSize
      * @return
      */
-    public List<ProductSummaryDTO> findProductListPagination(Long productIdx, int pageSize) {
+    public List<Product> findProductListPagination(Long productIdx, int pageSize) {
         return queryFactory
-                .select(
-                    Projections.fields(ProductSummaryDTO.class,
-                        product.idx,
-                        product.name,
-                        product.originalPrice,
-                        product.currentPrice,
-                        product.discountRate,
-                        product.thumbnailUrl))
+                .select(product)
                 .from(product)
                 .where(ltProduct(productIdx))
+                .where(
+                    product.name.isNotNull(),
+                    product.originalPrice.isNotNull(),
+                    product.thumbnailUrl.isNotNull()
+                )
                 .orderBy(product.idx.desc())
                 .limit(pageSize)
                 .fetch();
@@ -268,8 +266,15 @@ public class ProductRepository {
         return product.idx.lt(productIdx);
     }
     public List<Product> findAll() {
-        return em.createQuery("select p from Product p", Product.class)
-                .getResultList();
+        List<Product> products = queryFactory.selectFrom(product)
+            .where(
+                product.name.isNotNull(),
+                product.originalPrice.isNotNull(),
+                product.thumbnailUrl.isNotNull()
+            )
+            .fetch();
+        return products;
+
     }
 
     public boolean existsProduct(Long productIdx) {
