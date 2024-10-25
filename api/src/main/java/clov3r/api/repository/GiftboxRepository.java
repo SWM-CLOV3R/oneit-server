@@ -77,14 +77,11 @@ public class GiftboxRepository {
                 .execute();
     }
 
-    @Transactional
     public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
         // giftbox의 정보를 수정
         queryFactory.update(giftbox)
                 .set(giftbox.name, request.getName())
-                .set(giftbox.description, request.getDescription())
                 .set(giftbox.deadline, request.getDeadline())
-                .set(giftbox.accessStatus, request.getAccessStatus())
                 .set(giftbox.updatedAt, LocalDateTime.now())
                 .where(giftbox.idx.eq(giftboxIdx),
                         giftbox.status.eq(Status.ACTIVE))
@@ -161,6 +158,8 @@ public class GiftboxRepository {
                 .where(giftboxUser.user.idx.eq(userIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED),
                         giftbox.status.eq(Status.ACTIVE))
+//                .orderBy(giftbox.createdAt.desc())
+                .orderBy(giftbox.deadline.asc())
                 .fetch();
     }
 
@@ -312,4 +311,18 @@ public class GiftboxRepository {
                 .where(inquiry.idx.eq(inquiryIdx))
                 .fetchOne();
     }
+
+    public List<Product> searchProductInGiftbox(String searchKeyword, Long giftboxIdx) {
+        // giftboxIdx로 status가 ACTIVE인 product 중 검색어가 포함된 product 조회
+        return queryFactory.select(product)
+                .from(giftbox)
+                .join(giftbox.products, giftboxProduct)
+                .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
+                        product.idx.eq(giftboxProduct.product.idx),
+                        product.status.eq(ProductStatus.ACTIVE),
+                        giftboxProduct.status.eq(Status.ACTIVE),
+                        product.name.contains(searchKeyword))
+                .fetch();
+    }
+
 }

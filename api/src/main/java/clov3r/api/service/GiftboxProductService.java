@@ -60,8 +60,8 @@ public class GiftboxProductService {
   }
 
 
-  public VoteStatus getVoteStatusOfUser(Long userIdx, Long giftboxIdx, Long idx) {
-    VoteStatus voteStatus = giftboxProductVoteRepository.getVoteStatusOfUser(userIdx, giftboxIdx, idx);
+  public VoteStatus getVoteStatusOfUser(Long userIdx, Long giftboxIdx, Long productIdx) {
+    VoteStatus voteStatus = giftboxProductVoteRepository.getVoteStatusOfUser(userIdx, giftboxIdx, productIdx);
     if (voteStatus == null || voteStatus == VoteStatus.NONE) {
       return VoteStatus.NONE;
     }

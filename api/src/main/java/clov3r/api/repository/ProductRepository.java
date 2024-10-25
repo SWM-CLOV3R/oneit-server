@@ -244,6 +244,11 @@ public class ProductRepository {
                 .select(product)
                 .from(product)
                 .where(ltProduct(productIdx))
+                .where(
+                    product.name.isNotNull(),
+                    product.originalPrice.isNotNull(),
+                    product.thumbnailUrl.isNotNull()
+                )
                 .orderBy(product.idx.desc())
                 .limit(pageSize)
                 .fetch();
@@ -261,8 +266,15 @@ public class ProductRepository {
         return product.idx.lt(productIdx);
     }
     public List<Product> findAll() {
-        return em.createQuery("select p from Product p", Product.class)
-                .getResultList();
+        List<Product> products = queryFactory.selectFrom(product)
+            .where(
+                product.name.isNotNull(),
+                product.originalPrice.isNotNull(),
+                product.thumbnailUrl.isNotNull()
+            )
+            .fetch();
+        return products;
+
     }
 
     public boolean existsProduct(Long productIdx) {
