@@ -77,14 +77,11 @@ public class GiftboxRepository {
                 .execute();
     }
 
-    @Transactional
     public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
         // giftbox의 정보를 수정
         queryFactory.update(giftbox)
                 .set(giftbox.name, request.getName())
-                .set(giftbox.description, request.getDescription())
                 .set(giftbox.deadline, request.getDeadline())
-                .set(giftbox.accessStatus, request.getAccessStatus())
                 .set(giftbox.updatedAt, LocalDateTime.now())
                 .where(giftbox.idx.eq(giftboxIdx),
                         giftbox.status.eq(Status.ACTIVE))

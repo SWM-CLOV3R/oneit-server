@@ -60,4 +60,11 @@ public class Giftbox extends BaseEntity {
     public Giftbox() {
 
     }
+
+    public Giftbox(String name, LocalDate deadline, Long userIdx, Status status) {
+        this.name = name;
+        this.deadline = deadline;
+        this.createdUserIdx = userIdx;
+        this.status = status;
+    }
 }

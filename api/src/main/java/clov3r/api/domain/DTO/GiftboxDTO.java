@@ -21,14 +21,14 @@ public class GiftboxDTO {
     private List<ParticipantsDTO> participants;
     private LocalDateTime createdAt;
 
-    public GiftboxDTO(Long idx, String name, String description, LocalDate deadline, String imageUrl, Long createdUserIdx, AccessStatus accessStatus, List<ParticipantsDTO> participants, LocalDateTime createdAt) {
+    public GiftboxDTO(Long idx, String name, LocalDate deadline, String imageUrl, Long createdUserIdx, List<ParticipantsDTO> participants, LocalDateTime createdAt) {
         this.idx = idx;
         this.name = name;
-        this.description = description;
+//        this.description = description;
         this.deadline = deadline;
         this.imageUrl = imageUrl;
         this.createdUserIdx = createdUserIdx;
-        this.accessStatus = accessStatus;
+//        this.accessStatus = accessStatus;
         this.participants = participants;
         this.createdAt = createdAt;
     }
@@ -36,11 +36,9 @@ public class GiftboxDTO {
     public GiftboxDTO(Giftbox giftbox, List<ParticipantsDTO> participants) {
         this.idx = giftbox.getIdx();
         this.name = giftbox.getName();
-        this.description = giftbox.getDescription();
         this.deadline = giftbox.getDeadline();
         this.imageUrl = giftbox.getImageUrl();
         this.createdUserIdx = giftbox.getCreatedUserIdx();
-        this.accessStatus = giftbox.getAccessStatus();
         this.participants = participants;
         this.createdAt = giftbox.getCreatedAt();
     }

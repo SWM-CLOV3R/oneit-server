@@ -76,10 +76,6 @@ public class GiftboxControllerV2 {
     if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
       throw new BaseExceptionV2(DATE_BEFORE_NOW);
     }
-    if (!request.getAccessStatus().equals(AccessStatus.PUBLIC)
-        && !request.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      throw new BaseExceptionV2(INVALID_ACCESS_STATUS);
-    }
     // create Gift box
     Long giftboxIdx = giftboxService.createGiftbox(request, userIdx);
 
@@ -209,10 +205,6 @@ public class GiftboxControllerV2 {
     if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
       throw new BaseExceptionV2(DATE_BEFORE_NOW);
     }
-    if (!request.getAccessStatus().equals(AccessStatus.PUBLIC)
-        && !request.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      throw new BaseExceptionV2(INVALID_ACCESS_STATUS);
-    }
 
     // update giftbox
     giftboxService.updateGiftbox(giftboxIdx, request);
@@ -240,11 +232,9 @@ public class GiftboxControllerV2 {
     GiftboxDTO giftboxDTO = new GiftboxDTO(
         giftboxIdx,
         request.getName(),
-        request.getDescription(),
         request.getDeadline(),
         imageUrl,
         giftbox.getCreatedUserIdx(),
-        request.getAccessStatus(),
         participantsDTOList,
         giftbox.getCreatedAt());
     return ResponseEntity.ok(giftboxDTO);

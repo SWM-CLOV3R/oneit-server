@@ -23,6 +23,7 @@ import clov3r.api.repository.InquiryRepository;
 import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -47,10 +48,8 @@ public class GiftboxService {
 
     Giftbox newGiftbox = new Giftbox(
         request.getName(),
-        request.getDescription(),
         request.getDeadline(),
         userIdx,
-        request.getAccessStatus(),
         Status.ACTIVE
     );
     Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
@@ -74,6 +73,7 @@ public class GiftboxService {
     }
   }
 
+  @Transactional
   public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
     try {
       giftboxRepository.updateGiftbox(giftboxIdx, request);

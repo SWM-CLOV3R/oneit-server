@@ -9,7 +9,5 @@ import lombok.Getter;
 @Getter
 public class PostGiftboxRequest {
     private String name;
-    private String description;
     private LocalDate deadline;
-    private AccessStatus accessStatus;
 }
