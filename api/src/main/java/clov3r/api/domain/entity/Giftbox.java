@@ -66,5 +66,6 @@ public class Giftbox extends BaseEntity {
         this.deadline = deadline;
         this.createdUserIdx = userIdx;
         this.status = status;
+        this.createBaseEntity();
     }
 }
