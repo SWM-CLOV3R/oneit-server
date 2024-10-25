@@ -108,11 +108,8 @@ public class GiftboxControllerV2 {
 
     // get giftbox
     Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
-    if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      if (userIdx == null || !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-        throw new BaseExceptionV2(
-            NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
-      }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 조회 가능함
     }
 
     // get participants of giftbox
@@ -190,7 +187,7 @@ public class GiftboxControllerV2 {
   @Tag(name = "선물바구니 API", description = "선물바구니 CRUD API 목록")
   @Operation(summary = "선물바구니 수정", description = "선물 바구니의 idx로 선물 바구니 수정, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")
   @PutMapping(value = "/api/v2/giftbox/{giftboxIdx}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<Long> updateGiftbox(
+  public ResponseEntity<GiftboxDTO> updateGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
       @RequestPart("request") PostGiftboxRequest request,
       @RequestPart(value = "image", required = false) MultipartFile image,
@@ -219,13 +216,38 @@ public class GiftboxControllerV2 {
 
     // update giftbox
     giftboxService.updateGiftbox(giftboxIdx, request);
-
+    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    String imageUrl = giftbox.getImageUrl();
     // upload image if exists
     if (image != null) {
-      String imageUrl = s3Service.upload(image, "giftbox-profile");
+      imageUrl = s3Service.upload(image, "giftbox-profile");
       giftboxService.updateGiftboxImageUrl(giftboxIdx, imageUrl);
     }
-    return ResponseEntity.ok(giftboxIdx);
+
+    // get participants of giftbox
+    List<GiftboxUser> participants = giftbox.getParticipants();
+    List<ParticipantsDTO> participantsDTOList = participants.stream()
+        .map(participant -> new ParticipantsDTO(
+            participant.getUser().getIdx(),
+            participant.getUser().getNickname(),
+            participant.getUser().getName(),
+            participant.getUser().getProfileImg(),
+            participant.getUserRole()
+        ))
+        .toList();
+
+    // make giftbox detail dto
+    GiftboxDTO giftboxDTO = new GiftboxDTO(
+        giftboxIdx,
+        request.getName(),
+        request.getDescription(),
+        request.getDeadline(),
+        imageUrl,
+        giftbox.getCreatedUserIdx(),
+        request.getAccessStatus(),
+        participantsDTOList,
+        giftbox.getCreatedAt());
+    return ResponseEntity.ok(giftboxDTO);
   }
 
 
