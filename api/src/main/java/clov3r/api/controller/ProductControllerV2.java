@@ -4,22 +4,26 @@ import static clov3r.api.error.errorcode.CommonErrorCode.DATABASE_ERROR_NOT_FOUN
 import static clov3r.api.error.errorcode.CustomErrorCode.*;
 import static clov3r.api.error.errorcode.CommonErrorCode.*;
 
+import clov3r.api.config.security.Auth;
 import clov3r.api.domain.DTO.ProductDTO;
 import clov3r.api.domain.DTO.ProductDetailDTO;
 import clov3r.api.domain.DTO.ProductSummaryDTO;
 import clov3r.api.domain.collection.ProductFilter;
 import clov3r.api.domain.collection.ProductSearch;
 import clov3r.api.domain.data.Gender;
+import clov3r.api.domain.data.status.LikeStatus;
 import clov3r.api.domain.entity.Category;
 import clov3r.api.domain.entity.Keyword;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.error.errorcode.CommonErrorCode;
 import clov3r.api.error.exception.BaseExceptionV2;
+import clov3r.api.repository.ProductLikeRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.service.CategoryService;
 import clov3r.api.service.KeywordService;
 import clov3r.api.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +45,7 @@ public class ProductControllerV2 {
     private final KeywordService keywordService;
     private final CategoryService categoryService;
     private final ProductRepository productRepository;
+    private final ProductLikeRepository productLikeRepository;
 
 
     @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
@@ -52,7 +57,8 @@ public class ProductControllerV2 {
                     "개수가 5개 미만인 경우 그대로 출력됩니다. ")
     @PostMapping("/api/v2/product/result/category")
     public ResponseEntity<List<ProductDTO>> extractProductsWithCategory(
-        @RequestBody ProductSearch productSearch
+        @RequestBody ProductSearch productSearch,
+        @Parameter(hidden = true) @Auth(required = false) Long userIdx
     ) {
 
         // check gender
@@ -78,7 +84,12 @@ public class ProductControllerV2 {
             products = products.subList(0, 5);
         }
         List<ProductDTO> productDTOs = products.stream()
-                .map(product -> new ProductDTO(product, keywordService.getKeywordsByIdx(product.getIdx())))
+                .map(product ->
+                    new ProductDTO(
+                        product,
+                        keywordService.getKeywordsByIdx(product.getIdx()),
+                        productService.getLikeStatus(product.getIdx(), userIdx)
+                    ))
                 .toList();
 
         if (productDTOs.isEmpty()) {
@@ -92,7 +103,10 @@ public class ProductControllerV2 {
     @Tag(name = "상품 API", description = "상품 관련 API 목록")
     @Operation(summary = "상품 상세 정보 조회")
     @GetMapping("/api/v2/products/{productIdx}")
-    public ResponseEntity<ProductDetailDTO> getProductDetail(@PathVariable Long productIdx) {
+    public ResponseEntity<ProductDetailDTO> getProductDetail(
+        @PathVariable Long productIdx,
+        @Parameter(hidden = true) @Auth(required = false) Long userIdx
+    ) {
         if (!productRepository.existsProduct(productIdx)) {
             throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
         }
@@ -104,7 +118,12 @@ public class ProductControllerV2 {
         List<Keyword> keywords = keywordService.getKeywordsByIdx(productIdx);
         ProductDetailDTO productDetailDTO;
         try {
-            productDetailDTO = new ProductDetailDTO(product, keywords, category);
+            productDetailDTO = new ProductDetailDTO(
+                product,
+                keywords,
+                category,
+                productService.getLikeStatus(productIdx, userIdx)
+            );
         } catch (Exception e) {
             throw new BaseExceptionV2(PRODUCT_DTO_ERROR);
         }
@@ -119,13 +138,14 @@ public class ProductControllerV2 {
     @GetMapping("/api/v2/products")
     public ResponseEntity<List<ProductSummaryDTO>> getProductListPagination(
         @RequestParam(required = false) Long LastProductIdx,
-        @RequestParam(required = false) Integer pageSize)
-    {
+        @RequestParam(required = false) Integer pageSize,
+        @Parameter(hidden = true) @Auth(required = false) Long userIdx
+    ) {
 
         if (LastProductIdx == null && pageSize == null) {
-            return ResponseEntity.ok(productService.getAllProducts());
+            return ResponseEntity.ok(productService.getAllProducts(userIdx));
         }
-        List<ProductSummaryDTO> products = productService.getProductListPagination(LastProductIdx, pageSize);
+        List<ProductSummaryDTO> products = productService.getProductListPagination(LastProductIdx, pageSize, userIdx);
         return ResponseEntity.ok(products);
     }
 
@@ -133,11 +153,14 @@ public class ProductControllerV2 {
     @Operation(summary = "상품 검색", description = "상품 이름을 검색하여 상품 리스트를 반환합니다. " +
             "검색어가 2글자 미만인 경우 에러를 반환합니다.")
     @GetMapping("/api/v2/products/search")
-    public ResponseEntity<List<ProductSummaryDTO>> searchProduct(@RequestParam String searchKeyword) {
+    public ResponseEntity<List<ProductSummaryDTO>> searchProduct(
+        @RequestParam String searchKeyword,
+        @Parameter(hidden = true) @Auth(required = false) Long userIdx
+    ) {
         if (searchKeyword.length() < 2) {
             throw new BaseExceptionV2(SEARCH_KEYWORD_ERROR);
         }
-        List<ProductSummaryDTO> products = productService.searchProduct(searchKeyword);
+        List<ProductSummaryDTO> products = productService.searchProduct(searchKeyword, userIdx);
         return ResponseEntity.ok(products);
     }
 
@@ -148,14 +171,48 @@ public class ProductControllerV2 {
     @GetMapping("/api/v2/products/filter/price")
     public ResponseEntity<List<ProductSummaryDTO>> filterProductByPrice(
         @RequestParam int minPrice,
-        @RequestParam int maxPrice
+        @RequestParam int maxPrice,
+        @Parameter(hidden = true) @Auth(required = false) Long userIdx
     ) {
         if (minPrice < 0 || maxPrice < 0 || minPrice > maxPrice) {
             throw new BaseExceptionV2(REQUEST_PRICE_ERROR);
         }
         ProductFilter productFilter = new ProductFilter(minPrice, maxPrice);
-        List<ProductSummaryDTO> products = productService.filterProducts(productFilter);
+        List<ProductSummaryDTO> products = productService.filterProducts(productFilter, userIdx);
         return ResponseEntity.ok(products);
     }
 
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "상품 좋아요", description = "상품 좋아요를 누릅니다.")
+    @PostMapping("/api/v2/products/{productIdx}/like")
+    public ResponseEntity<ProductSummaryDTO> likeProduct(
+        @PathVariable Long productIdx,
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        if (!productRepository.existsProduct(productIdx)) {
+            throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
+        }
+        productService.likeProduct(productIdx, userIdx);
+        Product product = productService.getProductByIdx(productIdx);
+        ProductSummaryDTO productSummaryDTO = new ProductSummaryDTO(
+            product,
+            productService.getLikeStatus(productIdx, userIdx)
+        );
+        return ResponseEntity.ok(productSummaryDTO);
+    }
+
+    @Tag(name = "상품 API", description = "상품 관련 API 목록")
+    @Operation(summary = "좋아요 상품 리스트 조회", description = "유저별로 좋아요를 누른 상품 리스트를 조회합니다.")
+    @GetMapping("/api/v2/products/like")
+    public ResponseEntity<List<ProductSummaryDTO>> getLikeProductList(
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        List<Product> products = productLikeRepository.findLikeProductList(userIdx, LikeStatus.LIKE);
+        List<ProductSummaryDTO> productSummaryDTOs = products.stream()
+            .map(product -> new ProductSummaryDTO(
+                product,
+                productService.getLikeStatus(product.getIdx(), userIdx)
+            )).toList();
+        return ResponseEntity.ok(productSummaryDTOs);
+    }
 }

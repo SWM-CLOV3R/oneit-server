@@ -42,8 +42,7 @@ public class CollectionRepository {
           .join(collectionProduct)
           .on(product.idx.eq(collectionProduct.product.idx))
           .where(collectionProduct.collection.idx.eq(collectionIdx)
-              .and(product.status.eq(ProductStatus.ACTIVE))
-              .and(collectionProduct.status.eq(Status.ACTIVE)))
+              .and(product.status.eq(ProductStatus.ACTIVE)))
           .fetch();
 
   }
