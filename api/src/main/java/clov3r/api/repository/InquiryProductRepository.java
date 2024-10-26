@@ -47,14 +47,11 @@ public class InquiryProductRepository {
     public void addEmojiToInquiry(Long inquiryIdx, ProductEmoji productEmoji) {
         queryFactory
             .update(inquiryProduct)
-            .set(inquiryProduct.emojiIdx, productEmoji.getEmojiIdx())
+            .set(inquiryProduct.emojiName, productEmoji.getEmojiName())
             .set(inquiryProduct.updatedAt, LocalDateTime.now())
             .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
                 .and(inquiryProduct.product.idx.eq(productEmoji.getProductIdx())))
             .execute();
-
-        inquiryRepository.findByIdx(inquiryIdx).updateBaseEntity();
-
     }
 
 
@@ -69,16 +66,6 @@ public class InquiryProductRepository {
 
     public void saveGiftboxInquiryResult(GiftboxInquiryResult giftboxInquiryResult) {
         em.persist(giftboxInquiryResult);
-    }
-
-    public void updateEmojiToGiftbox(ProductEmoji productEmoji, Giftbox giftbox) {
-        queryFactory
-            .update(giftboxInquiryResult)
-            .set(giftboxInquiryResult.emoji.idx, productEmoji.getEmojiIdx())
-            .set(giftboxInquiryResult.updatedAt, LocalDateTime.now())
-            .where(giftboxInquiryResult.giftbox.eq(giftbox)
-                .and(giftboxInquiryResult.product.idx.eq(productEmoji.getProductIdx())))
-            .execute();
     }
 
     public List<Product> findProductListByGiftbox(Long giftboxIdx) {

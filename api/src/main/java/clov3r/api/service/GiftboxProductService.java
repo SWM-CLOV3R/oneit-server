@@ -1,9 +1,11 @@
 package clov3r.api.service;
 
+import clov3r.api.domain.data.ProductEmoji;
 import clov3r.api.domain.data.status.VoteStatus;
 import clov3r.api.domain.entity.GiftboxProductVote;
 import clov3r.api.repository.GiftboxProductRepository;
 import clov3r.api.repository.GiftboxProductVoteRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,5 +72,12 @@ public class GiftboxProductService {
 
   public void purchaseProduct(Long giftboxIdx, Long productIdx) {
     giftboxProductRepository.purchaseProduct(giftboxIdx, productIdx);
+  }
+
+  @Transactional
+  public void addEmojiToGiftbox(Long giftboxIdx, List<ProductEmoji> productEmojiList) {
+    for (ProductEmoji productEmoji : productEmojiList) {
+      giftboxProductRepository.updateEmojiToGiftbox(giftboxIdx, productEmoji.getProductIdx(), productEmoji.getEmojiName());
+    }
   }
 }

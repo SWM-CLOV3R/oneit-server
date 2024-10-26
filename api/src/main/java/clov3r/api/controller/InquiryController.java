@@ -1,5 +1,6 @@
 package clov3r.api.controller;
 
+import static clov3r.api.error.errorcode.CommonErrorCode.REQUEST_ERROR;
 import static clov3r.api.error.errorcode.CustomErrorCode.ALREADY_USED_INQUIRY;
 import static clov3r.api.error.errorcode.CustomErrorCode.GIFTBOX_NOT_FOUND;
 import static clov3r.api.error.errorcode.CustomErrorCode.NOT_EXIST_EMOJI;
@@ -21,10 +22,12 @@ import clov3r.api.domain.entity.Inquiry;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.domain.request.InquiryRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
+import clov3r.api.repository.GiftboxProductRepository;
 import clov3r.api.repository.GiftboxRepository;
 import clov3r.api.repository.InquiryProductRepository;
 import clov3r.api.repository.InquiryRepository;
 import clov3r.api.repository.ProductRepository;
+import clov3r.api.service.GiftboxProductService;
 import clov3r.api.service.InquiryProductService;
 import clov3r.api.service.InquiryService;
 import clov3r.api.service.ProductService;
@@ -51,6 +54,8 @@ public class InquiryController {
   private final InquiryProductRepository inquiryProductRepository;
   private final ProductRepository productRepository;
   private final ProductService productService;
+  private final GiftboxProductService giftboxProductService;
+  private final GiftboxProductRepository giftboxProductRepository;
 
   @Tag(name = "물어보기 API", description = "물어보기 API 목록")
   @Operation(summary = "물어보기 생성", description = "물어보기를 생성합니다.")
@@ -125,18 +130,17 @@ public class InquiryController {
       @RequestBody List<ProductEmoji> productEmojiList
   ) {
     if (productEmojiList.isEmpty()) {
-      return ResponseEntity.badRequest().build();
+      throw new BaseExceptionV2(REQUEST_ERROR);
     }
     if (productEmojiList.stream().anyMatch(
         productEmoji -> productRepository.findById(productEmoji.getProductIdx()) == null)) {
       throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
     }
     // check if all emoji of productEmojiList exists
-    if (productEmojiList.stream()
-        .anyMatch(productEmoji -> !inquiryRepository.existEmojiById(productEmoji.getEmojiIdx()))) {
-      throw new BaseExceptionV2(NOT_EXIST_EMOJI);
-    }
-
+//    if (productEmojiList.stream()
+//        .anyMatch(productEmoji -> !inquiryRepository.existEmojiById(productEmoji.getEmojiIdx()))) {
+//      throw new BaseExceptionV2(NOT_EXIST_EMOJI);
+//    }
     Inquiry inquiry = inquiryRepository.findByIdx(inquiryIdx);
     if (inquiry == null) {
       throw new BaseExceptionV2(NOT_EXIST_INQUIRY);
@@ -149,9 +153,16 @@ public class InquiryController {
             productEmoji.getProductIdx()))) {
       throw new BaseExceptionV2(NOT_EXIST_INQUIRY_PRODUCT);
     }
+    if (productEmojiList.stream().anyMatch(
+        productEmoji -> !giftboxProductRepository.existProductByGiftbox(
+            inquiry.getGiftbox().getIdx(),
+            productEmoji.getProductIdx()))) {
+      throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
+    }
 
     inquiryProductService.addEmoji(inquiryIdx, productEmojiList); // add emoji to inquiry product
-    inquiryProductService.updateEmojiToGiftbox(inquiryIdx, productEmojiList);  //  add emoji to giftbox inquiry result
+//    inquiryProductService.updateEmojiToGiftbox(inquiryIdx, productEmojiList);  //  add emoji to giftbox inquiry result
+    giftboxProductService.addEmojiToGiftbox(inquiry.getGiftbox().getIdx(), productEmojiList);  //  add emoji to giftbox inquiry result
     inquiryService.completeInquiry(inquiryIdx);
     return ResponseEntity.ok().build();
   }

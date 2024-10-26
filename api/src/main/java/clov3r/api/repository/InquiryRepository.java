@@ -54,9 +54,8 @@ public class InquiryRepository {
         .from(inquiryProduct)
         .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
             .and(inquiryProduct.product.idx.eq(productIdx)))
-        .fetchFirst() != null;
+        .fetch() != null;
   }
-
 
   public void changeInquiryStatus(Long inquiryIdx, InquiryStatus inquiryStatus) {
     queryFactory

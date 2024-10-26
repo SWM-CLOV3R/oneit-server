@@ -4,6 +4,6 @@ import lombok.Getter;
 @Getter
 public class ProductEmoji {
   private Long productIdx;
-  private Long emojiIdx;
+  private EmojiName emojiName;
 
 }

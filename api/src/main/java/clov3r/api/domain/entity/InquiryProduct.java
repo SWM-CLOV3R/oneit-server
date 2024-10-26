@@ -1,10 +1,14 @@
 package clov3r.api.domain.entity;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+import clov3r.api.domain.data.EmojiName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -35,6 +39,10 @@ public class InquiryProduct extends BaseEntity {
 
   @Column(name = "emoji_idx")
   private Long emojiIdx;
+
+  @Enumerated(STRING)
+  @Column(name = "emoji_name")
+  private EmojiName emojiName;
 
   public InquiryProduct(Inquiry inquiry, Product product, Giftbox giftbox) {
     this.inquiry = inquiry;

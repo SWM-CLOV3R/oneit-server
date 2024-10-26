@@ -20,16 +20,7 @@ public class InquiryProductService {
   public void addEmoji(Long inquiryIdx, List<ProductEmoji> productEmojiList) {
     for (ProductEmoji productEmoji : productEmojiList) {
       inquiryProductRepository.addEmojiToInquiry(inquiryIdx, productEmoji);
+      inquiryRepository.findByIdx(inquiryIdx).updateBaseEntity();
     }
-  }
-
-  @Transactional
-  public void updateEmojiToGiftbox(Long inquiryIdx, List<ProductEmoji> productEmojiList) {
-
-    Giftbox giftbox = inquiryRepository.findGiftboxByInquiry(inquiryIdx);
-    for (ProductEmoji productEmoji : productEmojiList) {
-      inquiryProductRepository.updateEmojiToGiftbox(productEmoji, giftbox);
-    }
-
   }
 }
