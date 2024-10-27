@@ -59,6 +59,7 @@ public enum CustomErrorCode implements ErrorCode {
   INQUIRY_NOT_FOUND(NOT_FOUND, "물어보기를 찾을 수 없습니다."),
   ALREADY_USED_INQUIRY(NOT_FOUND, "이미 응답한 물어보기입니다."),
   COMMENT_NOT_FOUND(NOT_FOUND, "댓글을 찾을 수 없습니다."),
+  GIFTBOX_PRODUCT_NOT_FOUND(NOT_FOUND, "선물바구니 상품을 찾을 수 없습니다."),
 
   /**
    * FORBIDDEN
@@ -83,7 +84,8 @@ public enum CustomErrorCode implements ErrorCode {
 
   SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버와의 연결에 실패하였습니다."),
   DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 연결에 실패하였습니다."),
-  DATABASE_ERROR_QUERY(INTERNAL_SERVER_ERROR, "데이터베이스 쿼리 실행이 실패하였습니다."),;
+  DATABASE_ERROR_QUERY(INTERNAL_SERVER_ERROR, "데이터베이스 쿼리 실행이 실패하였습니다."),
+  KAKAO_ALARM_ERROR(INTERNAL_SERVER_ERROR, "카카오 알람 전송에 실패하였습니다."),;
 
   private final HttpStatus httpStatus;
   private final String message;

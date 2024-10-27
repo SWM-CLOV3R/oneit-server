@@ -1,4 +1,4 @@
-package clov3r.api.service;
+package clov3r.api.service.common;
 
 import static clov3r.api.error.errorcode.CustomErrorCode.S3_DELETE_OBJECT_ERROR;
 import static clov3r.api.error.errorcode.CustomErrorCode.S3_ERROR;

@@ -54,3 +54,17 @@ fcm:
     path: firebase-admin-sdk.json
   base-url: https://fcm.googleapis.com/v1/projects/oneit-gpt/messages:send
   auth-url: https://www.googleapis.com/auth/cloud-platform
+
+kakao:
+  talk-dream:
+    auth-token: ${KAKAO_ALARM_AUTH_TOKEN}
+    server-name: ${KAKAO_ALARM_SERVER_NAME}
+    service-id: ${KAKAO_ALARM_SERVICE_ID}
+    customer-inquiry: ${KAKAO_ALARM_CUSTOMER_INQUIRY}
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  exception-resolver-order: -2147483647
+  max-request-body-size: always
+  send-default-pii: true
+  traces-sample-rate: 1.0

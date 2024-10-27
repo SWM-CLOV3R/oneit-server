@@ -1,5 +1,6 @@
 package clov3r.api.domain.entity;
 
+import clov3r.api.domain.data.ActionType;
 import clov3r.api.domain.data.status.NotiStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,8 +36,19 @@ public class Notification {
   @JoinColumn(name = "sender_idx")
   private User sender;
 
+  @ManyToOne
+  @JoinColumn(name = "device_idx")
+  private Device device;
+
   private String title;
   private String body;
+
+  @Column(name = "action_type")
+  @Enumerated(EnumType.STRING)
+  private ActionType actionType;
+
+  @Column(name = "platform_type")
+  private String platformType;
 
   @Column(name = "created_at")
   private LocalDateTime createdAt;

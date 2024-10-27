@@ -27,6 +27,7 @@ import clov3r.api.repository.InquiryRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.service.InquiryProductService;
 import clov3r.api.service.InquiryService;
+import clov3r.api.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,6 +50,7 @@ public class InquiryController {
   private final InquiryProductService inquiryProductService;
   private final InquiryProductRepository inquiryProductRepository;
   private final ProductRepository productRepository;
+  private final ProductService productService;
 
   @Tag(name = "물어보기 API", description = "물어보기 API 목록")
   @Operation(summary = "물어보기 생성", description = "물어보기를 생성합니다.")
@@ -105,7 +107,12 @@ public class InquiryController {
     }
     List<Product> productList = inquiryProductRepository.findProductListByInquiry(inquiry);
     InquiryDTO inquiryDTO = new InquiryDTO(inquiry,
-        productList.stream().map(ProductSummaryDTO::new).toList());
+        productList.stream().map(
+            product -> new ProductSummaryDTO(
+                product,
+                productService.getLikeStatus(product.getIdx(), userIdx)
+            )
+        ).toList());
 
     return ResponseEntity.ok(inquiryDTO);
   }

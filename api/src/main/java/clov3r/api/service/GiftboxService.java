@@ -4,30 +4,52 @@ import static clov3r.api.error.errorcode.CommonErrorCode.DATABASE_ERROR;
 import static clov3r.api.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX;
 import static clov3r.api.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
 
+import clov3r.api.domain.DTO.GiftboxProductDTO;
+import clov3r.api.domain.DTO.ProductSummaryDTO;
+import clov3r.api.domain.data.GiftboxUserRole;
+import clov3r.api.domain.data.status.InvitationStatus;
 import clov3r.api.domain.data.status.Status;
 import clov3r.api.domain.entity.Giftbox;
+import clov3r.api.domain.entity.GiftboxProduct;
+import clov3r.api.domain.entity.GiftboxUser;
+import clov3r.api.domain.entity.InquiryProduct;
+import clov3r.api.domain.entity.Notification;
+import clov3r.api.domain.entity.Product;
 import clov3r.api.domain.request.PostGiftboxRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
 import clov3r.api.repository.GiftboxRepository;
+import clov3r.api.repository.GiftboxUserRepository;
+import clov3r.api.repository.InquiryRepository;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.ProductRepository;
+import clov3r.api.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class GiftboxService {
 
   private final GiftboxRepository giftboxRepository;
-  private final ProductRepository productRepository;
+  private final GiftboxUserRepository giftboxUserRepository;
+  private final UserRepository userRepository;
+  private final NotificationRepository notificationRepository;
+  private final NotificationService notificationService;
+  private final ApplicationEventPublisher applicationEventPublisher;
+  private final GiftboxProductService giftboxProductService;
+  private final InquiryRepository inquiryRepository;
 
   public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
 
     Giftbox newGiftbox = new Giftbox(
         request.getName(),
-        request.getDescription(),
         request.getDeadline(),
         userIdx,
-        request.getAccessStatus(),
         Status.ACTIVE
     );
     Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
@@ -51,6 +73,7 @@ public class GiftboxService {
     }
   }
 
+  @Transactional
   public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
     try {
       giftboxRepository.updateGiftbox(giftboxIdx, request);
@@ -69,7 +92,45 @@ public class GiftboxService {
     }
   }
 
-  public Long inviteUserToGiftBox(Long giftboxIdx) {
-    return giftboxRepository.createPendingInvitation(giftboxIdx);
+  public Long inviteUserToGiftBox(Long giftboxIdx, Long userIdx) {
+    // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
+    GiftboxUser giftboxUser = GiftboxUser.builder()
+        .giftbox(giftboxRepository.findById(giftboxIdx))
+        .sender(userRepository.findByUserIdx(userIdx))
+        .userRole(GiftboxUserRole.PARTICIPANT)
+        .invitationStatus(InvitationStatus.PENDING)
+        .build();
+    giftboxUser.createBaseEntity();
+    giftboxUserRepository.save(giftboxUser);
+    return giftboxUser.getIdx();
+  }
+
+  public void acceptInvitationToGiftBox(GiftboxUser giftboxUser, Long userIdx, Long invitationIdx) {
+    giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
+
+    // send notification
+    notificationService.sendGiftboxInvitationAcceptanceNotification(invitationIdx, giftboxUser.getGiftbox().getIdx(), userIdx);
+
+  }
+
+  public List<ProductSummaryDTO> searchProductInGiftbox(String searchKeyword, Long giftboxIdx) {
+    List<Product> products = giftboxRepository.searchProductInGiftbox(searchKeyword, giftboxIdx);
+    return products.stream()
+        .map(ProductSummaryDTO::new).toList();
+  }
+
+  public List<GiftboxProductDTO> findGiftboxProductList(Long giftboxIdx, Long userIdx) {
+    List<GiftboxProduct> giftboxProductList = giftboxRepository.findGiftboxProductList(giftboxIdx);
+//    List<InquiryProduct> inquiryProductList = inquiryRepository.findInquiryProductList(giftboxIdx);
+    List<GiftboxProductDTO> giftboxProductDTOList = giftboxProductList.stream()
+        .map(giftboxProduct ->
+            new GiftboxProductDTO(
+                giftboxProduct,
+                giftboxProductService.getVoteStatusOfUser(
+                    userIdx,
+                    giftboxProduct.getGiftbox().getIdx(),
+                    giftboxProduct.getProduct().getIdx())
+            )).toList();
+    return giftboxProductDTOList;
   }
 }

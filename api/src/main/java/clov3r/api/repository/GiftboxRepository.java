@@ -3,6 +3,7 @@ package clov3r.api.repository;
 import static clov3r.api.domain.entity.QGiftbox.giftbox;
 import static clov3r.api.domain.entity.QGiftboxProduct.giftboxProduct;
 import static clov3r.api.domain.entity.QGiftboxUser.giftboxUser;
+import static clov3r.api.domain.entity.QInquiry.inquiry;
 import static clov3r.api.domain.entity.QProduct.product;
 import static clov3r.api.error.errorcode.CommonErrorCode.DATABASE_ERROR;
 import static clov3r.api.error.errorcode.CustomErrorCode.DATABASE_ERROR_NOT_FOUND;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Repository;
 public class GiftboxRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
+    private final UserRepository userRepository;
 
     @Transactional
     public Giftbox save(Giftbox giftbox) {
@@ -75,14 +77,11 @@ public class GiftboxRepository {
                 .execute();
     }
 
-    @Transactional
     public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
         // giftbox의 정보를 수정
         queryFactory.update(giftbox)
                 .set(giftbox.name, request.getName())
-                .set(giftbox.description, request.getDescription())
                 .set(giftbox.deadline, request.getDeadline())
-                .set(giftbox.accessStatus, request.getAccessStatus())
                 .set(giftbox.updatedAt, LocalDateTime.now())
                 .where(giftbox.idx.eq(giftboxIdx),
                         giftbox.status.eq(Status.ACTIVE))
@@ -159,6 +158,8 @@ public class GiftboxRepository {
                 .where(giftboxUser.user.idx.eq(userIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED),
                         giftbox.status.eq(Status.ACTIVE))
+//                .orderBy(giftbox.createdAt.desc())
+                .orderBy(giftbox.deadline.asc())
                 .fetch();
     }
 
@@ -228,14 +229,14 @@ public class GiftboxRepository {
     }
 
     @Transactional
-    public Long createPendingInvitation(Long giftboxIdx) {
+    public Long createPendingInvitation(Long giftboxIdx, Long userIdx) {
         // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
-        GiftboxUser giftboxUser = new GiftboxUser(
-            em.find(Giftbox.class, giftboxIdx),
-            null,
-            GiftboxUserRole.PARTICIPANT,
-            InvitationStatus.PENDING
-        );
+        GiftboxUser giftboxUser = GiftboxUser.builder()
+            .giftbox(em.find(Giftbox.class, giftboxIdx))
+            .sender(userRepository.findByUserIdx(userIdx))
+            .userRole(GiftboxUserRole.PARTICIPANT)
+            .invitationStatus(InvitationStatus.PENDING)
+            .build();
         giftboxUser.createBaseEntity();
         em.persist(giftboxUser);
         return giftboxUser.getIdx();
@@ -293,6 +294,34 @@ public class GiftboxRepository {
                 .from(giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.status.eq(Status.ACTIVE))
+                .fetch();
+    }
+
+    public List<Long> findParticipantsByGiftboxIdx(Long giftboxIdx) {
+        return queryFactory.select(giftboxUser.user.idx)
+                .from(giftboxUser)
+                .where(giftboxUser.giftbox.idx.eq(giftboxIdx),
+                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                .fetch();
+    }
+
+    public Giftbox findByInquiryIdx(Long inquiryIdx) {
+        return queryFactory.select(giftbox)
+                .from(inquiry)
+                .where(inquiry.idx.eq(inquiryIdx))
+                .fetchOne();
+    }
+
+    public List<Product> searchProductInGiftbox(String searchKeyword, Long giftboxIdx) {
+        // giftboxIdx로 status가 ACTIVE인 product 중 검색어가 포함된 product 조회
+        return queryFactory.select(product)
+                .from(giftbox)
+                .join(giftbox.products, giftboxProduct)
+                .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
+                        product.idx.eq(giftboxProduct.product.idx),
+                        product.status.eq(ProductStatus.ACTIVE),
+                        giftboxProduct.status.eq(Status.ACTIVE),
+                        product.name.contains(searchKeyword))
                 .fetch();
     }
 

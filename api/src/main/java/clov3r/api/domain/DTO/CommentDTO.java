@@ -16,6 +16,7 @@ public class CommentDTO {
   private Long giftboxProductIdx;
   private Long writerIdx;
   private String writerNickName;
+  private String writerProfileImg;
   private String content;
   private LocalDateTime createdAt;
 
@@ -24,6 +25,7 @@ public class CommentDTO {
     this.giftboxProductIdx = comment.getGiftboxProductIdx();
     this.writerIdx = comment.getWriter().getIdx();
     this.writerNickName = comment.getWriter().getNickname();
+    this.writerProfileImg = comment.getWriter().getProfileImg();
     this.content = comment.getContent();
     this.createdAt = comment.getCreatedAt();
   }

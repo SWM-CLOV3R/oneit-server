@@ -19,19 +19,23 @@ import clov3r.api.domain.data.status.AccessStatus;
 import clov3r.api.domain.data.status.InvitationStatus;
 import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.GiftboxUser;
+import clov3r.api.domain.entity.Notification;
 import clov3r.api.domain.request.PostGiftboxRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
 import clov3r.api.repository.GiftboxRepository;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
 import clov3r.api.service.GiftboxService;
-import clov3r.api.service.S3Service;
+import clov3r.api.service.NotificationService;
+import clov3r.api.service.common.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,7 +56,7 @@ public class GiftboxControllerV2 {
   private final GiftboxRepository giftboxRepository;
   private final S3Service s3Service;
   private final UserRepository userRepository;
-  private final ProductRepository productRepository;
+
 
   @Tag(name = "선물바구니 API", description = "선물바구니 CRUD API 목록")
   @Operation(summary = "선물바구니 생성", description = "선물 바구니 생성, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")
@@ -71,10 +75,6 @@ public class GiftboxControllerV2 {
     }
     if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
       throw new BaseExceptionV2(DATE_BEFORE_NOW);
-    }
-    if (!request.getAccessStatus().equals(AccessStatus.PUBLIC)
-        && !request.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      throw new BaseExceptionV2(INVALID_ACCESS_STATUS);
     }
     // create Gift box
     Long giftboxIdx = giftboxService.createGiftbox(request, userIdx);
@@ -104,11 +104,8 @@ public class GiftboxControllerV2 {
 
     // get giftbox
     Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
-    if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      if (userIdx == null || !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-        throw new BaseExceptionV2(
-            NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
-      }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 조회 가능함
     }
 
     // get participants of giftbox
@@ -124,16 +121,7 @@ public class GiftboxControllerV2 {
         .toList();
 
     // make giftbox detail dto
-    GiftboxDTO giftboxDTO = new GiftboxDTO(
-        giftbox.getIdx(),
-        giftbox.getName(),
-        giftbox.getDescription(),
-        giftbox.getDeadline(),
-        giftbox.getImageUrl(),
-        giftbox.getCreatedUserIdx(),
-        giftbox.getAccessStatus(),
-        participantsDTOList
-    );
+    GiftboxDTO giftboxDTO = new GiftboxDTO(giftbox, participantsDTOList);
     return ResponseEntity.ok(giftboxDTO);
   }
 
@@ -163,16 +151,7 @@ public class GiftboxControllerV2 {
                   participant.getUserRole()
               ))
               .toList();
-          return new GiftboxDTO(
-              giftbox.getIdx(),
-              giftbox.getName(),
-              giftbox.getDescription(),
-              giftbox.getDeadline(),
-              giftbox.getImageUrl(),
-              giftbox.getCreatedUserIdx(),
-              giftbox.getAccessStatus(),
-              participantsDTOList
-          );
+          return new GiftboxDTO(giftbox, participantsDTOList);
         })
         .toList();
     return ResponseEntity.ok(giftboxDTOList);
@@ -204,7 +183,7 @@ public class GiftboxControllerV2 {
   @Tag(name = "선물바구니 API", description = "선물바구니 CRUD API 목록")
   @Operation(summary = "선물바구니 수정", description = "선물 바구니의 idx로 선물 바구니 수정, 이미지는 선택적으로 업로드 가능, 이미지를 업로드하지 않을 경우 null로 저장")
   @PutMapping(value = "/api/v2/giftbox/{giftboxIdx}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<Long> updateGiftbox(
+  public ResponseEntity<GiftboxDTO> updateGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
       @RequestPart("request") PostGiftboxRequest request,
       @RequestPart(value = "image", required = false) MultipartFile image,
@@ -226,20 +205,39 @@ public class GiftboxControllerV2 {
     if (request.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
       throw new BaseExceptionV2(DATE_BEFORE_NOW);
     }
-    if (!request.getAccessStatus().equals(AccessStatus.PUBLIC)
-        && !request.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      throw new BaseExceptionV2(INVALID_ACCESS_STATUS);
-    }
 
     // update giftbox
     giftboxService.updateGiftbox(giftboxIdx, request);
-
+    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    String imageUrl = giftbox.getImageUrl();
     // upload image if exists
     if (image != null) {
-      String imageUrl = s3Service.upload(image, "giftbox-profile");
+      imageUrl = s3Service.upload(image, "giftbox-profile");
       giftboxService.updateGiftboxImageUrl(giftboxIdx, imageUrl);
     }
-    return ResponseEntity.ok(giftboxIdx);
+
+    // get participants of giftbox
+    List<GiftboxUser> participants = giftbox.getParticipants();
+    List<ParticipantsDTO> participantsDTOList = participants.stream()
+        .map(participant -> new ParticipantsDTO(
+            participant.getUser().getIdx(),
+            participant.getUser().getNickname(),
+            participant.getUser().getName(),
+            participant.getUser().getProfileImg(),
+            participant.getUserRole()
+        ))
+        .toList();
+
+    // make giftbox detail dto
+    GiftboxDTO giftboxDTO = new GiftboxDTO(
+        giftboxIdx,
+        request.getName(),
+        request.getDeadline(),
+        imageUrl,
+        giftbox.getCreatedUserIdx(),
+        participantsDTOList,
+        giftbox.getCreatedAt());
+    return ResponseEntity.ok(giftboxDTO);
   }
 
 
@@ -267,7 +265,7 @@ public class GiftboxControllerV2 {
     }
 
     // invite user to giftbox
-    Long invitationIdx = giftboxService.inviteUserToGiftBox(giftboxIdx);
+    Long invitationIdx = giftboxService.inviteUserToGiftBox(giftboxIdx, userIdx);
     return ResponseEntity.ok(new InvitationUserDTO(invitationIdx));
   }
 
@@ -302,7 +300,7 @@ public class GiftboxControllerV2 {
     }
 
     // accept invitation to giftbox
-    giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
+    giftboxService.acceptInvitationToGiftBox(giftboxUser, userIdx, invitationIdx);
     return ResponseEntity.ok(
         "유저 " + userIdx + "님이 " + giftboxUser.getGiftbox().getIdx() + "번 선물 바구니에 참여하였습니다.");
   }

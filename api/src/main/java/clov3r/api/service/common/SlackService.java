@@ -1,4 +1,4 @@
-package clov3r.api.service;
+package clov3r.api.service.common;
 
 import static com.slack.api.webhook.WebhookPayloads.payload;
 

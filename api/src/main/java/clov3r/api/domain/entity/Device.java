@@ -31,6 +31,9 @@ public class Device {
   @Column(name = "device_token")
   private String deviceToken;
 
+  @Column(name = "device_type")
+  private String deviceType;
+
   @Column(name = "last_logged_in_at")
   private LocalDateTime lastLoggedInAt;
 

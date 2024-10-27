@@ -12,6 +12,7 @@ import clov3r.api.domain.data.status.UserStatus;
 import clov3r.api.domain.entity.User;
 import clov3r.api.domain.request.KakaoAccessToken;
 import clov3r.api.domain.request.SignupRequest;
+import clov3r.api.domain.request.UpdateUserRequest;
 import clov3r.api.repository.AuthRepository;
 import clov3r.api.repository.UserRepository;
 import clov3r.api.service.AuthService;
@@ -19,12 +20,17 @@ import clov3r.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,12 +50,13 @@ public class AuthControllerV2 {
     public ResponseEntity<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
         KakaoProfileDTO kakaoProfileDTO = authService.getKaKaoUserInfo(kakaoAccessToken.getAccessToken());
         User user;
-        Boolean isSignedUp = false;
+        boolean isSignedUp = false;
         if (userRepository.existsByEmail(kakaoProfileDTO.getKakao_account().getEmail())) {
             // 1. 이미 카카오 가입된 유저라면 status를 active로 변경
             user = userRepository.findByEmail(kakaoProfileDTO.getKakao_account().getEmail());
             if (!user.getStatus().equals(UserStatus.ACTIVE)) {
-                user.setStatus(UserStatus.ACTIVE); 
+                user.setStatus(UserStatus.ACTIVE);
+                user.setUpdatedAt(LocalDateTime.now());
             }
             // 2. 자체 회원가입 유무 확인
             if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null) {
@@ -75,7 +82,7 @@ public class AuthControllerV2 {
         NicknameCheckDTO nicknameCheckDTO = new NicknameCheckDTO(false);
         if (userRepository.existsByNickname(nickname)) {
             nicknameCheckDTO.setExist(true);
-            return ResponseEntity.badRequest().body(nicknameCheckDTO);
+            return ResponseEntity.ok(nicknameCheckDTO);
         }
 
         return ResponseEntity.ok(nicknameCheckDTO);
@@ -120,6 +127,37 @@ public class AuthControllerV2 {
             .birthDate(user.getBirthDate())
             .build();
         return ResponseEntity.ok(newUser);
+    }
+
+    @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
+    @Operation(summary = "회원정보 수정", description = "회원정보를 수정합니다.")
+    @PatchMapping(value = "/api/v2/user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserDTO> updateUser(
+        @RequestPart UpdateUserRequest updateUserRequest,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        User user = userService.updateUser(updateUserRequest, profileImage, userIdx);
+        UserDTO updatedUser = UserDTO.builder()
+            .idx(user.getIdx())
+            .email(user.getEmail())
+            .name(user.getName())
+            .nickname(user.getNickname())
+            .profileImg(user.getProfileImg())
+            .gender(user.getGender())
+            .birthDate(user.getBirthDate())
+            .build();
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
+    @PostMapping("/api/v2/withdraw")
+    public ResponseEntity<String> withdraw(
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        userService.withdraw(userIdx);
+        return ResponseEntity.ok("탈퇴가 완료되었습니다.");
     }
 
 }

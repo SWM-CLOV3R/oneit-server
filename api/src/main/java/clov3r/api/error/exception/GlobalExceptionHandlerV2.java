@@ -3,7 +3,7 @@ package clov3r.api.error.exception;
 import clov3r.api.error.errorcode.CommonErrorCode;
 import clov3r.api.error.errorcode.ErrorCode;
 import clov3r.api.error.response.ErrorResponse;
-import clov3r.api.service.SlackService;
+import clov3r.api.service.common.SlackService;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +37,13 @@ public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
     final ErrorCode errorCode = exception.getErrorCode();
     log.error("BaseException : {}, errorCode : {}", exception, errorCode, exception);
     return handleExceptionInternal(errorCode, exception.getMessage());
+  }
+
+  @ExceptionHandler(KakaoException.class)
+  public ResponseEntity<Object> handleKakaoException(final KakaoException exception) {
+    final ErrorCode errorCode = exception.getErrorCode();
+    log.error("AuthException : {}, errorCode : {}", exception, errorCode, exception);
+    return handleExceptionInternal(errorCode);
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

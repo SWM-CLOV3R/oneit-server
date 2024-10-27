@@ -5,6 +5,7 @@ import static clov3r.api.error.errorcode.CustomErrorCode.*;
 
 import clov3r.api.config.security.Auth;
 import clov3r.api.domain.DTO.GiftboxProductDTO;
+import clov3r.api.domain.DTO.ProductSummaryDTO;
 import clov3r.api.domain.collection.GiftboxProductVoteId;
 import clov3r.api.domain.data.status.AccessStatus;
 import clov3r.api.domain.data.status.VoteStatus;
@@ -14,7 +15,6 @@ import clov3r.api.domain.entity.GiftboxProductVote;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.domain.request.VoteProductRequest;
 import clov3r.api.error.exception.BaseExceptionV2;
-import clov3r.api.repository.GiftboxProductVoteRepository;
 import clov3r.api.repository.GiftboxRepository;
 import clov3r.api.repository.ProductRepository;
 import clov3r.api.repository.UserRepository;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,7 +42,6 @@ public class GiftboxProductControllerV2 {
 
   private final GiftboxService giftboxService;
   private final GiftboxRepository giftboxRepository;
-  private final GiftboxProductVoteRepository giftboxProductVoteRepository;
   private final GiftboxProductService giftboxProductService;
   private final UserRepository userRepository;
   private final ProductRepository productRepository;
@@ -77,7 +77,7 @@ public class GiftboxProductControllerV2 {
       giftboxService.addProductToGiftbox(giftboxIdx, productIdx);
     }
     return ResponseEntity.ok(giftboxIdx + "번 선물 바구니에 상품" +
-        productIdxList.toString() + "이 추가되었습니다.");
+        productIdxList + "이 추가되었습니다.");
   }
 
   // 선물 바구니의 상품 리스트 조회 API
@@ -86,40 +86,23 @@ public class GiftboxProductControllerV2 {
   @GetMapping("/api/v2/giftbox/{giftboxIdx}/products")
   public ResponseEntity<List<GiftboxProductDTO>> getProductOfGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
-      @Parameter(hidden = true) @Auth(required = false) Long userIdx
+      @Parameter(hidden = true) @Auth Long userIdx
   ) {
     // request validation
     if (giftboxIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
-    if (giftboxRepository.findById(giftboxIdx) == null) {
-      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
-    }
-
     // check if the user is a participant of the giftbox
     Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
-    if (giftbox.getAccessStatus().equals(AccessStatus.PRIVATE)) {
-      if (userIdx == null || !giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-        throw new BaseExceptionV2(
-            NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE 일 경우, 해당 선물 바구니의 참여자만 조회 가능함
-      }
+    if (giftbox == null) {
+      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
+    }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX); // 해당 선물 바구니의 참여자만 조회 가능함
     }
 
     // get product list of the giftbox
-    List<GiftboxProduct> giftboxProductList = giftboxRepository.findGiftboxProductList(
-        giftboxIdx);
-
-    List<GiftboxProductDTO> giftboxProductDTOList = giftboxProductList.stream()
-        .map(giftboxProduct -> new GiftboxProductDTO(
-            giftboxProduct.getProduct().getIdx(),
-            giftboxProduct.getProduct().getName(),
-            giftboxProduct.getProduct().getDescription(),
-            giftboxProduct.getProduct().getOriginalPrice(),
-            giftboxProduct.getProduct().getThumbnailUrl(),
-            giftboxProduct.getLikeCount(),
-            giftboxProductService.getVoteStatusOfUser(userIdx, giftboxIdx,
-                giftboxProduct.getProduct().getIdx())
-        )).toList();
+    List<GiftboxProductDTO> giftboxProductDTOList = giftboxService.findGiftboxProductList(giftboxIdx, userIdx);
 
     return ResponseEntity.ok(giftboxProductDTOList);
   }
@@ -161,7 +144,7 @@ public class GiftboxProductControllerV2 {
       }
     }
     return ResponseEntity.ok(giftboxIdx + "번 선물 바구니의 상품" +
-        productIdxList.toString()
+        productIdxList
         + "이 삭제되었습니다.");
   }
 
@@ -219,4 +202,65 @@ public class GiftboxProductControllerV2 {
         previousStatus, newVote.getVote());
     return ResponseEntity.ok("상품에 투표하였습니다.");
   }
+
+  @Tag(name = "선물바구니 상품 API", description = "선물바구니 API 목록")
+  @Operation(summary = "선물바구니 제품 구매 표시", description = "선물바구니 제품의 구매했음을 표시합니다.")
+  @PutMapping("/api/v2/giftbox/{giftboxIdx}/products/{productIdx}/purchase")
+  public ResponseEntity<String> purchaseProduct(
+      @PathVariable("giftboxIdx") Long giftboxIdx,
+      @PathVariable("productIdx") Long productIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    // request validation
+    if (giftboxIdx == null || productIdx == null || userIdx == null) {
+      throw new BaseExceptionV2(REQUEST_ERROR);
+    }
+    if (!giftboxRepository.existsById(giftboxIdx)) {
+      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
+    }
+    if (!productRepository.existsProduct(productIdx)) {
+      throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
+    }
+    if (!userRepository.existsByUserIdx(userIdx)) {
+      throw new BaseExceptionV2(USER_NOT_FOUND);
+    }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 구매 표시 가능함
+    }
+
+    // purchase product
+    giftboxProductService.purchaseProduct(giftboxIdx, productIdx);
+    return ResponseEntity.ok("제품을 구매했습니다.");
+  }
+
+  @Tag(name = "선물바구니 상품 API", description = "선물바구니 API 목록")
+  @Operation(summary = "선물바구니 제품 검색", description = "선물바구니 내 제품 검색")
+  @GetMapping("/api/v2/giftbox/{giftboxIdx}/products/search")
+  public ResponseEntity<List<ProductSummaryDTO>> searchProductInGiftbox(
+      @PathVariable("giftboxIdx") Long giftboxIdx,
+      @RequestParam String searchKeyword,
+      @Parameter(hidden = true) @Auth(required = false) Long userIdx
+  ) {
+    // request validation
+    if (giftboxIdx == null || searchKeyword == null) {
+      throw new BaseExceptionV2(REQUEST_ERROR);
+    }
+    if (searchKeyword.length() < 2) {
+      throw new BaseExceptionV2(SEARCH_KEYWORD_ERROR);
+    }
+    if (!giftboxRepository.existsById(giftboxIdx)) {
+      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
+    }
+    if (!userRepository.existsByUserIdx(userIdx)) {
+      throw new BaseExceptionV2(USER_NOT_FOUND);
+    }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 검색 가능함
+    }
+
+    // search product in giftbox
+    List<ProductSummaryDTO> productSummaryDTOList = giftboxService.searchProductInGiftbox(searchKeyword, giftboxIdx);
+    return ResponseEntity.ok(productSummaryDTOList);
+  }
+
 }

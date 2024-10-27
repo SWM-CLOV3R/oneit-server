@@ -1,7 +1,9 @@
 package clov3r.api.domain.entity;
 
 import clov3r.api.domain.data.Gender;
+import clov3r.api.domain.data.status.LikeStatus;
 import clov3r.api.domain.data.status.ProductStatus;
+import clov3r.api.repository.ProductLikeRepository;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -76,5 +78,9 @@ public class Product extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
+
+    @Column(name = "like_count")
+    private int likeCount;
+
 
 }
