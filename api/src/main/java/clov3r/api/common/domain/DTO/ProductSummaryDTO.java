@@ -1,8 +1,11 @@
 package clov3r.api.common.domain.DTO;
 
 import clov3r.api.common.domain.data.status.LikeStatus;
+import clov3r.api.common.domain.entity.Keyword;
 import clov3r.api.common.domain.entity.Product;
 import clov3r.api.giftbox.domain.status.ProductStatus;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +14,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductSummaryDTO {
+
     private Long idx;
     private String name;
+    private String description;
     private Integer originalPrice;
-//    private Integer currentPrice;
+    //    private Integer currentPrice;
 //    private Integer discountRate;
     private String thumbnailUrl;
     private ProductStatus status;
@@ -25,6 +30,7 @@ public class ProductSummaryDTO {
     public ProductSummaryDTO(Product product, LikeStatus likeStatus) {
         this.idx = product.getIdx();
         this.name = product.getName();
+        this.description = product.getDescription();
         this.originalPrice = product.getOriginalPrice();
 //        this.currentPrice = product.getCurrentPrice();
 //        this.discountRate = product.getDiscountRate();
@@ -34,12 +40,4 @@ public class ProductSummaryDTO {
         this.likeStatus = likeStatus;
     }
 
-    public ProductSummaryDTO(Product product) {
-        this.idx = product.getIdx();
-        this.name = product.getName();
-        this.originalPrice = product.getOriginalPrice();
-        this.thumbnailUrl = product.getThumbnailUrl();
-        this.status = product.getStatus();
-        this.likeCount = product.getLikeCount();
-    }
 }

@@ -58,7 +58,6 @@ public class CollectionControllerV2 {
         collection.getThumbnailUrl(),
         productList.stream().map(product -> new ProductDTO(
             product,
-            keywordRepository.findKeywordByProductIdx(product.getIdx()),
             productService.getLikeStatus(product.getIdx(), userIdx)
         )).toList()
     );

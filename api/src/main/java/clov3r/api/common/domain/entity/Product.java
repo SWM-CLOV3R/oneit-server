@@ -2,6 +2,7 @@ package clov3r.api.common.domain.entity;
 
 import clov3r.api.common.domain.data.Gender;
 import clov3r.api.giftbox.domain.status.ProductStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -79,6 +80,10 @@ public class Product extends BaseEntity {
 
     @Column(name = "like_count")
     private int likeCount;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Keyword> keyword;
 
 
 }

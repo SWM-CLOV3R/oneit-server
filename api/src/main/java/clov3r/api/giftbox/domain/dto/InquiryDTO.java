@@ -4,7 +4,9 @@ import clov3r.api.common.domain.DTO.ProductSummaryDTO;
 import clov3r.api.giftbox.domain.entity.Inquiry;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 public class InquiryDTO {
   private Long idx;

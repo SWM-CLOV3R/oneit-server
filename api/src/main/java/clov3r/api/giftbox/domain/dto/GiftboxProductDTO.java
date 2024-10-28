@@ -1,5 +1,6 @@
 package clov3r.api.giftbox.domain.dto;
 
+import clov3r.api.common.domain.DTO.ProductSummaryDTO;
 import clov3r.api.common.domain.entity.Category;
 import clov3r.api.common.domain.entity.Keyword;
 import clov3r.api.giftbox.domain.data.EmojiName;
@@ -30,12 +31,15 @@ public class GiftboxProductDTO {
 //  private int discountRate;
   private String thumbnailUrl;
   private ProductStatus productStatus;
+  private ProductStatus status;
   private List<Keyword> keywords = new ArrayList<>();
 
-  private int likeCount;
+  // information in giftbox
+  private int likeCountInGiftbox;
   private VoteStatus voteStatus;
   private PurchaseStatus purchaseStatus;
   private EmojiName emojiIdx;
+
 
   public GiftboxProductDTO(GiftboxProduct giftboxProduct, VoteStatus voteStatus, List<Keyword> keywords) {
     this.idx = giftboxProduct.getProduct().getIdx();
@@ -43,20 +47,12 @@ public class GiftboxProductDTO {
     this.description = giftboxProduct.getProduct().getDescription();
     this.originalPrice = giftboxProduct.getProduct().getOriginalPrice();
     this.thumbnailUrl = giftboxProduct.getProduct().getThumbnailUrl();
-    this.likeCount = giftboxProduct.getLikeCount();
+    this.productStatus = giftboxProduct.getProduct().getStatus();
+    this.status = giftboxProduct.getProduct().getStatus();
+    this.keywords.addAll(keywords);
+    this.likeCountInGiftbox = giftboxProduct.getLikeCount();
     this.voteStatus = voteStatus;
     this.purchaseStatus = giftboxProduct.getPurchaseStatus();
-    this.productStatus = giftboxProduct.getProduct().getStatus();
     this.emojiIdx = giftboxProduct.getEmojiName();
-    this.keywords.addAll(keywords);
   }
-
-  public GiftboxProductDTO(Product product) {
-    this.idx = product.getIdx();
-    this.name = product.getName();
-    this.description = product.getDescription();
-    this.originalPrice = product.getOriginalPrice();
-    this.thumbnailUrl = product.getThumbnailUrl();
-  }
-
 }

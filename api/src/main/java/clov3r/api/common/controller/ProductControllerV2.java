@@ -84,7 +84,6 @@ public class ProductControllerV2 {
                 .map(product ->
                     new ProductDTO(
                         product,
-                        keywordService.getKeywordsByIdx(product.getIdx()),
                         productService.getLikeStatus(product.getIdx(), userIdx)
                     ))
                 .toList();
@@ -112,12 +111,10 @@ public class ProductControllerV2 {
         Category category = categoryService.getCategoryByIdx(product.getCategory().getIdx());
 
         // get keywords
-        List<Keyword> keywords = keywordService.getKeywordsByIdx(productIdx);
         ProductDetailDTO productDetailDTO;
         try {
             productDetailDTO = new ProductDetailDTO(
                 product,
-                keywords,
                 category,
                 productService.getLikeStatus(productIdx, userIdx)
             );
@@ -205,11 +202,11 @@ public class ProductControllerV2 {
         @Parameter(hidden = true) @Auth Long userIdx
     ) {
         List<Product> products = productLikeRepository.findLikeProductList(userIdx, LikeStatus.LIKE);
-        List<ProductSummaryDTO> productSummaryDTOs = products.stream()
+        List<ProductSummaryDTO> productSummaryDTOS = products.stream()
             .map(product -> new ProductSummaryDTO(
                 product,
                 productService.getLikeStatus(product.getIdx(), userIdx)
             )).toList();
-        return ResponseEntity.ok(productSummaryDTOs);
+        return ResponseEntity.ok(productSummaryDTOS);
     }
 }

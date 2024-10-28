@@ -257,7 +257,7 @@ public class GiftboxProductController {
     }
 
     // search product in giftbox
-    List<ProductSummaryDTO> productSummaryDTOList = giftboxService.searchProductInGiftbox(searchKeyword, giftboxIdx);
+    List<ProductSummaryDTO> productSummaryDTOList = giftboxService.searchProductInGiftbox(searchKeyword, giftboxIdx, userIdx);
     return ResponseEntity.ok(productSummaryDTOList);
   }
 

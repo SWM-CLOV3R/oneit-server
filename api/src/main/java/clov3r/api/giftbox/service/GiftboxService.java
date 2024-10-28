@@ -5,6 +5,7 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_G
 import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
 
 import clov3r.api.common.repository.KeywordRepository;
+import clov3r.api.common.service.ProductService;
 import clov3r.api.giftbox.domain.dto.GiftboxProductDTO;
 import clov3r.api.common.domain.DTO.ProductSummaryDTO;
 import clov3r.api.giftbox.domain.data.GiftboxUserRole;
@@ -18,13 +19,10 @@ import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.giftbox.repository.GiftboxRepository;
 import clov3r.api.giftbox.repository.GiftboxUserRepository;
-import clov3r.api.giftbox.repository.InquiryRepository;
-import clov3r.api.common.repository.NotificationRepository;
 import clov3r.api.common.repository.UserRepository;
 import clov3r.api.common.service.NotificationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +37,7 @@ public class GiftboxService {
   private final NotificationService notificationService;
   private final GiftboxProductService giftboxProductService;
   private final KeywordRepository keywordRepository;
+  private final ProductService productService;
 
   public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
 
@@ -109,10 +108,13 @@ public class GiftboxService {
 
   }
 
-  public List<ProductSummaryDTO> searchProductInGiftbox(String searchKeyword, Long giftboxIdx) {
+  public List<ProductSummaryDTO> searchProductInGiftbox(String searchKeyword, Long giftboxIdx, Long userIdx) {
     List<Product> products = giftboxRepository.searchProductInGiftbox(searchKeyword, giftboxIdx);
     return products.stream()
-        .map(ProductSummaryDTO::new).toList();
+        .map(product -> new ProductSummaryDTO(
+            product,
+            productService.getLikeStatus(product.getIdx(), userIdx)
+        )).toList();
   }
 
   public List<GiftboxProductDTO> findGiftboxProductList(Long giftboxIdx, Long userIdx) {
