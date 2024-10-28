@@ -1,6 +1,7 @@
 package clov3r.api.repository;
 
 import static clov3r.api.domain.entity.QGiftboxInquiryResult.giftboxInquiryResult;
+import static clov3r.api.domain.entity.QGiftboxProduct.giftboxProduct;
 import static clov3r.api.domain.entity.QInquiryProduct.inquiryProduct;
 
 import clov3r.api.domain.data.EmojiName;
@@ -65,9 +66,6 @@ public class InquiryProductRepository {
             .fetchFirst();
     }
 
-    public void saveGiftboxInquiryResult(GiftboxInquiryResult giftboxInquiryResult) {
-        em.persist(giftboxInquiryResult);
-    }
 
     public List<Product> findProductListByGiftbox(Long giftboxIdx) {
         return queryFactory
@@ -77,14 +75,6 @@ public class InquiryProductRepository {
             .fetch();
     }
 
-    public EmojiName findEmojiByGiftboxProduct(Long giftboxIdx, Long idx) {
-        return queryFactory
-            .select(giftboxInquiryResult.emoji.name)
-            .from(giftboxInquiryResult)
-            .where(giftboxInquiryResult.giftbox.idx.eq(giftboxIdx)
-                .and(giftboxInquiryResult.product.idx.eq(idx)))
-            .fetchFirst();
-    }
 
     public boolean existGiftboxAndProduct(Giftbox giftbox, Long productIdx) {
         return queryFactory

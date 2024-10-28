@@ -3,10 +3,12 @@ package clov3r.api.service;
 import clov3r.api.domain.data.status.InquiryStatus;
 import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.GiftboxInquiryResult;
+import clov3r.api.domain.entity.GiftboxProduct;
 import clov3r.api.domain.entity.Inquiry;
 import clov3r.api.domain.entity.Notification;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.domain.request.InquiryRequest;
+import clov3r.api.repository.GiftboxProductRepository;
 import clov3r.api.repository.GiftboxRepository;
 import clov3r.api.repository.InquiryProductRepository;
 import clov3r.api.repository.InquiryRepository;
@@ -31,6 +33,7 @@ public class InquiryService {
   private final NotificationRepository notificationRepository;
   private final NotificationService notificationService;
   private final ApplicationEventPublisher applicationEventPublisher;
+  private final GiftboxProductRepository giftboxProductRepository;
 
   @Transactional
   public Long createInquiry(InquiryRequest inquiryRequest, Long userIdx) {
@@ -63,18 +66,6 @@ public class InquiryService {
     for (Long productIdx : productIdxList) {
       Product product = productRepository.findById(productIdx);
       inquiryProductRepository.addProductToInquiry(inquiry, product, giftbox);
-    }
-  }
-
-  @Transactional
-  public void createGiftboxInquiry(Long giftboxIdx, List<Long> productIdxList) {
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
-    for (Long productIdx : productIdxList) {
-      Product product = productRepository.findById(productIdx);
-      if (!inquiryProductRepository.existGiftboxAndProduct(giftbox, productIdx)) {
-        GiftboxInquiryResult giftboxInquiryResult = new GiftboxInquiryResult(giftbox, product);
-        inquiryProductRepository.saveGiftboxInquiryResult(giftboxInquiryResult);
-      }
     }
   }
 }

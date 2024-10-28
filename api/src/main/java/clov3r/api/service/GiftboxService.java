@@ -121,7 +121,7 @@ public class GiftboxService {
 
   public List<GiftboxProductDTO> findGiftboxProductList(Long giftboxIdx, Long userIdx) {
     List<GiftboxProduct> giftboxProductList = giftboxRepository.findGiftboxProductList(giftboxIdx);
-    List<GiftboxProductDTO> giftboxProductDTOList = giftboxProductList.stream()
+    return giftboxProductList.stream()
         .map(giftboxProduct ->
             new GiftboxProductDTO(
                 giftboxProduct,
@@ -130,6 +130,5 @@ public class GiftboxService {
                     giftboxProduct.getGiftbox().getIdx(),
                     giftboxProduct.getProduct().getIdx())
             )).toList();
-    return giftboxProductDTOList;
   }
 }

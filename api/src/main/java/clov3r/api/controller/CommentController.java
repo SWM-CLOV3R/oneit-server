@@ -6,6 +6,7 @@ import static clov3r.api.error.errorcode.CustomErrorCode.NOT_PARTICIPANT_OF_GIFT
 import clov3r.api.config.security.Auth;
 import clov3r.api.domain.DTO.CommentDTO;
 import clov3r.api.domain.entity.Comment;
+import clov3r.api.domain.entity.GiftboxProduct;
 import clov3r.api.domain.request.CommentRequest;
 import clov3r.api.error.errorcode.CustomErrorCode;
 import clov3r.api.error.exception.BaseExceptionV2;
@@ -48,11 +49,11 @@ public class CommentController {
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
       throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);
     }
-    Long giftboxProductIdx = giftboxProductRepository.findGiftboxProductIdxByGiftboxIdxAndProductIdx(giftboxIdx, productIdx);
-    if (giftboxProductIdx == null) {
+    GiftboxProduct giftboxProduct = giftboxProductRepository.findByGiftboxIdxAndProductIdx(giftboxIdx, productIdx);
+    if (giftboxProduct == null) {
       throw new BaseExceptionV2(CustomErrorCode.GIFTBOX_PRODUCT_NOT_FOUND);
     }
-    Comment comment = commentService.createComment(userIdx, giftboxProductIdx, request);
+    Comment comment = commentService.createComment(userIdx, giftboxProduct.getIdx(), request);
     CommentDTO commentDTO = new CommentDTO(comment);
     return ResponseEntity.ok(commentDTO);
   }
@@ -87,11 +88,11 @@ public class CommentController {
     if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
       throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);
     }
-    Long giftboxProductIdx = giftboxProductRepository.findGiftboxProductIdxByGiftboxIdxAndProductIdx(giftboxIdx, productIdx);
-    if (giftboxProductIdx == null) {
+    GiftboxProduct giftboxProduct = giftboxProductRepository.findByGiftboxIdxAndProductIdx(giftboxIdx, productIdx);
+    if (giftboxProduct == null) {
       throw new BaseExceptionV2(CustomErrorCode.GIFTBOX_PRODUCT_NOT_FOUND);
     }
-    List<CommentDTO> commentDTOList = commentService.getCommentList(giftboxProductIdx);
+    List<CommentDTO> commentDTOList = commentService.getCommentList(giftboxProduct.getIdx());
     return ResponseEntity.ok(commentDTOList);
   }
 

@@ -11,9 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GiftboxProductRepository extends JpaRepository<GiftboxProduct, Long> {
 
-  @Query("select idx from GiftboxProduct where giftbox.idx = :giftboxIdx and product.idx = :productIdx and status = 'ACTIVE'")
-  Long findGiftboxProductIdxByGiftboxIdxAndProductIdx(Long giftboxIdx, Long productIdx);
-
   @Modifying
   @Query("update GiftboxProduct set purchaseStatus = 'PURCHASED' where giftbox.idx = :giftboxIdx and product.idx = :productIdx")
   void purchaseProduct(Long giftboxIdx, Long productIdx);
@@ -24,5 +21,8 @@ public interface GiftboxProductRepository extends JpaRepository<GiftboxProduct, 
 
   @Query("select count(gp) > 0 from GiftboxProduct gp where gp.giftbox.idx = :giftboxIdx and gp.product.idx = :productIdx and gp.status = 'ACTIVE'")
   boolean existProductByGiftbox(Long giftboxIdx, Long productIdx);
+
+  @Query("select gp from GiftboxProduct gp where gp.giftbox.idx = :giftboxIdx and gp.product.idx = :productIdx and gp.status = 'ACTIVE'")
+  GiftboxProduct findByGiftboxIdxAndProductIdx(Long giftboxIdx, Long productIdx);
 
 }

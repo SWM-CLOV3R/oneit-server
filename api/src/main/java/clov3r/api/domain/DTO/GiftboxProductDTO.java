@@ -28,7 +28,7 @@ public class GiftboxProductDTO {
   private int likeCount;
   private VoteStatus voteStatus;
   private PurchaseStatus purchaseStatus;
-  private EmojiName emojiName;
+  private EmojiName emojiIdx;
   private ProductStatus productStatus;
 
   public GiftboxProductDTO(GiftboxProduct giftboxProduct, VoteStatus voteStatus) {
@@ -41,7 +41,7 @@ public class GiftboxProductDTO {
     this.voteStatus = voteStatus;
     this.purchaseStatus = giftboxProduct.getPurchaseStatus();
     this.productStatus = giftboxProduct.getProduct().getStatus();
-    this.emojiName = giftboxProduct.getEmojiName();
+    this.emojiIdx = giftboxProduct.getEmojiName();
   }
 
   public GiftboxProductDTO(Product product) {

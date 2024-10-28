@@ -7,17 +7,13 @@ import static clov3r.api.error.errorcode.CustomErrorCode.NOT_EXIST_EMOJI;
 import static clov3r.api.error.errorcode.CustomErrorCode.NOT_EXIST_INQUIRY;
 import static clov3r.api.error.errorcode.CustomErrorCode.NOT_EXIST_INQUIRY_PRODUCT;
 import static clov3r.api.error.errorcode.CustomErrorCode.NOT_MANAGER_OF_GIFTBOX;
-import static clov3r.api.error.errorcode.CustomErrorCode.NOT_PARTICIPANT_OF_GIFTBOX;
 import static clov3r.api.error.errorcode.CustomErrorCode.PRODUCT_NOT_FOUND;
 
 import clov3r.api.config.security.Auth;
 import clov3r.api.domain.DTO.InquiryDTO;
-import clov3r.api.domain.DTO.InquiryProductDTO;
-import clov3r.api.domain.DTO.InquiryResultDTO;
 import clov3r.api.domain.DTO.ProductSummaryDTO;
 import clov3r.api.domain.data.ProductEmoji;
 import clov3r.api.domain.data.status.InquiryStatus;
-import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.Inquiry;
 import clov3r.api.domain.entity.Product;
 import clov3r.api.domain.request.InquiryRequest;
@@ -90,8 +86,6 @@ public class InquiryController {
     // make inquiry
     Long idx = inquiryService.createInquiry(inquiryRequest, userIdx);
     inquiryService.createInquiryProduct(idx, inquiryRequest.getProductIdxList(), inquiryRequest.getGiftboxIdx());
-    inquiryService.createGiftboxInquiry(inquiryRequest.getGiftboxIdx(), inquiryRequest.getProductIdxList());
-
     return ResponseEntity.ok(idx);
   }
 
@@ -136,11 +130,6 @@ public class InquiryController {
         productEmoji -> productRepository.findById(productEmoji.getProductIdx()) == null)) {
       throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
     }
-    // check if all emoji of productEmojiList exists
-//    if (productEmojiList.stream()
-//        .anyMatch(productEmoji -> !inquiryRepository.existEmojiById(productEmoji.getEmojiIdx()))) {
-//      throw new BaseExceptionV2(NOT_EXIST_EMOJI);
-//    }
     Inquiry inquiry = inquiryRepository.findByIdx(inquiryIdx);
     if (inquiry == null) {
       throw new BaseExceptionV2(NOT_EXIST_INQUIRY);
@@ -161,40 +150,9 @@ public class InquiryController {
     }
 
     inquiryProductService.addEmoji(inquiryIdx, productEmojiList); // add emoji to inquiry product
-//    inquiryProductService.updateEmojiToGiftbox(inquiryIdx, productEmojiList);  //  add emoji to giftbox inquiry result
     giftboxProductService.addEmojiToGiftbox(inquiry.getGiftbox().getIdx(), productEmojiList);  //  add emoji to giftbox inquiry result
     inquiryService.completeInquiry(inquiryIdx);
     return ResponseEntity.ok(inquiryIdx);
   }
-
-  @Tag(name = "물어보기 API", description = "물어보기 API 목록")
-  @Operation(summary = "선물바구니의 물어보기 결과 조회(이모지 포함)", description = "선물바구니의 물어보기 결과를 조회합니다.(각 제품별 이모지 포함, 여러 물어보기 합산 즉 선물바구니 idx 기준)")
-  @GetMapping("/api/v2/inquiry/{giftboxIdx}/emoji")
-  public ResponseEntity<InquiryResultDTO> getInquiryResult(
-      @PathVariable("giftboxIdx") Long giftboxIdx,
-      @Parameter(hidden = true) @Auth Long userIdx
-  ) {
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
-    if (giftbox == null) {
-      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
-    }
-    // 물어보기 조회는 해당 선물바구니의 참여자만 가능하다
-    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);  // 선물 바구니가 PRIVATE일 경우 해당 선물 바구니의 참여자만 조회 가능함
-    }
-    List<Product> productList = giftboxRepository.findProductOfGiftbox(giftboxIdx);
-    List<InquiryProductDTO> inquiryProductDTOS = productList.stream().map(product ->
-        new InquiryProductDTO(
-            product,
-            inquiryProductRepository.findEmojiByGiftboxProduct(giftboxIdx, product.getIdx()))
-    ).toList();
-
-    InquiryResultDTO inquiryReulstDTO = new InquiryResultDTO(
-        giftboxIdx,
-        inquiryProductDTOS);
-
-    return ResponseEntity.ok(inquiryReulstDTO);
-  }
-
 
 }
