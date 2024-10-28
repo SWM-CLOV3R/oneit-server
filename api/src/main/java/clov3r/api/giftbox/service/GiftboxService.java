@@ -4,6 +4,7 @@ import static clov3r.api.common.error.errorcode.CommonErrorCode.DATABASE_ERROR;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
 
+import clov3r.api.common.repository.KeywordRepository;
 import clov3r.api.giftbox.domain.dto.GiftboxProductDTO;
 import clov3r.api.common.domain.DTO.ProductSummaryDTO;
 import clov3r.api.giftbox.domain.data.GiftboxUserRole;
@@ -35,11 +36,9 @@ public class GiftboxService {
   private final GiftboxRepository giftboxRepository;
   private final GiftboxUserRepository giftboxUserRepository;
   private final UserRepository userRepository;
-  private final NotificationRepository notificationRepository;
   private final NotificationService notificationService;
-  private final ApplicationEventPublisher applicationEventPublisher;
   private final GiftboxProductService giftboxProductService;
-  private final InquiryRepository inquiryRepository;
+  private final KeywordRepository keywordRepository;
 
   public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
 
@@ -125,7 +124,8 @@ public class GiftboxService {
                 giftboxProductService.getVoteStatusOfUser(
                     userIdx,
                     giftboxProduct.getGiftbox().getIdx(),
-                    giftboxProduct.getProduct().getIdx())
+                    giftboxProduct.getProduct().getIdx()),
+                keywordRepository.findKeywordByProductIdx(giftboxProduct.getProduct().getIdx())
             )).toList();
   }
 }

@@ -30,13 +30,14 @@ public class GiftboxProductDTO {
 //  private int discountRate;
   private String thumbnailUrl;
   private ProductStatus productStatus;
+  private List<Keyword> keywords = new ArrayList<>();
 
   private int likeCount;
   private VoteStatus voteStatus;
   private PurchaseStatus purchaseStatus;
   private EmojiName emojiIdx;
 
-  public GiftboxProductDTO(GiftboxProduct giftboxProduct, VoteStatus voteStatus) {
+  public GiftboxProductDTO(GiftboxProduct giftboxProduct, VoteStatus voteStatus, List<Keyword> keywords) {
     this.idx = giftboxProduct.getProduct().getIdx();
     this.name = giftboxProduct.getProduct().getName();
     this.description = giftboxProduct.getProduct().getDescription();
@@ -47,6 +48,7 @@ public class GiftboxProductDTO {
     this.purchaseStatus = giftboxProduct.getPurchaseStatus();
     this.productStatus = giftboxProduct.getProduct().getStatus();
     this.emojiIdx = giftboxProduct.getEmojiName();
+    this.keywords.addAll(keywords);
   }
 
   public GiftboxProductDTO(Product product) {
