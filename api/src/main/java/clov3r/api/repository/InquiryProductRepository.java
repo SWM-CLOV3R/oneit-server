@@ -3,6 +3,7 @@ package clov3r.api.repository;
 import static clov3r.api.domain.entity.QGiftboxInquiryResult.giftboxInquiryResult;
 import static clov3r.api.domain.entity.QInquiryProduct.inquiryProduct;
 
+import clov3r.api.domain.data.EmojiName;
 import clov3r.api.domain.data.ProductEmoji;
 import clov3r.api.domain.entity.Giftbox;
 import clov3r.api.domain.entity.GiftboxInquiryResult;
@@ -76,9 +77,9 @@ public class InquiryProductRepository {
             .fetch();
     }
 
-    public Long findEmojiByGiftboxProduct(Long giftboxIdx, Long idx) {
+    public EmojiName findEmojiByGiftboxProduct(Long giftboxIdx, Long idx) {
         return queryFactory
-            .select(giftboxInquiryResult.emoji.idx)
+            .select(giftboxInquiryResult.emoji.name)
             .from(giftboxInquiryResult)
             .where(giftboxInquiryResult.giftbox.idx.eq(giftboxIdx)
                 .and(giftboxInquiryResult.product.idx.eq(idx)))

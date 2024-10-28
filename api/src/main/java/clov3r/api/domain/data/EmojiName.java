@@ -1,8 +1,8 @@
 package clov3r.api.domain.data;
 
 public enum EmojiName {
+  LOVE,
   LIKE,
-  LIKE2,
   NEED,
   SOSO,
   BAD,

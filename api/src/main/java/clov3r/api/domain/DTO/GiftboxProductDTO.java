@@ -1,5 +1,6 @@
 package clov3r.api.domain.DTO;
 
+import clov3r.api.domain.data.EmojiName;
 import clov3r.api.domain.data.status.ProductStatus;
 import clov3r.api.domain.data.status.PurchaseStatus;
 import clov3r.api.domain.data.status.VoteStatus;
@@ -27,7 +28,7 @@ public class GiftboxProductDTO {
   private int likeCount;
   private VoteStatus voteStatus;
   private PurchaseStatus purchaseStatus;
-  private Long emojiIdx;
+  private EmojiName emojiName;
   private ProductStatus productStatus;
 
   public GiftboxProductDTO(GiftboxProduct giftboxProduct, VoteStatus voteStatus) {
@@ -40,6 +41,7 @@ public class GiftboxProductDTO {
     this.voteStatus = voteStatus;
     this.purchaseStatus = giftboxProduct.getPurchaseStatus();
     this.productStatus = giftboxProduct.getProduct().getStatus();
+    this.emojiName = giftboxProduct.getEmojiName();
   }
 
   public GiftboxProductDTO(Product product) {

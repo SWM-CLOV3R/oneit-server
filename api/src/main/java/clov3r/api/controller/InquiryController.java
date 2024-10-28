@@ -125,7 +125,7 @@ public class InquiryController {
   @Tag(name = "물어보기 API", description = "물어보기 API 목록")
   @Operation(summary = "물어보기 이모지 추가", description = "물어보기 제품에 대해 이모지를 추가합니다. 계정 정보는 받지 않습니다.")
   @PostMapping("/api/v2/inquiry/{inquiryIdx}/emoji")
-  public ResponseEntity<String> addEmoji(
+  public ResponseEntity<Long> addEmoji(
       @PathVariable("inquiryIdx") Long inquiryIdx,
       @RequestBody List<ProductEmoji> productEmojiList
   ) {
@@ -164,7 +164,7 @@ public class InquiryController {
 //    inquiryProductService.updateEmojiToGiftbox(inquiryIdx, productEmojiList);  //  add emoji to giftbox inquiry result
     giftboxProductService.addEmojiToGiftbox(inquiry.getGiftbox().getIdx(), productEmojiList);  //  add emoji to giftbox inquiry result
     inquiryService.completeInquiry(inquiryIdx);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(inquiryIdx);
   }
 
   @Tag(name = "물어보기 API", description = "물어보기 API 목록")

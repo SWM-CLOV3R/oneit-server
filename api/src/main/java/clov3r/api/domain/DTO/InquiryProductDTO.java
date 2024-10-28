@@ -1,14 +1,15 @@
 package clov3r.api.domain.DTO;
 
+import clov3r.api.domain.data.EmojiName;
 import clov3r.api.domain.entity.Product;
 import lombok.Getter;
 
 @Getter
 public class InquiryProductDTO extends ProductSummaryDTO {
-  private Long emojiIdx;
+  private EmojiName emojiName;
 
-  public InquiryProductDTO(Product product, Long emojiIdx) {
+  public InquiryProductDTO(Product product, EmojiName emojiName) {
     super(product);
-    this.emojiIdx = emojiIdx;
+    this.emojiName = emojiName;
   }
 }
