@@ -45,6 +45,7 @@ public enum CustomErrorCode implements ErrorCode {
   NO_AUTHORIZATION_HEADER(UNAUTHORIZED, "Authorization Header가 없습니다."),
   INVALID_TOKEN(UNAUTHORIZED,"유효하지 않은 토큰입니다."),
 
+
   /**
    * NOT_FOUND
    */
@@ -60,6 +61,7 @@ public enum CustomErrorCode implements ErrorCode {
   ALREADY_USED_INQUIRY(NOT_FOUND, "이미 응답한 물어보기입니다."),
   COMMENT_NOT_FOUND(NOT_FOUND, "댓글을 찾을 수 없습니다."),
   GIFTBOX_PRODUCT_NOT_FOUND(NOT_FOUND, "선물바구니 상품을 찾을 수 없습니다."),
+  DEVICE_TOKEN_NOT_FOUND(NOT_FOUND, "디바이스 토큰을 찾을 수 없습니다."),
 
   /**
    * FORBIDDEN

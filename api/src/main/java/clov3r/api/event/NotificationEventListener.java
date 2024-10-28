@@ -1,9 +1,12 @@
 package clov3r.api.event;
 
+
 import clov3r.api.domain.DTO.PushNotificationRequest;
 import clov3r.api.domain.entity.Notification;
+import clov3r.api.repository.NotificationRepository;
 import clov3r.api.service.common.FCMService;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -17,7 +20,9 @@ public class NotificationEventListener {
   @Async
   @TransactionalEventListener
   public void fcmNotificationEventHandler(Notification notification) throws IOException {
-    System.out.println("NotificationEventListener.fcmNotificationEventHandler");
+    if (notification.getDevice() == null) {
+      return;
+    }
     PushNotificationRequest pushNotificationRequest = PushNotificationRequest.builder()
         .token(notification.getDevice().getDeviceToken())
         .title(notification.getTitle())
