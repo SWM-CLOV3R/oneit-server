@@ -85,7 +85,7 @@ public class GiftboxProductController {
 
   // 선물 바구니의 상품 리스트 조회 API
   @Tag(name = "선물바구니 상품 API", description = "선물바구니 상품 CRUD API 목록")
-  @Operation(summary = "선물바구니 상품 조회", description = "선물 바구니의 idx로 상품 조회")
+  @Operation(summary = "선물바구니 상품 리스트 조회", description = "선물 바구니의 idx로 상품 조회")
   @GetMapping("/api/v2/giftbox/{giftboxIdx}/products")
   public ResponseEntity<List<GiftboxProductDTO>> getProductOfGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
@@ -242,7 +242,7 @@ public class GiftboxProductController {
   }
 
   @Tag(name = "선물바구니 상품 API", description = "선물바구니 API 목록")
-  @Operation(summary = "선물바구니 제품 구매 표시", description = "선물바구니 제품의 구매했음을 표시합니다.")
+  @Operation(summary = "선물바구니 상품 구매 표시", description = "선물바구니 상품 구매여부를 표시합니다.")
   @PutMapping("/api/v2/giftbox/{giftboxIdx}/products/{productIdx}/purchase")
   public ResponseEntity<String> purchaseProduct(
       @PathVariable("giftboxIdx") Long giftboxIdx,
@@ -272,7 +272,7 @@ public class GiftboxProductController {
   }
 
   @Tag(name = "선물바구니 상품 API", description = "선물바구니 API 목록")
-  @Operation(summary = "선물바구니 제품 검색", description = "선물바구니 내 제품 검색")
+  @Operation(summary = "선물바구니 내부에서 상품 검색", description = "선물바구니 내 상품 텍스트 검색")
   @GetMapping("/api/v2/giftbox/{giftboxIdx}/products/search")
   public ResponseEntity<List<ProductSummaryDTO>> searchProductInGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
