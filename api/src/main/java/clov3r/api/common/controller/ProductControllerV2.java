@@ -108,14 +108,12 @@ public class ProductControllerV2 {
         }
         // get Category
         Product product = productService.getProductByIdx(productIdx);
-        Category category = categoryService.getCategoryByIdx(product.getCategory().getIdx());
 
         // get keywords
         ProductDetailDTO productDetailDTO;
         try {
             productDetailDTO = new ProductDetailDTO(
                 product,
-                category,
                 productService.getLikeStatus(productIdx, userIdx)
             );
         } catch (Exception e) {

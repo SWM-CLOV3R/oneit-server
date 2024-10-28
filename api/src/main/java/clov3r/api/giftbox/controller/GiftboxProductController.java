@@ -4,15 +4,18 @@ import static clov3r.api.common.error.errorcode.CommonErrorCode.*;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.*;
 
 import clov3r.api.common.config.security.Auth;
+import clov3r.api.common.service.ProductService;
 import clov3r.api.giftbox.domain.dto.GiftboxProductDTO;
 import clov3r.api.common.domain.DTO.ProductSummaryDTO;
 import clov3r.api.common.domain.collection.GiftboxProductVoteId;
+import clov3r.api.giftbox.domain.dto.GiftboxProductDetailDTO;
 import clov3r.api.giftbox.domain.status.VoteStatus;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.GiftboxProductVote;
 import clov3r.api.common.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.VoteProductRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
+import clov3r.api.giftbox.repository.GiftboxProductRepository;
 import clov3r.api.giftbox.repository.GiftboxRepository;
 import clov3r.api.common.repository.ProductRepository;
 import clov3r.api.common.repository.UserRepository;
@@ -43,6 +46,8 @@ public class GiftboxProductController {
   private final GiftboxProductService giftboxProductService;
   private final UserRepository userRepository;
   private final ProductRepository productRepository;
+  private final ProductService productService;
+  private final GiftboxProductRepository giftboxProductRepository;
 
   // 선물 바구니에 상품 리스트를 추가하는 API
   @Tag(name = "선물바구니 상품 API", description = "선물바구니 상품 CRUD API 목록")
@@ -103,6 +108,41 @@ public class GiftboxProductController {
     List<GiftboxProductDTO> giftboxProductDTOList = giftboxService.findGiftboxProductList(giftboxIdx, userIdx);
 
     return ResponseEntity.ok(giftboxProductDTOList);
+  }
+
+  @Tag(name = "선물바구니 상품 API", description = "선물바구니 상품 CRUD API 목록")
+  @Operation(summary = "선물바구니 상품 상세 조회", description = "선물 바구니에서 상품 idx로 상세 정보 조회")
+  @GetMapping("/api/v2/giftbox/{giftboxIdx}/products/{productIdx}")
+  public ResponseEntity<GiftboxProductDetailDTO> getProductDetailOfGiftbox(
+      @PathVariable("giftboxIdx") Long giftboxIdx,
+      @PathVariable("productIdx") Long productIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    // request validation
+    if (giftboxIdx == null) {
+      throw new BaseExceptionV2(REQUEST_ERROR);
+    }
+    // check if the user is a participant of the giftbox
+    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    if (giftbox == null) {
+      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
+    }
+    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
+      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX); // 해당 선물 바구니의 참여자만 조회 가능함
+    }
+
+    // get product list of the giftbox
+    GiftboxProductDetailDTO giftboxProductDetailDTO =
+        new GiftboxProductDetailDTO(
+            productService.getProductByIdx(productIdx),
+            giftboxProductRepository.findByGiftboxIdxAndProductIdx(giftboxIdx, productIdx),
+            giftboxProductService.getVoteStatusOfUser(
+                userIdx, giftboxIdx, productIdx
+            ),
+            productService.getLikeStatus(productIdx, userIdx)
+        );
+
+    return ResponseEntity.ok(giftboxProductDetailDTO);
   }
 
   // 선물 바구니의 상품 리스트 삭제 API
