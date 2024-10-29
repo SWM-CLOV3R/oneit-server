@@ -6,7 +6,7 @@ import clov3r.api.giftbox.domain.request.ProductEmoji;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.Inquiry;
 import clov3r.api.giftbox.domain.entity.InquiryProduct;
-import clov3r.api.common.domain.entity.Product;
+import clov3r.api.product.domain.entity.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;

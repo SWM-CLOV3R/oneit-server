@@ -6,7 +6,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import clov3r.api.giftbox.domain.data.EmojiName;
 import clov3r.api.common.domain.entity.BaseEntity;
-import clov3r.api.common.domain.entity.Product;
+import clov3r.api.product.domain.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

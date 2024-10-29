@@ -1,6 +1,6 @@
 package clov3r.api.giftbox.repository;
 
-import static clov3r.api.common.domain.entity.QEmoji.emoji;
+import static clov3r.api.giftbox.domain.entity.QEmoji.emoji;
 import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;
 import static clov3r.api.giftbox.domain.entity.QInquiryProduct.inquiryProduct;
 

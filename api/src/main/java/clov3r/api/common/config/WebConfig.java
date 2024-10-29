@@ -1,7 +1,7 @@
 package clov3r.api.common.config;
 
-import clov3r.api.common.config.security.AuthInterceptor;
-import clov3r.api.common.config.security.AuthUserResolver;
+import clov3r.api.auth.config.security.AuthInterceptor;
+import clov3r.api.auth.config.security.AuthUserResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

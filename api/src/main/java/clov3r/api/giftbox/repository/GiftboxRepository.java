@@ -1,25 +1,25 @@
 package clov3r.api.giftbox.repository;
 
-import static clov3r.api.common.domain.entity.QProduct.product;
 import static clov3r.api.common.error.errorcode.CommonErrorCode.DATABASE_ERROR;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.DATABASE_ERROR_NOT_FOUND;
 import static clov3r.api.giftbox.domain.entity.QGiftbox.giftbox;
 import static clov3r.api.giftbox.domain.entity.QGiftboxProduct.giftboxProduct;
 import static clov3r.api.giftbox.domain.entity.QGiftboxUser.giftboxUser;
 import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;
+import static clov3r.api.product.domain.entity.QProduct.product;
 
 import clov3r.api.giftbox.domain.data.GiftboxUserRole;
-import clov3r.api.common.domain.data.status.InvitationStatus;
-import clov3r.api.giftbox.domain.status.ProductStatus;
-import clov3r.api.common.domain.data.status.Status;
+import clov3r.api.giftbox.domain.status.InvitationStatus;
+import clov3r.api.product.domain.status.ProductStatus;
+import clov3r.api.common.domain.status.Status;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.GiftboxProduct;
 import clov3r.api.giftbox.domain.entity.GiftboxUser;
-import clov3r.api.common.domain.entity.Product;
-import clov3r.api.common.domain.entity.User;
+import clov3r.api.product.domain.entity.Product;
+import clov3r.api.auth.domain.entity.User;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
-import clov3r.api.common.repository.UserRepository;
+import clov3r.api.auth.repository.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;

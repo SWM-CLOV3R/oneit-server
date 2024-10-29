@@ -5,10 +5,10 @@ import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import clov3r.api.giftbox.domain.data.EmojiName;
-import clov3r.api.common.domain.data.status.PurchaseStatus;
-import clov3r.api.common.domain.data.status.Status;
+import clov3r.api.giftbox.domain.status.PurchaseStatus;
+import clov3r.api.common.domain.status.Status;
 import clov3r.api.common.domain.entity.BaseEntity;
-import clov3r.api.common.domain.entity.Product;
+import clov3r.api.product.domain.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

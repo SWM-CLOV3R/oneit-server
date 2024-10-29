@@ -1,7 +1,7 @@
 package clov3r.api.giftbox.domain.entity;
 
-import clov3r.api.common.domain.data.status.AccessStatus;
-import clov3r.api.common.domain.data.status.Status;
+import clov3r.api.giftbox.domain.status.AccessStatus;
+import clov3r.api.common.domain.status.Status;
 import clov3r.api.common.domain.entity.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

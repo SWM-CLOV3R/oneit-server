@@ -5,7 +5,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import clov3r.api.giftbox.domain.status.InquiryStatus;
 import clov3r.api.common.domain.entity.BaseEntity;
-import clov3r.api.common.domain.entity.User;
+import clov3r.api.auth.domain.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

@@ -1,6 +1,6 @@
 package clov3r.api.giftbox.domain.entity;
 
-import clov3r.api.common.domain.collection.GiftboxProductVoteId;
+import clov3r.api.product.domain.collection.GiftboxProductVoteId;
 import clov3r.api.giftbox.domain.status.VoteStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
