@@ -17,7 +17,9 @@ public class NotificationEventListener {
   @Async
   @TransactionalEventListener
   public void fcmNotificationEventHandler(Notification notification) throws IOException {
-    System.out.println("NotificationEventListener.fcmNotificationEventHandler");
+    if (notification.getDevice() == null) {
+      return;
+    }
     PushNotificationRequest pushNotificationRequest = PushNotificationRequest.builder()
         .token(notification.getDevice().getDeviceToken())
         .title(notification.getTitle())

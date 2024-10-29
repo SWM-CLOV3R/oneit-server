@@ -46,6 +46,13 @@ public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(errorCode);
   }
 
+  @ExceptionHandler(NotificationException.class)
+  public ResponseEntity<Object> handleKakaoException(final NotificationException exception) {
+    final ErrorCode errorCode = exception.getErrorCode();
+    log.error("AuthException : {}, errorCode : {}", exception, errorCode, exception);
+    return handleExceptionInternal(errorCode);
+  }
+
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException exception) {
     ErrorCode errorCode = CommonErrorCode.REQUEST_ERROR;
