@@ -1,9 +1,9 @@
 package clov3r.api.giftbox.domain.dto;
 
-import clov3r.api.common.domain.entity.Keyword;
+import clov3r.api.product.domain.entity.Keyword;
 import clov3r.api.giftbox.domain.data.EmojiName;
-import clov3r.api.giftbox.domain.status.ProductStatus;
-import clov3r.api.common.domain.data.status.PurchaseStatus;
+import clov3r.api.product.domain.status.ProductStatus;
+import clov3r.api.giftbox.domain.status.PurchaseStatus;
 import clov3r.api.giftbox.domain.status.VoteStatus;
 import clov3r.api.giftbox.domain.entity.GiftboxProduct;
 import java.util.ArrayList;
@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class GiftboxProductDTO {

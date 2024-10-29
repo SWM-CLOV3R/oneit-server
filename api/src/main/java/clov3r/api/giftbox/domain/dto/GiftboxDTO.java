@@ -1,7 +1,6 @@
 package clov3r.api.giftbox.domain.dto;
 
-import clov3r.api.common.domain.DTO.ParticipantsDTO;
-import clov3r.api.common.domain.data.status.AccessStatus;
+import clov3r.api.giftbox.domain.status.AccessStatus;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

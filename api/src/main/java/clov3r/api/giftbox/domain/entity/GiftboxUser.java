@@ -3,9 +3,9 @@ package clov3r.api.giftbox.domain.entity;
 import static jakarta.persistence.FetchType.LAZY;
 
 import clov3r.api.giftbox.domain.data.GiftboxUserRole;
-import clov3r.api.common.domain.data.status.InvitationStatus;
+import clov3r.api.giftbox.domain.status.InvitationStatus;
 import clov3r.api.common.domain.entity.BaseEntity;
-import clov3r.api.common.domain.entity.User;
+import clov3r.api.auth.domain.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
