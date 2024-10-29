@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -131,7 +132,7 @@ public class GiftboxController {
 
     // get giftbox list of the user
     List<Giftbox> giftboxList = giftboxRepository.findGiftboxOfUser(userIdx);
-    List<GiftboxDTO> giftboxDTOList = giftboxList.stream()
+    List<GiftboxDTO> giftboxDTOList = new ArrayList<>(giftboxList.stream()
         .map(giftbox -> {
           List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(
               giftbox.getIdx());
@@ -146,7 +147,19 @@ public class GiftboxController {
               .toList();
           return new GiftboxDTO(giftbox, participantsDTOList);
         })
-        .toList();
+        .toList());
+
+    // sort by d-day
+    giftboxDTOList.sort((o1, o2) ->
+    {
+      if (o1.getDDay() >= 0 && o2.getDDay() >= 0) {
+        return o1.getDDay() - o2.getDDay();
+      } else if (o1.getDDay() < 0 && o2.getDDay() < 0) {
+        return o2.getDDay() - o1.getDDay();
+      } else {
+        return o1.getDDay() >= 0 ? -1 : 1;
+      }
+    });
     return ResponseEntity.ok(giftboxDTOList);
   }
 
