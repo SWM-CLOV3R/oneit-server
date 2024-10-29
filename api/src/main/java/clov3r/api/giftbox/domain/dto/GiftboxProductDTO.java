@@ -1,14 +1,11 @@
 package clov3r.api.giftbox.domain.dto;
 
-import clov3r.api.common.domain.DTO.ProductSummaryDTO;
-import clov3r.api.common.domain.entity.Category;
 import clov3r.api.common.domain.entity.Keyword;
 import clov3r.api.giftbox.domain.data.EmojiName;
 import clov3r.api.giftbox.domain.status.ProductStatus;
 import clov3r.api.common.domain.data.status.PurchaseStatus;
 import clov3r.api.giftbox.domain.status.VoteStatus;
 import clov3r.api.giftbox.domain.entity.GiftboxProduct;
-import clov3r.api.common.domain.entity.Product;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -31,7 +28,6 @@ public class GiftboxProductDTO {
 //  private int discountRate;
   private String thumbnailUrl;
   private ProductStatus productStatus;
-  private ProductStatus status;
   private List<Keyword> keywords = new ArrayList<>();
 
   // information in giftbox
@@ -48,7 +44,6 @@ public class GiftboxProductDTO {
     this.originalPrice = giftboxProduct.getProduct().getOriginalPrice();
     this.thumbnailUrl = giftboxProduct.getProduct().getThumbnailUrl();
     this.productStatus = giftboxProduct.getProduct().getStatus();
-    this.status = giftboxProduct.getProduct().getStatus();
     this.keywords.addAll(keywords);
     this.likeCountInGiftbox = giftboxProduct.getLikeCount();
     this.voteStatus = voteStatus;

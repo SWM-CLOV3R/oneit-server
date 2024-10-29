@@ -22,7 +22,7 @@ public class ProductSummaryDTO {
     //    private Integer currentPrice;
 //    private Integer discountRate;
     private String thumbnailUrl;
-    private ProductStatus status;
+    private ProductStatus productStatus;
     private int likeCount;
     private LikeStatus likeStatus;
 
@@ -35,7 +35,7 @@ public class ProductSummaryDTO {
 //        this.currentPrice = product.getCurrentPrice();
 //        this.discountRate = product.getDiscountRate();
         this.thumbnailUrl = product.getThumbnailUrl();
-        this.status = product.getStatus();
+        this.productStatus = product.getStatus();
         this.likeCount = product.getLikeCount();
         this.likeStatus = likeStatus;
     }
