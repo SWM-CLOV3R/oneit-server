@@ -20,6 +20,8 @@ import clov3r.api.common.error.exception.KakaoException;
 import clov3r.api.giftbox.repository.GiftboxRepository;
 import clov3r.api.giftbox.repository.GiftboxUserRepository;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -81,7 +83,7 @@ public class NotificationService {
   public void readNotification(Long notificationIdx) {
 
     Notification notification = notificationRepository.findById(notificationIdx).orElseThrow();
-    notification.setReadAt(LocalDateTime.now());
+    notification.setReadAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
     notification.setNotiStatus(NotiStatus.READ);
     notificationRepository.save(notification);
   }
@@ -100,7 +102,7 @@ public class NotificationService {
         .body(friendReq.getFrom().getNickname() + "님이 친구 요청을 보냈습니다.")
         .actionType(ActionType.FRIEND_REQUEST)
         .platformType("FCM")
-        .createdAt(LocalDateTime.now())
+        .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
         .notiStatus(NotiStatus.CREATED)
         .build();
     applicationEventPublisher.publishEvent(notification);
@@ -121,7 +123,7 @@ public class NotificationService {
         .title("친구 요청 수락")
         .body(friendReq.getTo().getNickname() + "님이 친구 요청을 수락했습니다.")
         .actionType(ActionType.FRIEND_ACCEPTANCE)
-        .createdAt(LocalDateTime.now())
+        .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
         .notiStatus(NotiStatus.CREATED)
         .build();
     applicationEventPublisher.publishEvent(notification);
@@ -164,7 +166,7 @@ public class NotificationService {
         .body(userRepository.findByUserIdx(userIdx).getNickname() + "님이 ["+giftbox.getName()+"] 선물바구니 초대를 수락했습니다.")
         .actionType(ActionType.GIFTBOX_ACCEPTANCE)
         .platformType("FCM")
-        .createdAt(LocalDateTime.now())
+        .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
         .notiStatus(NotiStatus.CREATED)
         .build();
     applicationEventPublisher.publishEvent(notification);
@@ -189,7 +191,7 @@ public class NotificationService {
           .body("선물바구니 ["+giftbox.getName()+"] 에서 받고 싶은 선물 물어보기가 완료되었습니다.")
           .actionType(ActionType.GIFT_ASK_COMPLETE)
           .platformType("FCM")
-          .createdAt(LocalDateTime.now())
+          .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
           .notiStatus(NotiStatus.CREATED)
           .build();
     }).toList();

@@ -13,6 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +25,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification {
 
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,14 +54,15 @@ public class Notification {
   private String platformType;
 
   @Column(name = "created_at")
-  private LocalDateTime createdAt;
+  private ZonedDateTime createdAt;
   @Setter
-  private LocalDateTime readAt;
+  private ZonedDateTime readAt;
   @Setter
-  private LocalDateTime sentAt;
+  private ZonedDateTime sentAt;
 
   @Setter
   @Column(name = "noti_status")
   @Enumerated(EnumType.STRING)
   private NotiStatus notiStatus;
+
 }

@@ -2,6 +2,8 @@ package clov3r.api.common.domain.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,25 +12,22 @@ import lombok.Setter;
 @Setter
 public class BaseEntity {
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
-
-    public BaseEntity() {
-    }
+    private ZonedDateTime createdAt;
+    private ZonedDateTime updatedAt;
+    private ZonedDateTime deletedAt;
 
     public void createBaseEntity() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
     public void updateBaseEntity() {
         if (this.createdAt != null) {
-            this.updatedAt = LocalDateTime.now();
+            this.updatedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         }
     }
 
     public void deleteBaseEntity() {
-        this.deletedAt = LocalDateTime.now();
+        this.deletedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
 }

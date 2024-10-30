@@ -11,17 +11,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor(access = PROTECTED)
-@Builder
 @Getter
+@Builder
+@NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor
 @Entity
+@Table(name = "product_like")
 public class ProductLike extends BaseEntity {
   @Id @GeneratedValue(strategy = IDENTITY)
   private Long idx;

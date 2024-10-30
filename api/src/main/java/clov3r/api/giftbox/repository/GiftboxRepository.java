@@ -24,6 +24,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -72,7 +74,7 @@ public class GiftboxRepository {
         // status가 ACTIVE인 row일 경우에만 DELETED로 변경, deletedAt을 현재 시간으로 변경
         queryFactory.update(giftbox)
                 .set(giftbox.status, Status.DELETED)
-                .set(giftbox.deletedAt, LocalDateTime.now())
+                .set(giftbox.deletedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
                 .where(giftbox.idx.eq(giftboxIdx),
                         giftbox.status.eq(Status.ACTIVE))
                 .execute();
@@ -83,7 +85,7 @@ public class GiftboxRepository {
         queryFactory.update(giftbox)
                 .set(giftbox.name, request.getName())
                 .set(giftbox.deadline, request.getDeadline())
-                .set(giftbox.updatedAt, LocalDateTime.now())
+                .set(giftbox.updatedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
                 .where(giftbox.idx.eq(giftboxIdx),
                         giftbox.status.eq(Status.ACTIVE))
                 .execute();
@@ -124,7 +126,7 @@ public class GiftboxRepository {
             // status가 DELETED인 giftboxProduct가 존재할 경우 status를 ACTIVE로 변경
             queryFactory.update(giftboxProduct)
                     .set(giftboxProduct.status, Status.ACTIVE)
-                    .set(giftboxProduct.updatedAt, LocalDateTime.now())
+                    .set(giftboxProduct.updatedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
                     .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                             giftboxProduct.product.idx.eq(productIdx),
                             giftboxProduct.status.eq(Status.DELETED))
@@ -180,7 +182,7 @@ public class GiftboxRepository {
     public void deleteProductOfGiftbox(Long giftboxIdx, Long productIdx) {
         queryFactory.update(giftboxProduct)
                 .set(giftboxProduct.status, Status.DELETED)
-                .set(giftboxProduct.deletedAt, LocalDateTime.now())
+                .set(giftboxProduct.deletedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.product.idx.eq(productIdx),
                         giftboxProduct.status.eq(Status.ACTIVE))
@@ -253,7 +255,7 @@ public class GiftboxRepository {
     public void acceptInvitationToGiftBox(Long userIdx, Long invitationIdx) {
         queryFactory.update(giftboxUser)
                 .set(giftboxUser.invitationStatus, InvitationStatus.ACCEPTED)
-                .set(giftboxUser.updatedAt, LocalDateTime.now())
+                .set(giftboxUser.updatedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
                 .set(giftboxUser.user, em.find(User.class, userIdx))
                 .where(giftboxUser.idx.eq(invitationIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
