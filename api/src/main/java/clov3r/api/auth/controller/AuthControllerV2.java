@@ -92,11 +92,10 @@ public class AuthControllerV2 {
     @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
     @Operation(summary = "카카오 로그인 유저 조회", description = "헤더에 담긴 토큰을 검증하여 유저의 정보를 반환합니다.")
     @GetMapping("/api/v2/kakao/user")
-    public ResponseEntity<User> getUserInfo (
+    public ResponseEntity<UserDTO> getUserInfo (
             @Parameter(hidden = true) @Auth Long userIdx
     ) {
-        User user = userService.getUser(userIdx);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.getUser(userIdx));
     }
 
     // 유저의 카카오톡 친구 목록을 가져오는 API
