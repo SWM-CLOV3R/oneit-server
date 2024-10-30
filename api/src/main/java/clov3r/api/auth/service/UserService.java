@@ -77,4 +77,9 @@ public class UserService {
         return imageUrl;
     }
 
+    @Transactional
+    public void updatePhoneNumber(User user, String phoneNumber) {
+        user.setPhoneNumber(phoneNumber);
+    }
+
 }
