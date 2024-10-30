@@ -67,6 +67,7 @@ public class UserService {
         // upload image if exists
         if (profileImage != null) {
             String imageUrl = updateProfileImage(profileImage, userIdx);
+            user.setProfileImg(imageUrl);
         }
         return user;
     }
