@@ -1,6 +1,7 @@
 package clov3r.api.auth.domain.entity;
 
 import clov3r.api.auth.domain.data.UserStatus;
+import clov3r.api.auth.domain.dto.KakaoProfileDTO;
 import clov3r.api.common.domain.data.Gender;
 import clov3r.api.common.domain.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,14 +36,8 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "nickname_from_kakao")
-    private String nicknameFromKakao;
-
     @Column(name = "profile_img")
     private String profileImg;
-
-    @Column(name = "profile_img_from_kakao")
-    private String profileImgFromKakao;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;  //  product gender enum 과 다름
@@ -54,13 +50,20 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    public User(String email, String nickname, String profileImage, UserStatus status) {
-        this.email = email;
-        this.nickname = nickname;
-        this.profileImg = profileImage;
-        this.profileImgFromKakao = profileImage;
-        this.status = status;
+    public User(KakaoProfileDTO kakaoProfile) {
+        this.email = kakaoProfile.getKakao_account().getEmail();
+        this.name = kakaoProfile.getKakao_account().getName();
+        this.nickname = kakaoProfile.getProperties().getNickname();
+        this.profileImg = kakaoProfile.getProperties().getProfile_image();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        this.birthDate = LocalDate.parse(
+            kakaoProfile.getKakao_account().birthyear +
+                kakaoProfile.getKakao_account().birthday,
+            formatter);
+        this.phoneNumber = kakaoProfile.getKakao_account().phone_number;
         this.createBaseEntity();
+        this.status = UserStatus.ACTIVE;
     }
 
 }
