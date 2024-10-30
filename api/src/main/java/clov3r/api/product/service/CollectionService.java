@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class CollectionService {
   private final CollectionRepository collectionRepository;
   private final KeywordRepository keywordRepository;
-  public CollectionDetailDTO getCollectionDetail(Long collectionIdx, Long userIdx) {
+  public CollectionDetailDTO getCollectionDetail(Long collectionIdx) {
     Collection collection = collectionRepository.getCollection(collectionIdx);
     List<CollectionProduct> collectionProductList = collectionRepository.getCollectionProductList(collectionIdx);
     List<CollectionProductDTO> collectionProductDTOList = collectionProductList.stream().map(
