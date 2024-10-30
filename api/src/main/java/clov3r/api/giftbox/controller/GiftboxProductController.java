@@ -143,7 +143,8 @@ public class GiftboxProductController {
             giftboxProductService.getVoteStatusOfUser(
                 userIdx, giftboxIdx, productIdx
             ),
-            productService.getLikeStatus(productIdx, userIdx)
+            productService.getLikeStatus(productIdx, userIdx),
+            productService.getDetailImages(productIdx)
         );
 
     return ResponseEntity.ok(giftboxProductDetailDTO);

@@ -86,4 +86,7 @@ public class Product extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Keyword> keyword;
 
+    @Column(name = "detail_urls")
+    private String detailImages;
+
 }

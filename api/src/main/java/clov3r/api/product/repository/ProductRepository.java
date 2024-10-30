@@ -218,7 +218,11 @@ public class ProductRepository {
     }
 
     public Product findById(Long productIdx) {
-        return em.find(Product.class, productIdx);
+        return queryFactory.select(product)
+                .from(product)
+                .where(product.idx.eq(productIdx)
+                    .and(product.status.eq(ProductStatus.ACTIVE)))
+                .fetchOne();
     }
 
     private void setInitialQueryParameters(TypedQuery<Product> query, ProductSearch productSearch) {
@@ -279,7 +283,8 @@ public class ProductRepository {
         // productIdx로 status가 ACTIVE인 product가 존재하는지 확인
         return queryFactory.selectOne()
                 .from(product)
-                .where(product.idx.eq(productIdx))
+                .where(product.idx.eq(productIdx)
+                    .and(product.status.eq(ProductStatus.ACTIVE)))
                 .fetchFirst() != null;
 
     }
