@@ -1,5 +1,6 @@
 package clov3r.api.auth.domain.dto;
 
+import clov3r.api.auth.domain.entity.User;
 import clov3r.api.common.domain.data.Gender;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,16 @@ public class UserDTO {
     private String profileImg;
     private Gender gender;
     private LocalDate birthDate;
+    private String phoneNumber;
+
+    public UserDTO(User user) {
+        this.idx = user.getIdx();
+        this.email = user.getEmail();
+        this.name = user.getName();
+        this.nickname = user.getNickname();
+        this.profileImg = user.getProfileImg();
+        this.gender = user.getGender();
+        this.birthDate = user.getBirthDate();
+        this.phoneNumber = user.getPhoneNumber();
+    }
 }
