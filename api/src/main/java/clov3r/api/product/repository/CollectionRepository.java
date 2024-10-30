@@ -4,6 +4,7 @@ import static clov3r.api.product.domain.entity.QCollection.collection;
 import static clov3r.api.product.domain.entity.QCollectionProduct.collectionProduct;
 import static clov3r.api.product.domain.entity.QProduct.product;
 
+import clov3r.api.product.domain.entity.CollectionProduct;
 import clov3r.api.product.domain.status.ProductStatus;
 import clov3r.api.common.domain.status.Status;
 import clov3r.api.product.domain.entity.Collection;
@@ -47,5 +48,13 @@ public class CollectionRepository {
 
   }
 
+  public List<CollectionProduct> getCollectionProductList(Long collectionIdx) {
+    return queryFactory.select(collectionProduct)
+        .from(collectionProduct)
+        .where(collectionProduct.collection.idx.eq(collectionIdx)
+            .and(collectionProduct.product.status.eq(ProductStatus.ACTIVE)
+                .or(collectionProduct.product.status.eq(ProductStatus.UPSUPPORTED))))
+        .fetch();
+  }
 
 }

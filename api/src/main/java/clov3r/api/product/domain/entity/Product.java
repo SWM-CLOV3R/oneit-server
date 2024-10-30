@@ -86,5 +86,4 @@ public class Product extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Keyword> keyword;
 
-
 }
