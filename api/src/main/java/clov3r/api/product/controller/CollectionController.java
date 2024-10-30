@@ -43,7 +43,7 @@ public class CollectionController {
       @Parameter(description = "컬렉션 idx") @PathVariable Long collectionIdx,
       @Parameter(hidden = true) @Auth(required = false) Long userIdx
   ) {
-    CollectionDetailDTO collectionDetailDTO = collectionService.getCollectionDetail(collectionIdx, userIdx);
+    CollectionDetailDTO collectionDetailDTO = collectionService.getCollectionDetail(collectionIdx);
     return ResponseEntity.ok(collectionDetailDTO);
   }
 }
