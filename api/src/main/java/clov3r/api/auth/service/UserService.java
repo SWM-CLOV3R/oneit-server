@@ -3,6 +3,7 @@ package clov3r.api.auth.service;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
 import clov3r.api.auth.domain.data.UserStatus;
+import clov3r.api.auth.domain.dto.UserDTO;
 import clov3r.api.auth.domain.entity.User;
 import clov3r.api.auth.domain.request.SignupRequest;
 import clov3r.api.auth.domain.request.UpdateUserRequest;
@@ -24,8 +25,9 @@ public class UserService {
     private final NotificationService notificationService;
     private final S3Service s3Service;
 
-    public User getUser(Long userIdx) {
-        return userRepository.findByUserIdx(userIdx);
+    public UserDTO getUser(Long userIdx) {
+        User user = userRepository.findByUserIdx(userIdx);
+        return new UserDTO(user);
     }
 
     @Transactional
@@ -73,6 +75,11 @@ public class UserService {
         String imageUrl = s3Service.upload(profileImage, "user-profile");
         user.setProfileImg(imageUrl);
         return imageUrl;
+    }
+
+    @Transactional
+    public void updatePhoneNumber(User user, String phoneNumber) {
+        user.setPhoneNumber(phoneNumber);
     }
 
 }
