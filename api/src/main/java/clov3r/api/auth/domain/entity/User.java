@@ -43,11 +43,14 @@ public class User extends BaseEntity {
     private Gender gender;  //  product gender enum 과 다름
 
     private String age;
+
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
     @Column(name = "is_agree_marketing")
     private Boolean isAgreeMarketing;
 
+    @Column(name = "refresh_token")
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
