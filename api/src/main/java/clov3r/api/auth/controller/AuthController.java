@@ -171,4 +171,14 @@ public class AuthController {
         return ResponseEntity.ok("탈퇴가 완료되었습니다.");
     }
 
+    @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
+    @Operation(summary = "마케팅 수신 동의 변경", description = "마케팅 수신 동의 여부를 변경합니다.")
+    @PatchMapping("/api/v2/marketing")
+    public ResponseEntity<String> changeMarketing(
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        Boolean isAgreeMarketing = userService.changeMarketing(userIdx);
+        return ResponseEntity.ok("마케팅 수신 동의 : " + isAgreeMarketing);
+    }
+
 }

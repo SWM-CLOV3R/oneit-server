@@ -83,4 +83,10 @@ public class UserService {
         user.setPhoneNumber(phoneNumber);
     }
 
+    @Transactional
+    public Boolean changeMarketing(Long userIdx) {
+        User user = userRepository.findByUserIdx(userIdx);
+        user.setIsAgreeMarketing(!user.getIsAgreeMarketing());
+        return user.getIsAgreeMarketing();
+    }
 }
