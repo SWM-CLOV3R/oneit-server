@@ -1,8 +1,11 @@
 package clov3r.api.product.domain.dto;
 
+import clov3r.api.product.domain.entity.Keyword;
 import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.api.product.domain.entity.Product;
 import clov3r.api.product.domain.status.ProductStatus;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +23,8 @@ public class ProductSummaryDTO {
 //    private Integer discountRate;
     private String thumbnailUrl;
     private ProductStatus productStatus;
+    private List<Keyword> keywords = new ArrayList<>();
+
     private int likeCount;
     private LikeStatus likeStatus;
 
@@ -33,6 +38,8 @@ public class ProductSummaryDTO {
 //        this.discountRate = product.getDiscountRate();
         this.thumbnailUrl = product.getThumbnailUrl();
         this.productStatus = product.getStatus();
+        this.keywords = product.getKeyword();
+
         this.likeCount = product.getLikeCount();
         this.likeStatus = likeStatus;
     }

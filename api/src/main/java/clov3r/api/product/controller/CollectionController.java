@@ -1,15 +1,11 @@
 package clov3r.api.product.controller;
 
 import clov3r.api.product.domain.dto.CollectionDTO;
-import clov3r.api.product.domain.dto.ProductDTO;
 import clov3r.api.auth.config.security.Auth;
-import clov3r.api.product.domain.dto.CollectionProductDTO;
+import clov3r.api.product.domain.dto.CollectionDetailDTO;
 import clov3r.api.product.domain.entity.Collection;
-import clov3r.api.product.domain.entity.Product;
 import clov3r.api.product.repository.CollectionRepository;
-import clov3r.api.product.repository.KeywordRepository;
 import clov3r.api.product.service.CollectionService;
-import clov3r.api.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,11 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class CollectionControllerV2 {
+public class CollectionController {
   private final CollectionService collectionService;
   private final CollectionRepository collectionRepository;
-  private final KeywordRepository keywordRepository;
-  private final ProductService productService;
 
   @Tag(name = "컬렉션 API", description = "컬렉션(둘러보기) API")
   @Operation(summary = "컬렉션 리스트 조회", description = "컬렉션 리스트를 조회합니다.")
@@ -45,23 +39,11 @@ public class CollectionControllerV2 {
   @Tag(name = "컬렉션 API", description = "컬렉션(둘러보기) API")
   @Operation(summary = "컬렉션 상세 조회", description = "컬렉션 정보와 컬렉션에 속한 상품 리스트를 조회합니다.")
   @GetMapping("api/v2/collections/{collectionIdx}")
-  public ResponseEntity<CollectionProductDTO> getProductList(
+  public ResponseEntity<CollectionDetailDTO> getProductList(
       @Parameter(description = "컬렉션 idx") @PathVariable Long collectionIdx,
       @Parameter(hidden = true) @Auth(required = false) Long userIdx
   ) {
-    Collection collection = collectionRepository.getCollection(collectionIdx);
-    List<Product> productList = collectionRepository.getProductList(collectionIdx);
-    CollectionProductDTO collectionProductDTO = new CollectionProductDTO(
-        collection.getIdx(),
-        collection.getName(),
-        collection.getDescription(),
-        collection.getThumbnailUrl(),
-        productList.stream().map(product -> new ProductDTO(
-            product,
-            productService.getLikeStatus(product.getIdx(), userIdx)
-        )).toList()
-    );
-    return ResponseEntity.ok(collectionProductDTO);
+    CollectionDetailDTO collectionDetailDTO = collectionService.getCollectionDetail(collectionIdx, userIdx);
+    return ResponseEntity.ok(collectionDetailDTO);
   }
-
 }

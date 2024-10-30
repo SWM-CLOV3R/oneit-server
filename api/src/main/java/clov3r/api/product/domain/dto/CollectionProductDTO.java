@@ -1,17 +1,18 @@
 package clov3r.api.product.domain.dto;
 
+import clov3r.api.product.domain.entity.Keyword;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
 public class CollectionProductDTO {
-  private Long collectionIdx;
-  private String collectionName;
-  private String collectionDescription;
-  private String collectionThumbnailUrl;
-  private List<ProductDTO> productList;
+  private Long productIdx;
+  private String productName;
+  private List<Keyword> keywords;
+  private String showcaseImageUrl;
 }

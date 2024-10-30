@@ -101,23 +101,20 @@ public class ProductControllerV2 {
         @PathVariable Long productIdx,
         @Parameter(hidden = true) @Auth(required = false) Long userIdx
     ) {
-        if (!productRepository.existsProduct(productIdx)) {
+        Product product = productService.getProductByIdx(productIdx);
+        if (product == null) {
             throw new BaseExceptionV2(CustomErrorCode.PRODUCT_NOT_FOUND);
         }
-        // get Category
-        Product product = productService.getProductByIdx(productIdx);
-
-        // get keywords
         ProductDetailDTO productDetailDTO;
         try {
             productDetailDTO = new ProductDetailDTO(
                 product,
-                productService.getLikeStatus(productIdx, userIdx)
+                productService.getLikeStatus(productIdx, userIdx),
+                productService.getDetailImages(productIdx)
             );
         } catch (Exception e) {
             throw new BaseExceptionV2(CustomErrorCode.PRODUCT_DTO_ERROR);
         }
-
         return ResponseEntity.ok(productDetailDTO);
     }
 

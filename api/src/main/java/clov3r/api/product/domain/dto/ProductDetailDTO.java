@@ -19,10 +19,11 @@ public class ProductDetailDTO extends ProductSummaryDTO {
     private String categoryName;
     private String categoryDisplayName;
     private Category category;
-    private List<String> keywords = new ArrayList<>();
+    private List<String> detailImages = new ArrayList<>();
+
 
     // 상세 조회시 사용
-    public ProductDetailDTO(Product product, LikeStatus likeStatus) {
+    public ProductDetailDTO(Product product, LikeStatus likeStatus, List<String> detailImages) {
         super(product, likeStatus);
         this.brandName = product.getBrandName();
         this.mallName = product.getMallName();
@@ -30,7 +31,7 @@ public class ProductDetailDTO extends ProductSummaryDTO {
         this.category = product.getCategory();
         this.categoryName = product.getCategory().getName();
         this.categoryDisplayName = product.getCategoryDisplayName();
-        this.keywords.addAll(product.getKeyword().stream().map(Keyword::getName).toList());
+        this.detailImages = detailImages;
     }
 
 }

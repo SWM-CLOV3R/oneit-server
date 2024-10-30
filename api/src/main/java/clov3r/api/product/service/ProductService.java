@@ -9,6 +9,7 @@ import clov3r.api.product.domain.entity.ProductLike;
 import clov3r.api.product.repository.KeywordRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.product.repository.ProductLikeRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,9 +42,7 @@ public class ProductService {
   }
 
   public Product getProductByIdx(Long productIdx) {
-    Product product = productRepository.findById(productIdx);
-//        System.out.println("product.toString() = " + product.toString());
-    return product;
+    return productRepository.findById(productIdx);
   }
 
   public List<Product> filterProductsWithCategory(ProductSearch productSearch) {
@@ -130,6 +129,21 @@ public class ProductService {
       return LikeStatus.NONE;
     }
     return productLike.getLikeStatus();
+  }
+
+  public List<String> getDetailImages(Long productIdx) {
+    String defaultDetailImage = productRepository.findById(productIdx).getDetailImages();
+    if (defaultDetailImage == null || defaultDetailImage.equals("[]")) {
+      return null;
+    }
+    defaultDetailImage = defaultDetailImage.substring(1, defaultDetailImage.length() - 1);
+    String[] detailImages = defaultDetailImage.split(",");
+    List<String> detailImageList = new ArrayList<>();
+    for (String detailImage : detailImages) {
+      detailImage = detailImage.trim();
+      detailImageList.add(detailImage.trim().substring(1, detailImage.length() - 1));
+    }
+    return detailImageList;
   }
 
 }

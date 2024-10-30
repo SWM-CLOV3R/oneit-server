@@ -5,6 +5,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import clov3r.api.common.domain.entity.BaseEntity;
 import clov3r.api.common.domain.status.Status;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,6 +35,9 @@ public class CollectionProduct extends BaseEntity {
   @ManyToOne(fetch = LAZY)
   @JoinColumn(name = "product_idx")
   private Product product;
+
+  @Column(name = "detail_img")
+  private String detailImg;
 
   @Enumerated(EnumType.STRING)
   private Status status;
