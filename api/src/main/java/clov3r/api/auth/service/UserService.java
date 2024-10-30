@@ -40,6 +40,7 @@ public class UserService {
         user.setNickname(signupRequest.getNickname());
         user.setGender(signupRequest.getGender());
         user.setBirthDate(signupRequest.getBirthDate());
+        user.setIsAgreeMarketing(signupRequest.getIsAgreeMarketing());
         userRepository.save(user);
 
 //        notificationService.sendSignupCompleteNotification(user);

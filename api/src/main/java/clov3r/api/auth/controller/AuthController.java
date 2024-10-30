@@ -23,7 +23,6 @@ import clov3r.api.common.error.exception.BaseExceptionV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -136,6 +135,7 @@ public class AuthController {
             .profileImg(user.getProfileImg())
             .gender(user.getGender())
             .birthDate(user.getBirthDate())
+            .isAgreeMarketing(user.getIsAgreeMarketing())
             .build();
         return ResponseEntity.ok(newUser);
     }

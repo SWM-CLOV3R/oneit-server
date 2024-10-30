@@ -21,6 +21,7 @@ public class UserDTO {
     private Gender gender;
     private LocalDate birthDate;
     private String phoneNumber;
+    private Boolean isAgreeMarketing;
 
     public UserDTO(User user) {
         this.idx = user.getIdx();
@@ -31,5 +32,6 @@ public class UserDTO {
         this.gender = user.getGender();
         this.birthDate = user.getBirthDate();
         this.phoneNumber = user.getPhoneNumber();
+        this.isAgreeMarketing = user.getIsAgreeMarketing();
     }
 }

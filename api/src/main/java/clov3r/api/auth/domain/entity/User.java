@@ -45,6 +45,9 @@ public class User extends BaseEntity {
     private String age;
     private LocalDate birthDate;
 
+    @Column(name = "is_agree_marketing")
+    private Boolean isAgreeMarketing;
+
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
