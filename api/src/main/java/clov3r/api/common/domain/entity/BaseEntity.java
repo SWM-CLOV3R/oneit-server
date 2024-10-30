@@ -4,6 +4,7 @@ import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

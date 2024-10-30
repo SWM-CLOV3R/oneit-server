@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-  @Query("SELECT n FROM Notification n WHERE n.receiver.idx = :userIdx ORDER BY n.createdAt DESC")
+  @Query("SELECT n FROM Notification n WHERE n.receiver.idx = :userIdx AND n.notiStatus != 'DELETED' ORDER BY n.createdAt DESC")
   List<Notification> findAllByUserId(Long userIdx);
 
 }

@@ -12,6 +12,10 @@ import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.common.service.S3Service;
 import clov3r.api.friend.domain.dto.OtherUserDTO;
 import clov3r.api.friend.service.FriendService;
+import clov3r.api.giftbox.domain.status.InvitationStatus;
+import clov3r.api.giftbox.repository.GiftboxUserRepository;
+import clov3r.api.notification.domain.status.NotiStatus;
+import clov3r.api.notification.repository.NotificationRepository;
 import clov3r.api.notification.service.NotificationService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
     private final S3Service s3Service;
     private final FriendService friendService;
+    private final GiftboxUserRepository giftboxUserRepository;
 
     public UserDTO getUser(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
@@ -55,6 +60,21 @@ public class UserService {
         User user = userRepository.findByUserIdx(userIdx);
         user.setStatus(UserStatus.INACTIVE);
         user.deleteBaseEntity();
+
+        deleteUserData(user);
+    }
+
+    @Transactional
+    public void deleteUserData(User user) {
+        // delete user data
+        giftboxUserRepository.findByUser(user.getIdx()).forEach(giftboxUser -> {
+            giftboxUser.setInvitationStatus(InvitationStatus.DELETED);
+            giftboxUser.deleteBaseEntity();
+        });
+        notificationRepository.findAllByUserId(user.getIdx()).forEach(notification -> {
+            notification.setNotiStatus(NotiStatus.DELETED);
+            notification.deleteBaseEntity();
+        });
     }
 
     @Transactional
