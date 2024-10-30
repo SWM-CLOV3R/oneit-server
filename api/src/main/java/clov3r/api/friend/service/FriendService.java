@@ -1,6 +1,5 @@
 package clov3r.api.friend.service;
 
-import clov3r.api.auth.domain.entity.User;
 import clov3r.api.friend.domain.dto.FriendDTO;
 import clov3r.api.friend.domain.dto.FriendReqDTO;
 import clov3r.api.friend.domain.data.FriendReqStatus;
