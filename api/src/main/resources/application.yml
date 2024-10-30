@@ -1,5 +1,6 @@
 server:
   port: 9000
+  timezone: Asia/Seoul
 
 spring:
   application:
@@ -11,6 +12,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc.time_zone: UTC
   cloud:
     aws:
       s3:
