@@ -1,5 +1,7 @@
 package clov3r.api.auth.controller;
 
+import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
+
 import clov3r.api.auth.domain.request.UpdateUserRequest;
 import clov3r.api.auth.config.security.Auth;
 import clov3r.api.auth.config.security.TokenProvider;
@@ -17,6 +19,7 @@ import clov3r.api.auth.repository.AuthRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.auth.service.AuthService;
 import clov3r.api.auth.service.UserService;
+import clov3r.api.common.error.exception.BaseExceptionV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-public class AuthControllerV2 {
+public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
@@ -49,22 +52,28 @@ public class AuthControllerV2 {
     @PostMapping("/api/v2/kakao/login")
     public ResponseEntity<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
         KakaoProfileDTO kakaoProfileDTO = authService.getKaKaoUserInfo(kakaoAccessToken.getAccessToken());
-        User user;
+        User user = userRepository.findByEmail(kakaoProfileDTO.getKakao_account().getEmail());
         boolean isSignedUp = false;
-        if (userRepository.existsByEmail(kakaoProfileDTO.getKakao_account().getEmail())) {
+        if (user == null) {
+            user = authService.createUserByKakao(kakaoProfileDTO);
+        } else {
             // 1. 이미 카카오 가입된 유저라면 status를 active로 변경
-            user = userRepository.findByEmail(kakaoProfileDTO.getKakao_account().getEmail());
             if (!user.getStatus().equals(UserStatus.ACTIVE)) {
                 user.setStatus(UserStatus.ACTIVE);
                 user.setUpdatedAt(LocalDateTime.now());
             }
+
             // 2. 자체 회원가입 유무 확인
-            if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null) {
+            if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null && user.getPhoneNumber()!=null) {
                 isSignedUp = true;
             }
-        } else {
-            user = authService.createUserByKakao(kakaoProfileDTO);
+
+            if (user.getPhoneNumber() == null) {
+                userService.updatePhoneNumber(user, kakaoProfileDTO.getKakao_account().phone_number);
+            }
         }
+
+
         AuthToken authToken = tokenProvider.createToken(user.getIdx());
         authRepository.saveRefreshToken(authToken.getRefreshToken(), user.getEmail());
 
@@ -95,6 +104,9 @@ public class AuthControllerV2 {
     public ResponseEntity<UserDTO> getUserInfo (
             @Parameter(hidden = true) @Auth Long userIdx
     ) {
+        if (userRepository.findByUserIdx(userIdx) == null) {
+            throw new BaseExceptionV2(USER_NOT_FOUND);
+        }
         return ResponseEntity.ok(userService.getUser(userIdx));
     }
 

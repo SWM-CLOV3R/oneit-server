@@ -28,12 +28,7 @@ public class AuthService {
     @Transactional
     public User createUserByKakao(KakaoProfileDTO kakaoProfileDTO) {
         // 사용자 정보 저장
-        User user = new User(
-                kakaoProfileDTO.getKakao_account().getEmail(),
-                kakaoProfileDTO.getProperties().getNickname(),
-                kakaoProfileDTO.getProperties().getProfile_image(),
-                UserStatus.ACTIVE
-        );
+        User user = new User(kakaoProfileDTO);
         userRepository.save(user);
         return user;
     }

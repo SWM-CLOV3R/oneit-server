@@ -1,6 +1,7 @@
 package clov3r.api.auth.domain.dto;
 
 import lombok.Data;
+import lombok.Getter;
 
 @Data
 public class KakaoProfileDTO {
@@ -9,6 +10,7 @@ public class KakaoProfileDTO {
     public Properties properties;
     public KakaoAccount kakao_account;
 
+    @Getter
     @Data
     public class Properties {
         public String nickname;
@@ -26,7 +28,9 @@ public class KakaoProfileDTO {
         public Boolean is_email_valid;
         public Boolean is_email_verified;
         public String email;
-        
+
+        public Boolean name_needs_agreement;
+        public String name;
         public Boolean has_phone_number;
         public Boolean phone_number_needs_agreement;
         public String phone_number;
