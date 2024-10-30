@@ -24,7 +24,8 @@ public class CollectionService {
             collectionProduct.getProduct().getIdx(),
             collectionProduct.getProduct().getName(),
             collectionProduct.getProduct().getKeyword(),
-            collectionProduct.getDetailImg()
+            collectionProduct.getDetailImg(),
+            collectionProduct.getProduct().getStatus()
         )).toList();
     return new CollectionDetailDTO(
         collection,
