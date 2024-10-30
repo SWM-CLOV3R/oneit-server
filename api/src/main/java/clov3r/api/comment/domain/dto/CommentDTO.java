@@ -2,6 +2,7 @@ package clov3r.api.comment.domain.dto;
 
 import clov3r.api.comment.domain.entity.Comment;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class CommentDTO {
   private String writerNickName;
   private String writerProfileImg;
   private String content;
-  private LocalDateTime createdAt;
+  private ZonedDateTime createdAt;
 
   public CommentDTO (Comment comment) {
     this.idx = comment.getIdx();

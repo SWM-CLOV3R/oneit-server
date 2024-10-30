@@ -60,7 +60,7 @@ public class AuthController {
             // 1. 이미 카카오 가입된 유저라면 status를 active로 변경
             if (!user.getStatus().equals(UserStatus.ACTIVE)) {
                 user.setStatus(UserStatus.ACTIVE);
-                user.setUpdatedAt(LocalDateTime.now());
+                user.updateBaseEntity();
             }
 
             // 2. 자체 회원가입 유무 확인

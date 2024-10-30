@@ -50,7 +50,7 @@ public class UserService {
     public void withdraw(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
         user.setStatus(UserStatus.INACTIVE);
-        user.setDeletedAt(LocalDateTime.now());
+        user.deleteBaseEntity();
     }
 
     @Transactional

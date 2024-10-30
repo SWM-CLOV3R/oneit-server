@@ -3,7 +3,7 @@ spring:
     name: oneit_server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${RDS_ENDPOINT}/${PROD_DATABASE}?
+    url: jdbc:mysql://${RDS_ENDPOINT}/${PROD_DATABASE}?serverTimezone=Asia/Seoul
     username: ${RDS_USER}
     password: ${RDS_PASSWORD}
   request:

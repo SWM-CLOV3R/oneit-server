@@ -10,6 +10,8 @@ import clov3r.api.product.domain.entity.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -46,7 +48,7 @@ public class InquiryProductRepository {
         queryFactory
             .update(inquiryProduct)
             .set(inquiryProduct.emojiName, productEmoji.getEmojiName())
-            .set(inquiryProduct.updatedAt, LocalDateTime.now())
+            .set(inquiryProduct.updatedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
             .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
                 .and(inquiryProduct.product.idx.eq(productEmoji.getProductIdx())))
             .execute();

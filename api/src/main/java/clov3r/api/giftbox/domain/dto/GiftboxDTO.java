@@ -4,6 +4,7 @@ import clov3r.api.giftbox.domain.status.AccessStatus;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +20,10 @@ public class GiftboxDTO {
     private Long createdUserIdx;
     private AccessStatus accessStatus;
     private List<ParticipantsDTO> participants;
-    private LocalDateTime createdAt;
+    private ZonedDateTime createdAt;
     private int dDay;
 
-    public GiftboxDTO(Long idx, String name, LocalDate deadline, String imageUrl, Long createdUserIdx, List<ParticipantsDTO> participants, LocalDateTime createdAt) {
+    public GiftboxDTO(Long idx, String name, LocalDate deadline, String imageUrl, Long createdUserIdx, List<ParticipantsDTO> participants, ZonedDateTime createdAt) {
         this.idx = idx;
         this.name = name;
 //        this.description = description;

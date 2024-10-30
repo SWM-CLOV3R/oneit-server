@@ -37,6 +37,6 @@ public class CommentService {
   @Transactional
   public void deleteComment(Long commentIdx) {
     Comment comment = commentRepository.findByIdx(commentIdx);
-    comment.setDeletedAt(LocalDateTime.now());
+    comment.deleteBaseEntity();
   }
 }
