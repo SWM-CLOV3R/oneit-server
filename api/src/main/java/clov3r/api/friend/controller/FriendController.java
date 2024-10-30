@@ -1,5 +1,7 @@
 package clov3r.api.friend.controller;
 
+import clov3r.api.auth.service.UserService;
+import clov3r.api.friend.domain.dto.OtherUserDTO;
 import clov3r.api.friend.domain.dto.RequestFriendDTO;
 import clov3r.api.common.error.errorcode.CustomErrorCode;
 import clov3r.api.common.error.exception.BaseExceptionV2;
@@ -30,6 +32,7 @@ public class FriendController {
   private final FriendService friendService;
   private final FriendReqRepository friendReqRepository;
   private final UserRepository userRepository;
+  private final UserService userService;
 
   @Tag(name = "친구관리 API", description = "친구 관련 API")
   @Operation(summary = "친구 요청", description = "친구 요청을 보냅니다.(서비스 가입 유저에게만 가능)")
@@ -144,6 +147,17 @@ public class FriendController {
   ) {
     List<FriendDTO> friends = friendService.getFriends(userIdx);
     return ResponseEntity.ok(friends);
+  }
+
+  @Tag(name = "친구관리 API", description = "친구 관련 API")
+  @Operation(summary = "다른 유저 프로필 확인", description = "친구 혹은 다른 유저의 프로필을 조회합니다.")
+  @GetMapping("/api/v2/friends/{friendIdx}")
+  public ResponseEntity<OtherUserDTO> getFriendProfile(
+      @PathVariable Long friendIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    OtherUserDTO otherUserDTO = userService.getOtherUser(userIdx, friendIdx);
+    return ResponseEntity.ok(otherUserDTO);
   }
 
 }

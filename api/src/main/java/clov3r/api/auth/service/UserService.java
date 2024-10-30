@@ -10,6 +10,8 @@ import clov3r.api.auth.domain.request.UpdateUserRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.common.service.S3Service;
+import clov3r.api.friend.domain.dto.OtherUserDTO;
+import clov3r.api.friend.service.FriendService;
 import clov3r.api.notification.service.NotificationService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final S3Service s3Service;
+    private final FriendService friendService;
 
     public UserDTO getUser(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
@@ -90,4 +93,10 @@ public class UserService {
         user.setIsAgreeMarketing(!user.getIsAgreeMarketing());
         return user.getIsAgreeMarketing();
     }
+
+    public OtherUserDTO getOtherUser(Long userIdx, Long friendIdx) {
+        User user = userRepository.findByUserIdx(friendIdx);
+        return new OtherUserDTO(user, friendService.isFriend(userIdx, friendIdx));
+    }
+
 }
