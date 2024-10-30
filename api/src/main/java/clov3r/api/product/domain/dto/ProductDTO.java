@@ -18,7 +18,6 @@ public class ProductDTO extends ProductSummaryDTO {
     private String productUrl;
     private Category category;
     private Gender gender;
-    private List<Keyword> keywords = new ArrayList<>();
 
     public ProductDTO(Product product, LikeStatus likeStatus) {
         super(product, likeStatus);
@@ -26,6 +25,5 @@ public class ProductDTO extends ProductSummaryDTO {
         this.productUrl = product.getProductUrl();
         this.category = product.getCategory();
         this.gender = product.getGender();
-        this.keywords.addAll(product.getKeyword());
     }
 }
