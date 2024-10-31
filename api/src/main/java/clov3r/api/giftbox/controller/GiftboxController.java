@@ -89,10 +89,10 @@ public class GiftboxController {
   @GetMapping("/api/v2/giftbox/{giftboxIdx}")
   public ResponseEntity<GiftboxDTO> getGiftboxByIdx(
       @PathVariable("giftboxIdx") Long giftboxIdx,
-      @Parameter(hidden = true) @Auth(required = false) Long userIdx
+      @Parameter(hidden = true) @Auth Long userIdx
   ) {
     // request validation
-    if (giftboxIdx == null) {
+    if (userIdx == null && giftboxIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
     if (!giftboxRepository.existsById(giftboxIdx)) {
@@ -101,9 +101,6 @@ public class GiftboxController {
 
     // get giftbox
     Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
-    if (!giftboxRepository.isParticipantOfGiftbox(userIdx, giftboxIdx)) {
-      throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX);  // 해당 선물 바구니의 참여자만 조회 가능함
-    }
 
     // get participants of giftbox
     List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
