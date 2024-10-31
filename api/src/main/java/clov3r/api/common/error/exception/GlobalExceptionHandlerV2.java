@@ -55,7 +55,7 @@ public class GlobalExceptionHandlerV2 extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException exception) {
-    ErrorCode errorCode = CommonErrorCode.REQUEST_ERROR;
+    ErrorCode errorCode = CommonErrorCode.ILLEGAL_ARGUMENT;
     log.error("IllegalArgumentException : {}, errorCode : {}", exception, errorCode, exception);
     return handleExceptionInternal(errorCode, exception.getMessage());
   }

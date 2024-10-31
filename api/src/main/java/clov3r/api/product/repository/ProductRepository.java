@@ -268,6 +268,7 @@ public class ProductRepository {
         }
         return product.idx.lt(productIdx);
     }
+
     public List<Product> findAll() {
         List<Product> products = queryFactory.selectFrom(product)
             .where(
@@ -295,6 +296,7 @@ public class ProductRepository {
         return queryFactory.selectFrom(product)
                 .where(product.name.contains(searchKeyword)
                         .or(product.brandName.contains(searchKeyword)))
+                .where(product.status.eq(ProductStatus.ACTIVE))
                 .fetch();
     }
 
@@ -303,7 +305,6 @@ public class ProductRepository {
                 .set(product.likeCount, likeCount)
                 .where(product.idx.eq(productIdx))
                 .execute();
-
     }
 }
 
