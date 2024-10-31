@@ -1,6 +1,7 @@
 package clov3r.api.notification.domain.entity;
 
 import clov3r.api.auth.domain.entity.User;
+import clov3r.api.common.domain.entity.BaseEntity;
 import clov3r.api.notification.domain.status.NotiStatus;
 import clov3r.api.notification.domain.data.ActionType;
 import jakarta.persistence.Column;
@@ -23,10 +24,11 @@ import lombok.Setter;
 
 @Entity
 @Builder
+@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification {
+public class Notification extends BaseEntity {
 
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idx;
@@ -53,14 +55,12 @@ public class Notification {
   @Column(name = "platform_type")
   private String platformType;
 
-  @Column(name = "created_at")
-  private ZonedDateTime createdAt;
-  @Setter
+  @Column(name = "read_at")
   private ZonedDateTime readAt;
-  @Setter
+
+  @Column(name = "sent_at")
   private ZonedDateTime sentAt;
 
-  @Setter
   @Column(name = "noti_status")
   @Enumerated(EnumType.STRING)
   private NotiStatus notiStatus;

@@ -10,6 +10,12 @@ import clov3r.api.auth.domain.request.UpdateUserRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.common.service.S3Service;
+import clov3r.api.friend.domain.dto.OtherUserDTO;
+import clov3r.api.friend.service.FriendService;
+import clov3r.api.giftbox.domain.status.InvitationStatus;
+import clov3r.api.giftbox.repository.GiftboxUserRepository;
+import clov3r.api.notification.domain.status.NotiStatus;
+import clov3r.api.notification.repository.NotificationRepository;
 import clov3r.api.notification.service.NotificationService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
     private final S3Service s3Service;
+    private final FriendService friendService;
+    private final GiftboxUserRepository giftboxUserRepository;
 
     public UserDTO getUser(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
@@ -40,6 +48,7 @@ public class UserService {
         user.setNickname(signupRequest.getNickname());
         user.setGender(signupRequest.getGender());
         user.setBirthDate(signupRequest.getBirthDate());
+        user.setIsAgreeMarketing(signupRequest.getIsAgreeMarketing());
         userRepository.save(user);
 
 //        notificationService.sendSignupCompleteNotification(user);
@@ -51,6 +60,21 @@ public class UserService {
         User user = userRepository.findByUserIdx(userIdx);
         user.setStatus(UserStatus.INACTIVE);
         user.deleteBaseEntity();
+
+        deleteUserData(user);
+    }
+
+    @Transactional
+    public void deleteUserData(User user) {
+        // delete user data
+        giftboxUserRepository.findByUser(user.getIdx()).forEach(giftboxUser -> {
+            giftboxUser.setInvitationStatus(InvitationStatus.DELETED);
+            giftboxUser.deleteBaseEntity();
+        });
+        notificationRepository.findAllByUserId(user.getIdx()).forEach(notification -> {
+            notification.setNotiStatus(NotiStatus.DELETED);
+            notification.deleteBaseEntity();
+        });
     }
 
     @Transactional
@@ -66,6 +90,7 @@ public class UserService {
         // upload image if exists
         if (profileImage != null) {
             String imageUrl = updateProfileImage(profileImage, userIdx);
+            user.setProfileImg(imageUrl);
         }
         return user;
     }
@@ -80,6 +105,18 @@ public class UserService {
     @Transactional
     public void updatePhoneNumber(User user, String phoneNumber) {
         user.setPhoneNumber(phoneNumber);
+    }
+
+    @Transactional
+    public Boolean changeMarketing(Long userIdx) {
+        User user = userRepository.findByUserIdx(userIdx);
+        user.setIsAgreeMarketing(!user.getIsAgreeMarketing());
+        return user.getIsAgreeMarketing();
+    }
+
+    public OtherUserDTO getOtherUser(Long userIdx, Long friendIdx) {
+        User user = userRepository.findByUserIdx(friendIdx);
+        return new OtherUserDTO(user, friendService.isFriend(userIdx, friendIdx));
     }
 
 }

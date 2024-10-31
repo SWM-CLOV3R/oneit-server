@@ -102,9 +102,9 @@ public class NotificationService {
         .body(friendReq.getFrom().getNickname() + "님이 친구 요청을 보냈습니다.")
         .actionType(ActionType.FRIEND_REQUEST)
         .platformType("FCM")
-        .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
         .notiStatus(NotiStatus.CREATED)
         .build();
+    notification.createBaseEntity();
     applicationEventPublisher.publishEvent(notification);
     notificationRepository.save(notification);
   }
@@ -123,9 +123,9 @@ public class NotificationService {
         .title("친구 요청 수락")
         .body(friendReq.getTo().getNickname() + "님이 친구 요청을 수락했습니다.")
         .actionType(ActionType.FRIEND_ACCEPTANCE)
-        .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
         .notiStatus(NotiStatus.CREATED)
         .build();
+    notification.createBaseEntity();
     applicationEventPublisher.publishEvent(notification);
     notificationRepository.save(notification);
     return notification;
@@ -166,9 +166,9 @@ public class NotificationService {
         .body(userRepository.findByUserIdx(userIdx).getNickname() + "님이 ["+giftbox.getName()+"] 선물바구니 초대를 수락했습니다.")
         .actionType(ActionType.GIFTBOX_ACCEPTANCE)
         .platformType("FCM")
-        .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
         .notiStatus(NotiStatus.CREATED)
         .build();
+    notification.createBaseEntity();
     applicationEventPublisher.publishEvent(notification);
     notificationRepository.save(notification);
     return notification;
@@ -191,11 +191,11 @@ public class NotificationService {
           .body("선물바구니 ["+giftbox.getName()+"] 에서 받고 싶은 선물 물어보기가 완료되었습니다.")
           .actionType(ActionType.GIFT_ASK_COMPLETE)
           .platformType("FCM")
-          .createdAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
           .notiStatus(NotiStatus.CREATED)
           .build();
     }).toList();
     for (Notification notification : notificationList) {
+      notification.createBaseEntity();
       applicationEventPublisher.publishEvent(notification);
       notificationRepository.save(notification);
     }

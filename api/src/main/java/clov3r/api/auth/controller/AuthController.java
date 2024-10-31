@@ -23,7 +23,6 @@ import clov3r.api.common.error.exception.BaseExceptionV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -136,6 +135,7 @@ public class AuthController {
             .profileImg(user.getProfileImg())
             .gender(user.getGender())
             .birthDate(user.getBirthDate())
+            .isAgreeMarketing(user.getIsAgreeMarketing())
             .build();
         return ResponseEntity.ok(newUser);
     }
@@ -169,6 +169,16 @@ public class AuthController {
     ) {
         userService.withdraw(userIdx);
         return ResponseEntity.ok("탈퇴가 완료되었습니다.");
+    }
+
+    @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
+    @Operation(summary = "마케팅 수신 동의 변경", description = "마케팅 수신 동의 여부를 변경합니다.")
+    @PatchMapping("/api/v2/marketing")
+    public ResponseEntity<String> changeMarketing(
+        @Parameter(hidden = true) @Auth Long userIdx
+    ) {
+        Boolean isAgreeMarketing = userService.changeMarketing(userIdx);
+        return ResponseEntity.ok("마케팅 수신 동의 : " + isAgreeMarketing);
     }
 
 }

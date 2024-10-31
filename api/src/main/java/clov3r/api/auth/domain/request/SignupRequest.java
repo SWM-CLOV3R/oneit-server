@@ -10,4 +10,5 @@ public class SignupRequest {
     private String nickname;
     private LocalDate birthDate;
     private Gender gender;
+    private Boolean isAgreeMarketing;
 }
