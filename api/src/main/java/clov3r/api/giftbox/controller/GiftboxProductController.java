@@ -279,7 +279,7 @@ public class GiftboxProductController {
   @Tag(name = "선물바구니 상품 API", description = "선물바구니 API 목록")
   @Operation(summary = "선물바구니 내부에서 상품 검색", description = "선물바구니 내 상품 텍스트 검색")
   @GetMapping("/api/v2/giftbox/{giftboxIdx}/products/search")
-  public ResponseEntity<List<ProductSummaryDTO>> searchProductInGiftbox(
+  public ResponseEntity<List<GiftboxProductDTO>> searchProductInGiftbox(
       @PathVariable("giftboxIdx") Long giftboxIdx,
       @RequestParam String searchKeyword,
       @Parameter(hidden = true) @Auth(required = false) Long userIdx
@@ -302,8 +302,8 @@ public class GiftboxProductController {
     }
 
     // search product in giftbox
-    List<ProductSummaryDTO> productSummaryDTOList = giftboxService.searchProductInGiftbox(searchKeyword, giftboxIdx, userIdx);
-    return ResponseEntity.ok(productSummaryDTOList);
+    List<GiftboxProductDTO> giftboxProductDTOList = giftboxService.searchProductInGiftbox(searchKeyword, giftboxIdx, userIdx);
+    return ResponseEntity.ok(giftboxProductDTOList);
   }
 
 }

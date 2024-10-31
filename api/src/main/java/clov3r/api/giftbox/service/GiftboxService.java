@@ -113,12 +113,16 @@ public class GiftboxService {
 
   }
 
-  public List<ProductSummaryDTO> searchProductInGiftbox(String searchKeyword, Long giftboxIdx, Long userIdx) {
-    List<Product> products = giftboxRepository.searchProductInGiftbox(searchKeyword, giftboxIdx);
-    return products.stream()
-        .map(product -> new ProductSummaryDTO(
-            product,
-            productService.getLikeStatus(product.getIdx(), userIdx)
+  public List<GiftboxProductDTO> searchProductInGiftbox(String searchKeyword, Long giftboxIdx, Long userIdx) {
+    List<GiftboxProduct> giftboxProducts = giftboxRepository.searchProductInGiftbox(searchKeyword, giftboxIdx);
+    return giftboxProducts.stream()
+        .map(giftboxProduct -> new GiftboxProductDTO(
+            giftboxProduct,
+            giftboxProductService.getVoteStatusOfUser(
+                userIdx,
+                giftboxProduct.getGiftbox().getIdx(),
+                giftboxProduct.getProduct().getIdx()),
+            keywordRepository.findKeywordByProductIdx(giftboxProduct.getProduct().getIdx())
         )).toList();
   }
 
