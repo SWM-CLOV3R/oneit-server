@@ -76,6 +76,7 @@ public class GiftboxService {
   public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
     try {
       giftboxRepository.updateGiftbox(giftboxIdx, request);
+      log.info("giftbox updated {} : ", giftboxRepository.findById(giftboxIdx).getUpdatedAt());
     } catch (BaseExceptionV2 exception) {
       throw new BaseExceptionV2(FAIL_TO_UPDATE_GIFTBOX);
     }
