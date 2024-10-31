@@ -5,6 +5,8 @@ server:
 spring:
   application:
     name: api
+  jackson:
+    time-zone: Asia/Seoul
   request:
     url: ${REQUEST_URL}
   jpa:
