@@ -220,8 +220,9 @@ public class ProductRepository {
     public Product findById(Long productIdx) {
         return queryFactory.select(product)
                 .from(product)
-                .where(product.idx.eq(productIdx)
-                    .and(product.status.eq(ProductStatus.ACTIVE)))
+                .where(product.idx.eq(productIdx))
+                .where(product.status.eq(ProductStatus.ACTIVE)
+                    .or(product.status.eq(ProductStatus.INVALID)))
                 .fetchOne();
     }
 
