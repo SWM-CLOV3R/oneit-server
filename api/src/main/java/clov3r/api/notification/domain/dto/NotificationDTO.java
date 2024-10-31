@@ -3,6 +3,7 @@ package clov3r.api.notification.domain.dto;
 import clov3r.api.notification.domain.data.ActionType;
 import clov3r.api.notification.domain.status.NotiStatus;
 import clov3r.api.notification.domain.entity.Notification;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,10 @@ public class NotificationDTO {
   private Long receiverIdx;
   private String title;
   private String body;
+
+  @JsonFormat(timezone = "Asia/Seoul")
   private LocalDateTime createdAt;
+  
   private NotiStatus notiStatus;
   private ActionType actionType;
 
