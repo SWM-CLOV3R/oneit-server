@@ -18,9 +18,9 @@ public class NotificationDTO {
   private String title;
   private String body;
 
-  @JsonFormat(timezone = "Asia/Seoul")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime createdAt;
-  
+
   private NotiStatus notiStatus;
   private ActionType actionType;
 
