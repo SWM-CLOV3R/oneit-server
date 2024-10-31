@@ -11,6 +11,7 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_PARTICIPANT_
 import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
 import clov3r.api.auth.config.security.Auth;
+import clov3r.api.giftbox.domain.data.GiftboxUserRole;
 import clov3r.api.giftbox.domain.dto.GiftboxDTO;
 import clov3r.api.giftbox.domain.dto.InvitationUserDTO;
 import clov3r.api.giftbox.domain.dto.ParticipantsDTO;
@@ -287,26 +288,35 @@ public class GiftboxController {
     if (invitationIdx == null || userIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
+    if (!userRepository.existsByUserIdx(userIdx)) {
+      throw new BaseExceptionV2(USER_NOT_FOUND);
+    }
     if (!giftboxRepository.existsInvitationOfGiftbox(invitationIdx)) {
       throw new BaseExceptionV2(INVITATION_NOT_FOUND);
     }
     GiftboxUser giftboxUser = giftboxRepository.findGiftboxByInvitationIdx(invitationIdx);
-    if (giftboxUser.getInvitationStatus().equals(InvitationStatus.ACCEPTED)
-        && giftboxUser.getUser().getIdx() != null) {
-      throw new BaseExceptionV2(ALREADY_USED_INVITATION);
+    if (!giftboxRepository.existsById(giftboxUser.getGiftbox().getIdx())) {
+      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
     if (giftboxRepository.existParticipantOfGiftbox(userIdx, giftboxUser.getGiftbox().getIdx())) {
       throw new BaseExceptionV2(ALREADY_PARTICIPANT_OF_GIFTBOX);
     }
-    if (!giftboxRepository.existsById(giftboxUser.getGiftbox().getIdx())) {
-      throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
+    if (giftboxUser.getInvitationStatus().equals(InvitationStatus.PENDING) && giftboxUser.getUser() == null) {
+      // accept invitation to giftbox
+      giftboxService.acceptInvitationToGiftBox(giftboxUser, userIdx, invitationIdx);
     }
-    if (!userRepository.existsByUserIdx(userIdx)) {
-      throw new BaseExceptionV2(USER_NOT_FOUND);
+    else {
+      // 새로운 참여자 row 추가
+      GiftboxUser newGiftboxUser = GiftboxUser.builder()
+          .giftbox(giftboxUser.getGiftbox())
+          .sender(giftboxUser.getSender())
+          .user(userRepository.findByUserIdx(userIdx))
+          .userRole(GiftboxUserRole.PARTICIPANT)
+          .invitationStatus(InvitationStatus.ACCEPTED)
+          .build();
+      giftboxUserRepository.save(newGiftboxUser);
     }
 
-    // accept invitation to giftbox
-    giftboxService.acceptInvitationToGiftBox(giftboxUser, userIdx, invitationIdx);
     return ResponseEntity.ok(
         "유저 " + userIdx + "님이 " + giftboxUser.getGiftbox().getIdx() + "번 선물 바구니에 참여하였습니다.");
   }
