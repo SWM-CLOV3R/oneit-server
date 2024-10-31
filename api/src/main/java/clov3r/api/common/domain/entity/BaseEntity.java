@@ -17,17 +17,17 @@ public class BaseEntity {
     private LocalDateTime deletedAt;
 
     public void createBaseEntity() {
-        this.createdAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        this.createdAt = LocalDateTime.now();
     }
 
     public void updateBaseEntity() {
         if (this.createdAt != null) {
-            this.updatedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+            this.updatedAt = LocalDateTime.now();
         }
     }
 
     public void deleteBaseEntity() {
-        this.deletedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        this.deletedAt = LocalDateTime.now();
     }
 
 }

@@ -23,9 +23,11 @@ import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.notification.service.NotificationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -47,7 +49,9 @@ public class GiftboxService {
         userIdx,
         Status.ACTIVE
     );
+    log.info("new Giftbox Entity deadline: {}", newGiftbox.getDeadline());
     Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
+    log.info("saved Giftbox deadline: {}", saveGiftbox.getDeadline());
 
     // 생성한 유저 idx와 선물 바구니 idx를 연결
     try {
