@@ -52,4 +52,4 @@ JAR_NAME=$(ls $REPOSITORY/api/build/libs/ | grep '.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/api/build/libs/$JAR_NAME
 
 echo "> $JAR_PATH deploy"
-nohup java -jar -Dspring.profiles.active=dev $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &
+nohup java -jar -Dspring.profiles.active=dev -Duser.timezone=Asia/Seoul $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &
