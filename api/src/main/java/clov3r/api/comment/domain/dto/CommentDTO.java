@@ -19,7 +19,7 @@ public class CommentDTO {
   private String writerNickName;
   private String writerProfileImg;
   private String content;
-  private ZonedDateTime createdAt;
+  private LocalDateTime createdAt;
 
   public CommentDTO (Comment comment) {
     this.idx = comment.getIdx();

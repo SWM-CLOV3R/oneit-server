@@ -20,10 +20,10 @@ public class GiftboxDTO {
     private Long createdUserIdx;
     private AccessStatus accessStatus;
     private List<ParticipantsDTO> participants;
-    private ZonedDateTime createdAt;
+    private LocalDateTime createdAt;
     private int dDay;
 
-    public GiftboxDTO(Long idx, String name, LocalDate deadline, String imageUrl, Long createdUserIdx, List<ParticipantsDTO> participants, ZonedDateTime createdAt) {
+    public GiftboxDTO(Long idx, String name, LocalDate deadline, String imageUrl, Long createdUserIdx, List<ParticipantsDTO> participants, LocalDateTime createdAt) {
         this.idx = idx;
         this.name = name;
 //        this.description = description;

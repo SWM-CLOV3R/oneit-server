@@ -1,5 +1,6 @@
 package clov3r.api.friend.domain.dto;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,9 @@ public class FriendReqDTO {
 
   private Long requestIdx;
   private FriendDTO fromUser;
-  private ZonedDateTime requestDate;
+  private LocalDateTime requestDate;
 
-  public FriendReqDTO(Long requestIdx, FriendDTO fromUser, ZonedDateTime requestDate) {
+  public FriendReqDTO(Long requestIdx, FriendDTO fromUser, LocalDateTime requestDate) {
     this.requestIdx = requestIdx;
     this.fromUser = fromUser;
     this.requestDate = requestDate;
