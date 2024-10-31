@@ -49,9 +49,7 @@ public class GiftboxService {
         userIdx,
         Status.ACTIVE
     );
-    log.info("new Giftbox Entity deadline: {}", newGiftbox.getDeadline());
     Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
-    log.info("saved Giftbox deadline: {}", saveGiftbox.getDeadline());
 
     // 생성한 유저 idx와 선물 바구니 idx를 연결
     try {
@@ -76,7 +74,6 @@ public class GiftboxService {
   public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
     try {
       giftboxRepository.updateGiftbox(giftboxIdx, request);
-      log.info("giftbox updated {} : ", giftboxRepository.findById(giftboxIdx).getUpdatedAt());
     } catch (BaseExceptionV2 exception) {
       throw new BaseExceptionV2(FAIL_TO_UPDATE_GIFTBOX);
     }
