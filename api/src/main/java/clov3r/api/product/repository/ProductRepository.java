@@ -249,7 +249,8 @@ public class ProductRepository {
                 .where(
                     product.name.isNotNull(),
                     product.originalPrice.isNotNull(),
-                    product.thumbnailUrl.isNotNull()
+                    product.thumbnailUrl.isNotNull(),
+                    product.status.eq(ProductStatus.ACTIVE)
                 )
                 .orderBy(product.idx.desc())
                 .limit(pageSize)
@@ -272,7 +273,8 @@ public class ProductRepository {
             .where(
                 product.name.isNotNull(),
                 product.originalPrice.isNotNull(),
-                product.thumbnailUrl.isNotNull()
+                product.thumbnailUrl.isNotNull(),
+                product.status.eq(ProductStatus.ACTIVE)
             )
             .fetch();
         return products;
