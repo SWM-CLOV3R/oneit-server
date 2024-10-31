@@ -30,7 +30,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class GiftboxController {
@@ -73,7 +71,6 @@ public class GiftboxController {
       throw new BaseExceptionV2(DATE_BEFORE_NOW);
     }
     // create Gift box
-    log.info("client request deadline : {}", request.getDeadline());
     Long giftboxIdx = giftboxService.createGiftbox(request, userIdx);
 
     // upload image if exists
@@ -186,7 +183,6 @@ public class GiftboxController {
 
     // delete giftbox
     giftboxRepository.deleteById(giftboxIdx);
-    log.info("giftbox delted {} : ", giftboxRepository.findById(giftboxIdx).getDeletedAt());
 
     return ResponseEntity.ok(giftboxIdx + "번 선물 바구니가 삭제되었습니다.");
   }
