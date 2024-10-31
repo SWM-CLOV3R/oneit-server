@@ -15,25 +15,22 @@ import lombok.extern.slf4j.Slf4j;
 public class BaseEntity {
 
     private LocalDateTime createdAt;
-    private ZonedDateTime updatedAt;
+    private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
     public void createBaseEntity() {
         this.createdAt = LocalDateTime.now();
-        log.info("createdAt: {}", this.createdAt);
 
     }
 
     public void updateBaseEntity() {
         if (this.createdAt != null) {
-            this.updatedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
-            log.info("updatedAt: {}", this.updatedAt);
+            this.updatedAt = LocalDateTime.now();
         }
     }
 
     public void deleteBaseEntity() {
-        this.deletedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
-        log.info("deletedAt: {}", this.deletedAt);
+        this.deletedAt = LocalDateTime.now();
     }
 
 }

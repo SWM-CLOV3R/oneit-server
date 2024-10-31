@@ -48,7 +48,7 @@ public class InquiryProductRepository {
         queryFactory
             .update(inquiryProduct)
             .set(inquiryProduct.emojiName, productEmoji.getEmojiName())
-            .set(inquiryProduct.updatedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")))
+            .set(inquiryProduct.updatedAt, LocalDateTime.now())
             .where(inquiryProduct.inquiry.idx.eq(inquiryIdx)
                 .and(inquiryProduct.product.idx.eq(productEmoji.getProductIdx())))
             .execute();
