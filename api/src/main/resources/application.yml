@@ -12,7 +12,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        jdbc.time_zone: UTC
         jdbc:
           time_zone: Asia/Seoul
   cloud:
