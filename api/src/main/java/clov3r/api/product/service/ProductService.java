@@ -132,7 +132,11 @@ public class ProductService {
   }
 
   public List<String> getDetailImages(Long productIdx) {
-    String defaultDetailImage = productRepository.findById(productIdx).getDetailImages();
+    Product product = productRepository.findById(productIdx);
+    if (product == null) {
+      return null;
+    }
+    String defaultDetailImage = product.getDetailImages();
     if (defaultDetailImage == null || defaultDetailImage.equals("[]")) {
       return null;
     }
