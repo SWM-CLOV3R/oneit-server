@@ -301,21 +301,9 @@ public class GiftboxController {
     if (giftboxRepository.existParticipantOfGiftbox(userIdx, giftboxUser.getGiftbox().getIdx())) {
       throw new BaseExceptionV2(ALREADY_PARTICIPANT_OF_GIFTBOX);
     }
-    if (giftboxUser.getInvitationStatus().equals(InvitationStatus.PENDING) && giftboxUser.getUser() == null) {
-      // accept invitation to giftbox
-      giftboxService.acceptInvitationToGiftBox(giftboxUser, userIdx, invitationIdx);
-    }
-    else {
-      // 새로운 참여자 row 추가
-      GiftboxUser newGiftboxUser = GiftboxUser.builder()
-          .giftbox(giftboxUser.getGiftbox())
-          .sender(giftboxUser.getSender())
-          .user(userRepository.findByUserIdx(userIdx))
-          .userRole(GiftboxUserRole.PARTICIPANT)
-          .invitationStatus(InvitationStatus.ACCEPTED)
-          .build();
-      giftboxUserRepository.save(newGiftboxUser);
-    }
+    giftboxService.acceptInvitationToGiftBox(giftboxUser, userIdx, invitationIdx);
+
+
 
     return ResponseEntity.ok(
         "유저 " + userIdx + "님이 " + giftboxUser.getGiftbox().getIdx() + "번 선물 바구니에 참여하였습니다.");

@@ -1,6 +1,7 @@
 package clov3r.api.common.domain.entity;
 
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -18,6 +19,7 @@ public class BaseEntity {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
+    @PrePersist
     public void createBaseEntity() {
         this.createdAt = LocalDateTime.now();
 
@@ -32,5 +34,4 @@ public class BaseEntity {
     public void deleteBaseEntity() {
         this.deletedAt = LocalDateTime.now();
     }
-
 }

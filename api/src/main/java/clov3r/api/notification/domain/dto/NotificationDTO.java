@@ -3,6 +3,7 @@ package clov3r.api.notification.domain.dto;
 import clov3r.api.notification.domain.data.ActionType;
 import clov3r.api.notification.domain.status.NotiStatus;
 import clov3r.api.notification.domain.entity.Notification;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class NotificationDTO {
   private Long receiverIdx;
   private String title;
   private String body;
-  private String createdAt;
+  private LocalDateTime createdAt;
   private NotiStatus notiStatus;
   private ActionType actionType;
 
@@ -24,7 +25,7 @@ public class NotificationDTO {
     this.receiverIdx = notification.getReceiver().getIdx();
     this.title = notification.getTitle();
     this.body = notification.getBody();
-    this.createdAt = notification.getCreatedAt().toString();
+    this.createdAt = notification.getCreatedAt();
     this.notiStatus = notification.getNotiStatus();
     this.actionType = notification.getActionType();
   }

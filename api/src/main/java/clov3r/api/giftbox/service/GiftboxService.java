@@ -103,7 +103,21 @@ public class GiftboxService {
   }
 
   public void acceptInvitationToGiftBox(GiftboxUser giftboxUser, Long userIdx, Long invitationIdx) {
-    giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
+    if (giftboxUser.getInvitationStatus().equals(InvitationStatus.PENDING) && giftboxUser.getUser() == null) {
+      // accept invitation to giftbox
+      giftboxRepository.acceptInvitationToGiftBox(userIdx, invitationIdx);
+    }
+    else {
+      // 새로운 참여자 row 추가
+      GiftboxUser newGiftboxUser = GiftboxUser.builder()
+          .giftbox(giftboxUser.getGiftbox())
+          .sender(giftboxUser.getSender())
+          .user(userRepository.findByUserIdx(userIdx))
+          .userRole(GiftboxUserRole.PARTICIPANT)
+          .invitationStatus(InvitationStatus.ACCEPTED)
+          .build();
+      giftboxUserRepository.save(newGiftboxUser);
+    }
 
     // send notification
     notificationService.sendGiftboxInvitationAcceptanceNotification(invitationIdx, giftboxUser.getGiftbox().getIdx(), userIdx);
