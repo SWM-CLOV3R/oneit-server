@@ -105,16 +105,11 @@ public class ProductControllerV2 {
         if (product == null) {
             throw new BaseExceptionV2(CustomErrorCode.PRODUCT_NOT_FOUND);
         }
-        ProductDetailDTO productDetailDTO;
-        try {
-            productDetailDTO = new ProductDetailDTO(
-                product,
-                productService.getLikeStatus(productIdx, userIdx),
-                productService.getDetailImages(productIdx)
-            );
-        } catch (Exception e) {
-            throw new BaseExceptionV2(CustomErrorCode.PRODUCT_DTO_ERROR);
-        }
+        ProductDetailDTO productDetailDTO = new ProductDetailDTO(
+            product,
+            productService.getLikeStatus(productIdx, userIdx),
+            productService.getDetailImages(productIdx)
+        );
         return ResponseEntity.ok(productDetailDTO);
     }
 

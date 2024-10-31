@@ -21,6 +21,7 @@ import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.giftbox.repository.GiftboxRepository;
 import clov3r.api.auth.repository.UserRepository;
+import clov3r.api.giftbox.repository.GiftboxUserRepository;
 import clov3r.api.giftbox.service.GiftboxService;
 import clov3r.api.common.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,6 +51,7 @@ public class GiftboxController {
   private final GiftboxRepository giftboxRepository;
   private final S3Service s3Service;
   private final UserRepository userRepository;
+  private final GiftboxUserRepository giftboxUserRepository;
 
 
   @Tag(name = "선물바구니 API", description = "선물바구니 CRUD API 목록")
@@ -221,7 +223,7 @@ public class GiftboxController {
     }
 
     // get participants of giftbox
-    List<GiftboxUser> participants = giftbox.getParticipants();
+    List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
     List<ParticipantsDTO> participantsDTOList = participants.stream()
         .map(participant -> new ParticipantsDTO(
             participant.getUser().getIdx(),
