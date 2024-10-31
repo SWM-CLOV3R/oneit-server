@@ -13,7 +13,7 @@ import lombok.Setter;
 public class BaseEntity {
 
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private ZonedDateTime updatedAt;
     private LocalDateTime deletedAt;
 
     public void createBaseEntity() {
@@ -22,12 +22,12 @@ public class BaseEntity {
 
     public void updateBaseEntity() {
         if (this.createdAt != null) {
-            this.updatedAt = LocalDateTime.now();
+            this.updatedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         }
     }
 
     public void deleteBaseEntity() {
-        this.deletedAt = LocalDateTime.now();
+        this.deletedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
     }
 
 }
