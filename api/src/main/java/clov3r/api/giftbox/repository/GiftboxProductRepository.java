@@ -24,4 +24,7 @@ public interface GiftboxProductRepository extends JpaRepository<GiftboxProduct, 
   @Query("select gp from GiftboxProduct gp where gp.giftbox.idx = :giftboxIdx and gp.product.idx = :productIdx and gp.status = 'ACTIVE'")
   GiftboxProduct findByGiftboxIdxAndProductIdx(Long giftboxIdx, Long productIdx);
 
+  @Query("select count(p) > 0 from Product p where p.idx = :productIdx and (p.status = 'ACTIVE' or p.status = 'INVALID')")
+  boolean validProductInGiftbox(Long productIdx);
+
 }

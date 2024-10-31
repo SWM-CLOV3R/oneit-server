@@ -104,6 +104,7 @@ public class GiftboxProductController {
       throw new BaseExceptionV2(NOT_PARTICIPANT_OF_GIFTBOX); // 해당 선물 바구니의 참여자만 조회 가능함
     }
 
+
     // get product list of the giftbox
     List<GiftboxProductDTO> giftboxProductDTOList = giftboxService.findGiftboxProductList(giftboxIdx, userIdx);
 
@@ -133,6 +134,10 @@ public class GiftboxProductController {
 
     if (!giftboxProductRepository.existProductByGiftbox(giftboxIdx, productIdx)) {
       throw new BaseExceptionV2(GIFTBOX_PRODUCT_NOT_FOUND);
+    }
+
+    if (!giftboxProductRepository.validProductInGiftbox(productIdx)) {
+      throw new BaseExceptionV2(PRODUCT_NOT_FOUND);
     }
 
     // get product list of the giftbox
