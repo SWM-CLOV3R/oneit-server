@@ -295,6 +295,8 @@ public class GiftboxRepository {
                 .from(giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.status.eq(Status.ACTIVE))
+                .where(giftboxProduct.product.status.eq(ProductStatus.ACTIVE)
+                    .or(giftboxProduct.product.status.eq(ProductStatus.INVALID)))
                 .fetch();
     }
 
