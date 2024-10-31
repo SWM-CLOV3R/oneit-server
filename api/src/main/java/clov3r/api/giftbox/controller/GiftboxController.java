@@ -186,6 +186,8 @@ public class GiftboxController {
 
     // delete giftbox
     giftboxRepository.deleteById(giftboxIdx);
+    log.info("giftbox delted {} : ", giftboxRepository.findById(giftboxIdx).getDeletedAt());
+
     return ResponseEntity.ok(giftboxIdx + "번 선물 바구니가 삭제되었습니다.");
   }
 
