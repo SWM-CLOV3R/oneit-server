@@ -4,6 +4,7 @@ import static clov3r.api.giftbox.domain.entity.QEmoji.emoji;
 import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;
 import static clov3r.api.giftbox.domain.entity.QInquiryProduct.inquiryProduct;
 
+import clov3r.api.common.domain.status.Status;
 import clov3r.api.giftbox.domain.status.InquiryStatus;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.Inquiry;
@@ -25,7 +26,12 @@ public class InquiryRepository {
   }
 
   public Inquiry findByIdx(Long inquiryIdx) {
-    return em.find(Inquiry.class, inquiryIdx);
+    return queryFactory.select(inquiry)
+        .from(inquiry)
+        .where(inquiry.idx.eq(inquiryIdx))
+        .where(inquiry.giftbox.status.eq(Status.ACTIVE)
+            .or(inquiry.giftbox.status.ne(Status.DELETED)))
+        .fetchFirst();
   }
 
 

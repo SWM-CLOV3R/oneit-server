@@ -7,6 +7,7 @@ import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.Inquiry;
 import clov3r.api.giftbox.domain.entity.InquiryProduct;
 import clov3r.api.product.domain.entity.Product;
+import clov3r.api.product.domain.status.ProductStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -40,6 +41,9 @@ public class InquiryProductRepository {
             .select(inquiryProduct.product)
             .from(inquiryProduct)
             .where(inquiryProduct.inquiry.eq(inquiry))
+            .where(inquiryProduct.product.status.eq(ProductStatus.ACTIVE)
+                .or(inquiryProduct.product.status.ne(ProductStatus.INVALID))
+                .or(inquiryProduct.product.status.ne(ProductStatus.UNSUPPORTED)))
             .fetch();
     }
 
