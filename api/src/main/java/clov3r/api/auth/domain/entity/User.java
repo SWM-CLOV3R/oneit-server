@@ -2,6 +2,8 @@ package clov3r.api.auth.domain.entity;
 
 import clov3r.api.auth.domain.data.UserStatus;
 import clov3r.api.auth.domain.dto.KakaoProfileDTO;
+import clov3r.api.auth.domain.request.SignupRequest;
+import clov3r.api.auth.domain.request.UpdateUserRequest;
 import clov3r.api.common.domain.data.Gender;
 import clov3r.api.common.domain.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -14,39 +16,41 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "user_seq_generator", sequenceName = "user_seq", allocationSize = 1)
     private Long idx;
     private String name;
     private String nickname;
     private String email;
 
+    @Setter
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Setter
     @Column(name = "profile_img")
     private String profileImg;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;  //  product gender enum 과 다름
 
-    private String age;
-
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @Setter
     @Column(name = "is_agree_marketing")
     private Boolean isAgreeMarketing;
 
@@ -61,7 +65,6 @@ public class User extends BaseEntity {
         this.name = kakaoProfile.getKakao_account().getName();
         this.nickname = kakaoProfile.getProperties().getNickname();
         this.profileImg = kakaoProfile.getProperties().getProfile_image();
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         this.birthDate = LocalDate.parse(
             kakaoProfile.getKakao_account().birthyear +
@@ -72,4 +75,27 @@ public class User extends BaseEntity {
         this.status = UserStatus.ACTIVE;
     }
 
+    public void createUser(SignupRequest signupRequest) {
+        this.name = signupRequest.getName();
+        this.nickname = signupRequest.getNickname();
+        this.gender = signupRequest.getGender();
+        this.birthDate = signupRequest.getBirthDate();
+        this.isAgreeMarketing = signupRequest.getIsAgreeMarketing();
+    }
+
+    public void changeInactiveUser() {
+        this.status = UserStatus.INACTIVE;
+        deleteBaseEntity();
+    }
+
+    public void updateUserDate(UpdateUserRequest updateUserRequest, MultipartFile profileImage) {
+        this.nickname = updateUserRequest.getNickName();
+        this.birthDate = updateUserRequest.getBirthDate();
+    }
+
+    public void backToActiveUser() {
+        this.status = UserStatus.ACTIVE;
+        updateBaseEntity();
+        restoreBaseEntity();
+    }
 }

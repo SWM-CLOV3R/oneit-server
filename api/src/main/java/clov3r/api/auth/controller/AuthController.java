@@ -13,7 +13,7 @@ import clov3r.api.auth.domain.dto.UserDTO;
 import clov3r.api.auth.domain.data.AuthToken;
 import clov3r.api.auth.domain.data.UserStatus;
 import clov3r.api.auth.domain.entity.User;
-import clov3r.api.auth.domain.request.KakaoAccessToken;
+import clov3r.api.auth.domain.request.KakaoAccessTokenRequest;
 import clov3r.api.auth.domain.request.SignupRequest;
 import clov3r.api.auth.repository.AuthRepository;
 import clov3r.api.auth.repository.UserRepository;
@@ -49,8 +49,8 @@ public class AuthController {
     @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")
     @Operation(summary = "카카오 로그인", description = "유저의 카카오 액세스 토큰을 입력받아 자체 서비스에서 카카오 로그인을 진행합니다.")
     @PostMapping("/api/v2/kakao/login")
-    public ResponseEntity<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
-        KakaoProfileDTO kakaoProfileDTO = authService.getKaKaoUserInfo(kakaoAccessToken.getAccessToken());
+    public ResponseEntity<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessTokenRequest kakaoAccessTokenRequest) {
+        KakaoProfileDTO kakaoProfileDTO = authService.getKaKaoUserInfo(kakaoAccessTokenRequest.getAccessToken());
 
         // 카카오 프로필 정보 중 "이메일"로 유저 조회
         User user = userRepository.findByEmail(kakaoProfileDTO.getKakao_account().getEmail());
@@ -61,8 +61,7 @@ public class AuthController {
             user = authService.createUserByKakao(kakaoProfileDTO);
         } else if (user.getStatus().equals(UserStatus.INACTIVE)) {
             // 탈퇴한 유저, 탈퇴후 7일이 지나기 전이라면 status를 active로 변경
-            user.setStatus(UserStatus.ACTIVE);
-            user.updateBaseEntity();
+            user.backToActiveUser();
         } else if (user.getStatus().equals(UserStatus.DELETED)) {
             // 탈퇴한 유저, 탈퇴후 7일이 지난 경우 다시 회원가입 진행
             user = authService.createUserByKakao(kakaoProfileDTO);
@@ -81,7 +80,11 @@ public class AuthController {
         authRepository.saveRefreshToken(authToken.getRefreshToken(), user.getEmail());
 
         // return the user's info with access token (jwt)
-        KakaoLoginDTO kakaoLoginDTO = new KakaoLoginDTO(isSignedUp, authToken.getAccessToken(), authToken.getRefreshToken());
+        KakaoLoginDTO kakaoLoginDTO = new KakaoLoginDTO(
+            isSignedUp,
+            authToken.getAccessToken(),
+            authToken.getRefreshToken()
+        );
         return ResponseEntity.ok(kakaoLoginDTO);
     }
 
@@ -118,9 +121,9 @@ public class AuthController {
     @Operation(summary = "카카오 친구 목록 조회", description = "유저의 카카오톡 친구 목록을 조회합니다.")
     @GetMapping("/api/v2/kakao/friends")
     public ResponseEntity<KakaoFriendDTO> getFriends(
-        @RequestBody KakaoAccessToken kakaoAccessToken
+        @RequestBody KakaoAccessTokenRequest kakaoAccessTokenRequest
     ) {
-        return ResponseEntity.ok(authService.getKakaoFriends(kakaoAccessToken.getAccessToken()));
+        return ResponseEntity.ok(authService.getKakaoFriends(kakaoAccessTokenRequest.getAccessToken()));
     }
 
     @Tag(name = "계정 API", description = "회원가입/로그인 관련 API 목록")

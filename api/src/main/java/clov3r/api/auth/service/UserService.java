@@ -44,11 +44,7 @@ public class UserService {
         if (user == null) {
             throw new BaseExceptionV2(USER_NOT_FOUND);
         }
-        user.setName(signupRequest.getName());
-        user.setNickname(signupRequest.getNickname());
-        user.setGender(signupRequest.getGender());
-        user.setBirthDate(signupRequest.getBirthDate());
-        user.setIsAgreeMarketing(signupRequest.getIsAgreeMarketing());
+        user.createUser(signupRequest);
         userRepository.save(user);
         return user;
     }
@@ -56,9 +52,7 @@ public class UserService {
     @Transactional
     public void withdraw(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
-        user.setStatus(UserStatus.INACTIVE);
-        user.deleteBaseEntity();
-
+        user.changeInactiveUser();
         deleteUserData(user);
     }
 
@@ -82,22 +76,18 @@ public class UserService {
         Long userIdx
     ) {
         User user = userRepository.findByUserIdx(userIdx);
-        user.setNickname(updateUserRequest.getNickName());
-        user.setBirthDate(updateUserRequest.getBirthDate());
-
         // upload image if exists
         if (profileImage != null) {
             String imageUrl = updateProfileImage(profileImage, userIdx);
             user.setProfileImg(imageUrl);
         }
+        user.updateUserDate(updateUserRequest, profileImage);
         return user;
     }
 
     public String updateProfileImage(MultipartFile profileImage, Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
-        String imageUrl = s3Service.upload(profileImage, "user-profile");
-        user.setProfileImg(imageUrl);
-        return imageUrl;
+        return s3Service.upload(profileImage, "user-profile");
     }
 
     @Transactional
