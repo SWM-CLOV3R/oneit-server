@@ -105,13 +105,7 @@ public class GiftboxController {
     // get participants of giftbox
     List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
     List<ParticipantsDTO> participantsDTOList = participants.stream()
-        .map(participant -> new ParticipantsDTO(
-            participant.getUser().getIdx(),
-            participant.getUser().getNickname(),
-            participant.getUser().getName(),
-            participant.getUser().getProfileImg(),
-            participant.getUserRole()
-        ))
+        .map(ParticipantsDTO::new)
         .toList();
 
     // make giftbox detail dto
@@ -137,13 +131,7 @@ public class GiftboxController {
           List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(
               giftbox.getIdx());
           List<ParticipantsDTO> participantsDTOList = participants.stream()
-              .map(participant -> new ParticipantsDTO(
-                  participant.getUser().getIdx(),
-                  participant.getUser().getNickname(),
-                  participant.getUser().getName(),
-                  participant.getUser().getProfileImg(),
-                  participant.getUserRole()
-              ))
+              .map(ParticipantsDTO::new)
               .toList();
           return new GiftboxDTO(giftbox, participantsDTOList);
         })
@@ -226,13 +214,7 @@ public class GiftboxController {
     // get participants of giftbox
     List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
     List<ParticipantsDTO> participantsDTOList = participants.stream()
-        .map(participant -> new ParticipantsDTO(
-            participant.getUser().getIdx(),
-            participant.getUser().getNickname(),
-            participant.getUser().getName(),
-            participant.getUser().getProfileImg(),
-            participant.getUserRole()
-        ))
+        .map(ParticipantsDTO::new)
         .toList();
 
     // make giftbox detail dto
@@ -332,13 +314,7 @@ public class GiftboxController {
 
     List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
     List<ParticipantsDTO> participantsDTOList = participants.stream()
-        .map(participant -> new ParticipantsDTO(
-            participant.getUser().getIdx(),
-            participant.getUser().getNickname(),
-            participant.getUser().getName(),
-            participant.getUser().getProfileImg(),
-            participant.getUserRole()
-        ))
+        .map(ParticipantsDTO::new)
         .toList();
     return ResponseEntity.ok(participantsDTOList);
   }

@@ -8,6 +8,7 @@ import static clov3r.api.giftbox.domain.entity.QGiftboxUser.giftboxUser;
 import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;
 import static clov3r.api.product.domain.entity.QProduct.product;
 
+import clov3r.api.auth.domain.data.UserStatus;
 import clov3r.api.giftbox.domain.data.GiftboxUserRole;
 import clov3r.api.giftbox.domain.status.InvitationStatus;
 import clov3r.api.product.domain.status.ProductStatus;
@@ -264,10 +265,12 @@ public class GiftboxRepository {
 
     public List<GiftboxUser> findParticipantsOfGiftbox(Long giftboxIdx) {
         // giftboxIdx로 status가 ACTIVE인 giftboxUser 조회
+        // userIdx가 ACTIVE인 giftboxUser만 조회
         return queryFactory.select(giftboxUser)
                 .from(giftboxUser)
-                .where(giftboxUser.giftbox.idx.eq(giftboxIdx),
-                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                .where(giftboxUser.giftbox.idx.eq(giftboxIdx)
+                        .and(giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                        .and(giftboxUser.user.status.eq(UserStatus.ACTIVE)))
                 .fetch();
     }
 

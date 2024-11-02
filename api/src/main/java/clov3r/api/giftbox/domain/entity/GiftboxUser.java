@@ -63,10 +63,4 @@ public class GiftboxUser extends BaseEntity {
         this.invitationStatus = invitationStatus;
         this.createBaseEntity();
     }
-
-    @PrePersist
-    public void createBaseEntity() {
-        super.createBaseEntity();
-    }
-
 }
