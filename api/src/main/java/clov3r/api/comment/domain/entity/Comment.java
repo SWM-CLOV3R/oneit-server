@@ -2,6 +2,7 @@ package clov3r.api.comment.domain.entity;
 
 import clov3r.api.common.domain.entity.BaseEntity;
 import clov3r.api.auth.domain.entity.User;
+import clov3r.api.common.domain.status.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,5 +32,4 @@ public class Comment extends BaseEntity {
   @JoinColumn(name = "writer_idx")
   private User writer;
   private String content;
-
 }
