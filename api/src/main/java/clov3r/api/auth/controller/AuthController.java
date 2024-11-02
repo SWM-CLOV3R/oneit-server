@@ -51,27 +51,31 @@ public class AuthController {
     @PostMapping("/api/v2/kakao/login")
     public ResponseEntity<KakaoLoginDTO> kakaoLogin(@RequestBody KakaoAccessToken kakaoAccessToken) {
         KakaoProfileDTO kakaoProfileDTO = authService.getKaKaoUserInfo(kakaoAccessToken.getAccessToken());
+
+        // 카카오 프로필 정보 중 "이메일"로 유저 조회
         User user = userRepository.findByEmail(kakaoProfileDTO.getKakao_account().getEmail());
+
         boolean isSignedUp = false;
         if (user == null) {
+            // 최초 회원가입
+            user = authService.createUserByKakao(kakaoProfileDTO);
+        } else if (user.getStatus().equals(UserStatus.INACTIVE)) {
+            // 탈퇴한 유저, 탈퇴후 7일이 지나기 전이라면 status를 active로 변경
+            user.setStatus(UserStatus.ACTIVE);
+            user.updateBaseEntity();
+        } else if (user.getStatus().equals(UserStatus.DELETED)) {
+            // 탈퇴한 유저, 탈퇴후 7일이 지난 경우 다시 회원가입 진행
             user = authService.createUserByKakao(kakaoProfileDTO);
         } else {
-            // 1. 이미 카카오 가입된 유저라면 status를 active로 변경
-            if (!user.getStatus().equals(UserStatus.ACTIVE)) {
-                user.setStatus(UserStatus.ACTIVE);
-                user.updateBaseEntity();
-            }
-
-            // 2. 자체 회원가입 유무 확인
+            // 1. 자체 회원가입 필수 정보(이름, 닉네임, 성별, 생일, 전화번호)가 있는지 확인
             if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null && user.getPhoneNumber()!=null) {
                 isSignedUp = true;
             }
-
+            // 2. 카카오 프로필 정보로 업데이트
             if (user.getPhoneNumber() == null) {
                 userService.updatePhoneNumber(user, kakaoProfileDTO.getKakao_account().phone_number);
             }
         }
-
 
         AuthToken authToken = tokenProvider.createToken(user.getIdx());
         authRepository.saveRefreshToken(authToken.getRefreshToken(), user.getEmail());
@@ -125,7 +129,7 @@ public class AuthController {
     public ResponseEntity<UserDTO> signUp(
         @RequestBody SignupRequest signupRequest,
         @Parameter(hidden = true) @Auth Long userIdx
-        ) {
+    ) {
         User user = userService.signUp(signupRequest, userIdx);
         UserDTO newUser = UserDTO.builder()
             .idx(user.getIdx())

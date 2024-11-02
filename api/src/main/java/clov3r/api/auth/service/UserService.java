@@ -50,8 +50,6 @@ public class UserService {
         user.setBirthDate(signupRequest.getBirthDate());
         user.setIsAgreeMarketing(signupRequest.getIsAgreeMarketing());
         userRepository.save(user);
-
-//        notificationService.sendSignupCompleteNotification(user);
         return user;
     }
 
