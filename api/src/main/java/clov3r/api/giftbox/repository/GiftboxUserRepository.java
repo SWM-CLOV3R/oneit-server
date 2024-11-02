@@ -15,4 +15,8 @@ public interface GiftboxUserRepository extends JpaRepository<GiftboxUser, Long> 
 
   @Query("select gu from GiftboxUser gu where gu.user.idx = :userIdx")
   List<GiftboxUser> findByUser(Long userIdx);
+
+  @Query("select gu from GiftboxUser gu where gu.giftbox.idx = :giftboxIdx and gu.")
+  List<GiftboxUser> findByGiftboxIdx(Long giftboxIdx);
+
 }

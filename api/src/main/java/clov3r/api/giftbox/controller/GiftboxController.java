@@ -52,7 +52,6 @@ public class GiftboxController {
   private final GiftboxRepository giftboxRepository;
   private final S3Service s3Service;
   private final UserRepository userRepository;
-  private final GiftboxUserRepository giftboxUserRepository;
 
 
   @Tag(name = "선물바구니 API", description = "선물바구니 CRUD API 목록")

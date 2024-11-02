@@ -131,7 +131,7 @@ public class GiftboxService {
             giftboxProduct,
             giftboxProductService.getVoteStatusOfUser(
                 userIdx,
-                giftboxProduct.getGiftbox().getIdx(),
+                giftboxIdx,
                 giftboxProduct.getProduct().getIdx()),
             keywordRepository.findKeywordByProductIdx(giftboxProduct.getProduct().getIdx())
         )).toList();
@@ -145,7 +145,7 @@ public class GiftboxService {
                 giftboxProduct,
                 giftboxProductService.getVoteStatusOfUser(
                     userIdx,
-                    giftboxProduct.getGiftbox().getIdx(),
+                    giftboxIdx,
                     giftboxProduct.getProduct().getIdx()),
                 keywordRepository.findKeywordByProductIdx(giftboxProduct.getProduct().getIdx())
             )).toList();

@@ -65,7 +65,7 @@ public class GiftboxRepository {
         Giftbox result = queryFactory.select(giftbox)
                 .from(giftbox)
                 .where(giftbox.idx.eq(giftboxIdx)
-                        .and(giftbox.status.eq(Status.ACTIVE)))
+                    .and(giftbox.status.eq(Status.ACTIVE)))
                 .fetchOne();
         return result;
     }
@@ -145,15 +145,6 @@ public class GiftboxRepository {
 
     }
 
-    public List<Giftbox> findAll() {
-        // status가 ACTIVE인 모든 giftbox 조회
-        List<Giftbox> giftboxList = queryFactory.select(giftbox)
-                .from(giftbox)
-                .where(giftbox.status.eq(Status.ACTIVE))
-                .fetch();
-        return giftboxList;
-    }
-
     public List<Giftbox> findGiftboxOfUser(Long userIdx) {
         // userIdx로 status가 ACTIVE인 giftbox 조회
         return queryFactory.select(giftbox)
@@ -164,7 +155,6 @@ public class GiftboxRepository {
                         giftbox.status.eq(Status.ACTIVE))
                 .fetch();
     }
-
 
     public List<Product> findProductOfGiftbox(Long giftboxIdx) {
         // giftboxIdx로 status가 ACTIVE인 product 조회
@@ -230,20 +220,6 @@ public class GiftboxRepository {
                 .fetchFirst() != null;
     }
 
-    @Transactional
-    public Long createPendingInvitation(Long giftboxIdx, Long userIdx) {
-        // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
-        GiftboxUser giftboxUser = GiftboxUser.builder()
-            .giftbox(em.find(Giftbox.class, giftboxIdx))
-            .sender(userRepository.findByUserIdx(userIdx))
-            .userRole(GiftboxUserRole.PARTICIPANT)
-            .invitationStatus(InvitationStatus.PENDING)
-            .build();
-        giftboxUser.createBaseEntity();
-        em.persist(giftboxUser);
-        return giftboxUser.getIdx();
-    }
-
     public GiftboxUser findGiftboxByInvitationIdx(Long invitationIdx) {
         // invitationIdx로 status가 PENDING인 giftboxUser의 giftbox 조회
         return queryFactory.select(giftboxUser)
@@ -257,7 +233,7 @@ public class GiftboxRepository {
         queryFactory.update(giftboxUser)
                 .set(giftboxUser.invitationStatus, InvitationStatus.ACCEPTED)
                 .set(giftboxUser.updatedAt, LocalDateTime.now())
-                .set(giftboxUser.user, em.find(User.class, userIdx))
+                .set(giftboxUser.user, userRepository.findByUserIdx(userIdx))
                 .where(giftboxUser.idx.eq(invitationIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
                 .execute();
@@ -303,13 +279,6 @@ public class GiftboxRepository {
                 .fetch();
     }
 
-    public List<Long> findParticipantsByGiftboxIdx(Long giftboxIdx) {
-        return queryFactory.select(giftboxUser.user.idx)
-                .from(giftboxUser)
-                .where(giftboxUser.giftbox.idx.eq(giftboxIdx),
-                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
-                .fetch();
-    }
 
     public Giftbox findByInquiryIdx(Long inquiryIdx) {
         return queryFactory.select(giftbox)
