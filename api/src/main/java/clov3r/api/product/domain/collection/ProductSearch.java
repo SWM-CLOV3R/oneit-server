@@ -3,6 +3,7 @@ package clov3r.api.product.domain.collection;
 import static jakarta.persistence.EnumType.STRING;
 
 import clov3r.api.common.domain.data.Gender;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import java.util.HashMap;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class ProductSearch {
 
-    @Enumerated(value = STRING)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private int age;
     private int minPrice;
