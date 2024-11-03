@@ -13,14 +13,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Builder
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "friend_req")
 public class FriendReq extends BaseEntity {
 
@@ -38,15 +41,26 @@ public class FriendReq extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private FriendReqStatus friendReqStatus;
 
+  public FriendReq(User from, User to) {
+    this.from = from;
+    this.to = to;
+    this.friendReqStatus = FriendReqStatus.REQUESTED;
+    this.createBaseEntity();
+  }
+
   public void accept() {
     this.friendReqStatus = FriendReqStatus.ACCEPTED;
+    this.updateBaseEntity();
   }
 
   public void reject() {
     this.friendReqStatus = FriendReqStatus.REJECTED;
+    this.updateBaseEntity();
   }
 
-  public FriendReq() {
-
+  public void cancel() {
+    this.friendReqStatus = FriendReqStatus.CANCELED;
+    this.updateBaseEntity();
   }
+
 }

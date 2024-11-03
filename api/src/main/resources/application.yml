@@ -1,6 +1,5 @@
 server:
   port: 9000
-  timezone: Asia/Seoul
 
 spring:
   application:
@@ -11,6 +10,8 @@ spring:
     url: ${REQUEST_URL}
   jpa:
     show-sql: false
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true

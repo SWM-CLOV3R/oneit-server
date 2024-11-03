@@ -2,7 +2,6 @@ package clov3r.api.comment.domain.dto;
 
 import clov3r.api.comment.domain.entity.Comment;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;

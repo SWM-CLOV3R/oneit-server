@@ -2,6 +2,8 @@ package clov3r.api.notification.service;
 
 import static clov3r.api.common.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERROR;
 
+import clov3r.api.giftbox.domain.entity.GiftboxUser;
+import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.notification.domain.dto.NotificationDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
 import clov3r.api.notification.domain.data.ActionType;
@@ -17,11 +19,8 @@ import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.notification.domain.entity.Notification;
 import clov3r.api.auth.domain.entity.User;
 import clov3r.api.common.error.exception.KakaoException;
-import clov3r.api.giftbox.repository.GiftboxRepository;
-import clov3r.api.giftbox.repository.GiftboxUserRepository;
+import clov3r.api.giftbox.repository.GiftboxUser.GiftboxUserRepository;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -83,8 +82,8 @@ public class NotificationService {
   public void readNotification(Long notificationIdx) {
 
     Notification notification = notificationRepository.findById(notificationIdx).orElseThrow();
-    notification.setReadAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
-    notification.setNotiStatus(NotiStatus.READ);
+
+    notification.readNotifitation();
     notificationRepository.save(notification);
   }
 
@@ -141,7 +140,7 @@ public class NotificationService {
    */
   public Notification sendGiftboxInvitationAcceptanceNotification(Long invitationIdx, Long giftboxIdx, Long userIdx) {
 //    List<Long> participants = giftboxRepository.findParticipantsByGiftboxIdx(giftboxIdx);
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    Giftbox giftbox = giftboxRepository.findByIdx(giftboxIdx);
     // 선물바구니 참여자들에게 전송
 //    for (Long participantIdx : participants) {
 //      Notification notification = Notification.builder()
@@ -181,12 +180,12 @@ public class NotificationService {
    */
   public void sendInquiryCompleteNotification(Long inquiryIdx) {
     Giftbox giftbox = giftboxRepository.findByInquiryIdx(inquiryIdx);
-    List<Long> participants = giftboxRepository.findParticipantsByGiftboxIdx(giftbox.getIdx());
+    List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftbox.getIdx());
     // 선물바구니 참여자들에게 전송
-    List<Notification> notificationList =  participants.stream().map(participantIdx -> {
+    List<Notification> notificationList =  participants.stream().map(participant -> {
       return Notification.builder()
-          .receiver(userRepository.findByUserIdx(participantIdx))
-          .device(deviceRepository.findByUserId(participantIdx))
+          .receiver(userRepository.findByUserIdx(participant.getIdx()))
+          .device(deviceRepository.findByUserId(participant.getIdx()))
           .title("선물바구니 ["+giftbox.getName()+"] 물어보기 완료")
           .body("선물바구니 ["+giftbox.getName()+"] 에서 받고 싶은 선물 물어보기가 완료되었습니다.")
           .actionType(ActionType.GIFT_ASK_COMPLETE)

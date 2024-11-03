@@ -10,6 +10,7 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.PRODUCT_NOT_FOUN
 
 import clov3r.api.auth.config.security.Auth;
 import clov3r.api.giftbox.domain.dto.InquiryDTO;
+import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.giftbox.domain.request.ProductEmoji;
 import clov3r.api.giftbox.domain.status.InquiryStatus;
@@ -17,10 +18,9 @@ import clov3r.api.giftbox.domain.entity.Inquiry;
 import clov3r.api.product.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.InquiryRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
-import clov3r.api.giftbox.repository.GiftboxProductRepository;
-import clov3r.api.giftbox.repository.GiftboxRepository;
-import clov3r.api.giftbox.repository.InquiryProductRepository;
-import clov3r.api.giftbox.repository.InquiryRepository;
+import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
+import clov3r.api.giftbox.repository.Inquiry.InquiryProductRepository;
+import clov3r.api.giftbox.repository.Inquiry.InquiryRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.giftbox.service.GiftboxProductService;
 import clov3r.api.giftbox.service.InquiryProductService;

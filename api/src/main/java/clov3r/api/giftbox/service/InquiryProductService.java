@@ -1,8 +1,8 @@
 package clov3r.api.giftbox.service;
 
 import clov3r.api.giftbox.domain.request.ProductEmoji;
-import clov3r.api.giftbox.repository.InquiryProductRepository;
-import clov3r.api.giftbox.repository.InquiryRepository;
+import clov3r.api.giftbox.repository.Inquiry.InquiryProductRepository;
+import clov3r.api.giftbox.repository.Inquiry.InquiryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

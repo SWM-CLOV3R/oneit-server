@@ -1,6 +1,5 @@
-package clov3r.api.giftbox.repository;
+package clov3r.api.giftbox.repository.GiftboxUser;
 
-import clov3r.api.auth.domain.entity.User;
 import clov3r.api.giftbox.domain.entity.GiftboxUser;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +14,5 @@ public interface GiftboxUserRepository extends JpaRepository<GiftboxUser, Long> 
 
   @Query("select gu from GiftboxUser gu where gu.user.idx = :userIdx")
   List<GiftboxUser> findByUser(Long userIdx);
+
 }

@@ -1,4 +1,4 @@
-package clov3r.api.giftbox.repository;
+package clov3r.api.giftbox.repository.GiftboxProduct;
 
 import static clov3r.api.giftbox.domain.entity.QGiftboxProduct.giftboxProduct;
 import static clov3r.api.giftbox.domain.entity.QGiftboxProductVote.giftboxProductVote;

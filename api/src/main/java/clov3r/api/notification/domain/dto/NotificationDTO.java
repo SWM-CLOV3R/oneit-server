@@ -26,7 +26,11 @@ public class NotificationDTO {
 
   public NotificationDTO(Notification notification) {
     this.idx = notification.getIdx();
-    this.receiverIdx = notification.getReceiver().getIdx();
+    if (notification.getReceiver() != null) {
+      this.receiverIdx = notification.getReceiver().getIdx();
+    } else {
+      this.receiverIdx = null;
+    }
     this.title = notification.getTitle();
     this.body = notification.getBody();
     this.createdAt = notification.getCreatedAt();

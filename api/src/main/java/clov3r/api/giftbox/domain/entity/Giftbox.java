@@ -15,13 +15,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "giftbox")
 public class Giftbox extends BaseEntity {
     @Id
@@ -56,19 +57,15 @@ public class Giftbox extends BaseEntity {
         this.deadline = deadline;
         this.createdUserIdx = createdUserIdx;
         this.accessStatus = accessStatus;
-        this.status = status;
+        this.status = Status.ACTIVE;
         this.createBaseEntity();
     }
 
-    public Giftbox() {
-
-    }
-
-    public Giftbox(String name, LocalDate deadline, Long userIdx, Status status) {
+    public Giftbox(String name, LocalDate deadline, Long userIdx) {
         this.name = name;
         this.deadline = deadline;
         this.createdUserIdx = userIdx;
-        this.status = status;
+        this.status = Status.ACTIVE;
         this.createBaseEntity();
     }
 }
