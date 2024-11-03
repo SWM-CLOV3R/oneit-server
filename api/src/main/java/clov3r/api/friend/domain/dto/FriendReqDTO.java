@@ -1,5 +1,6 @@
 package clov3r.api.friend.domain.dto;
 
+import clov3r.api.friend.domain.entity.FriendReq;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import lombok.Getter;
@@ -18,4 +19,5 @@ public class FriendReqDTO {
     this.fromUser = fromUser;
     this.requestDate = requestDate;
   }
+
 }
