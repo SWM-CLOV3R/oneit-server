@@ -40,8 +40,7 @@ public class InquiryProductRepository {
             .from(inquiryProduct)
             .where(inquiryProduct.inquiry.eq(inquiry))
             .where(inquiryProduct.product.status.eq(ProductStatus.ACTIVE)
-                .or(inquiryProduct.product.status.ne(ProductStatus.INVALID))
-                .or(inquiryProduct.product.status.ne(ProductStatus.UNSUPPORTED)))
+                .or(inquiryProduct.product.status.ne(ProductStatus.INVALID)))
             .fetch();
     }
 
