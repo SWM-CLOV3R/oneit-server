@@ -23,9 +23,15 @@ public class CommentDTO {
   public CommentDTO (Comment comment) {
     this.idx = comment.getIdx();
     this.giftboxProductIdx = comment.getGiftboxProductIdx();
-    this.writerIdx = comment.getWriter().getIdx();
-    this.writerNickName = comment.getWriter().getNickname();
-    this.writerProfileImg = comment.getWriter().getProfileImg();
+    if (comment.getWriter() == null) {
+      this.writerIdx = null;
+      this.writerNickName = null;
+      this.writerProfileImg = null;
+    } else {
+      this.writerIdx = comment.getWriter().getIdx();
+      this.writerNickName = comment.getWriter().getNickname();
+      this.writerProfileImg = comment.getWriter().getProfileImg();
+    }
     this.content = comment.getContent();
     this.createdAt = comment.getCreatedAt();
   }
