@@ -22,6 +22,13 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
         .where(notification.notiStatus.ne(NotiStatus.DELETED))
         .orderBy(notification.createdAt.desc())
         .fetch();
+  }
 
+  @Override
+  public Notification fincByIdxAndUserIdx(Long idx, Long userIdx) {
+    return queryFactory.selectFrom(notification)
+        .where(notification.idx.eq(idx)
+            .and(notification.receiver.idx.eq(userIdx)))
+        .fetchOne();
   }
 }

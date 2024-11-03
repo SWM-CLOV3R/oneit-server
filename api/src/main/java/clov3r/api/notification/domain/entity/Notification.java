@@ -64,4 +64,8 @@ public class Notification extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private NotiStatus notiStatus;
 
+  public void readNotifitation() {
+    this.setReadAt(LocalDateTime.now());
+    this.setNotiStatus(NotiStatus.READ);
+  }
 }

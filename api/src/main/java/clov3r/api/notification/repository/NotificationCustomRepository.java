@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface NotificationCustomRepository {
   List<Notification> findAllByUserId(Long userIdx);
+  Notification fincByIdxAndUserIdx(Long idx, Long userIdx);
 }

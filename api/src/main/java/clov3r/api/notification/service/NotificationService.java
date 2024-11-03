@@ -82,8 +82,8 @@ public class NotificationService {
   public void readNotification(Long notificationIdx) {
 
     Notification notification = notificationRepository.findById(notificationIdx).orElseThrow();
-    notification.setReadAt(LocalDateTime.now());
-    notification.setNotiStatus(NotiStatus.READ);
+
+    notification.readNotifitation();
     notificationRepository.save(notification);
   }
 
