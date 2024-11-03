@@ -8,6 +8,7 @@ import clov3r.api.auth.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +20,11 @@ public class CommentService {
   private final UserRepository userRepository;
 
   public Comment createComment(Long writerIdx, Long giftboxProductIdx, CommentRequest request) {
-    Comment comment = Comment.builder()
-        .giftboxProductIdx(giftboxProductIdx)
-        .writer(userRepository.findByUserIdx(writerIdx))
-        .content(request.getContent())
-        .build();
-    comment.createBaseEntity();
+
+    Comment comment = new Comment(
+        giftboxProductIdx,
+        userRepository.findByUserIdx(writerIdx),
+        request);
     commentRepository.save(comment);
     return comment;
   }
@@ -37,6 +37,6 @@ public class CommentService {
   @Transactional
   public void deleteComment(Long commentIdx) {
     Comment comment = commentRepository.findByIdx(commentIdx);
-    comment.deleteBaseEntity();
+    comment.deleteComment();
   }
 }
