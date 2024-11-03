@@ -16,12 +16,12 @@ public class CommentCustomRespotioryImpl implements CommentCustomRepository {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public List<Comment> findAllByGiftboxProductIdx(Long giftboxProductIdx) {
+  public List<Comment> findActiveByGiftboxProductIdx(Long giftboxProductIdx) {
     return queryFactory
         .selectFrom(comment)
         .where(comment.giftboxProductIdx.eq(giftboxProductIdx))
         .where(comment.writer.status.eq(UserStatus.ACTIVE)
-            .and(comment.deletedAt.isNotNull()))
+            .and(comment.status.eq(Status.ACTIVE)))
         .fetch();
   }
 }

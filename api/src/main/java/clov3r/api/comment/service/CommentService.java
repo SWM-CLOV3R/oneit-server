@@ -30,7 +30,7 @@ public class CommentService {
   }
 
   public List<CommentDTO> getCommentList(Long giftboxProductIdx) {
-    List<Comment> comments = commentRepository.findAllByGiftboxProductIdx(giftboxProductIdx);
+    List<Comment> comments = commentRepository.findActiveByGiftboxProductIdx(giftboxProductIdx);
     return CommentDTO.listOf(comments);
   }
 
