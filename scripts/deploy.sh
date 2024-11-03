@@ -53,3 +53,4 @@ JAR_PATH=$REPOSITORY/api/build/libs/$JAR_NAME
 
 echo "> $JAR_PATH deploy"
 nohup java -jar -Dspring.profiles.active=$ACTIVE_ENV -Duser.timezone=Asia/Seoul $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &
+
