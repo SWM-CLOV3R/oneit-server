@@ -4,7 +4,6 @@ import clov3r.api.giftbox.domain.status.AccessStatus;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

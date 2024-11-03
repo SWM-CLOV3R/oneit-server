@@ -19,12 +19,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
-@Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Table(name = "giftbox_product")
 public class GiftboxProduct extends BaseEntity {
 
@@ -60,9 +61,5 @@ public class GiftboxProduct extends BaseEntity {
         this.product = product;
         this.status = status;
         this.createBaseEntity();
-    }
-
-    public GiftboxProduct() {
-
     }
 }

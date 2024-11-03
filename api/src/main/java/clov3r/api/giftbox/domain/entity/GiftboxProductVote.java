@@ -12,10 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "giftbox_product_vote")
 public class GiftboxProductVote {
 

@@ -3,12 +3,12 @@ package clov3r.api.giftbox.service;
 import clov3r.api.giftbox.domain.status.InquiryStatus;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.Inquiry;
+import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.product.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.InquiryRequest;
-import clov3r.api.giftbox.repository.GiftboxProductRepository;
-import clov3r.api.giftbox.repository.GiftboxRepository;
-import clov3r.api.giftbox.repository.InquiryProductRepository;
-import clov3r.api.giftbox.repository.InquiryRepository;
+import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
+import clov3r.api.giftbox.repository.Inquiry.InquiryProductRepository;
+import clov3r.api.giftbox.repository.Inquiry.InquiryRepository;
 import clov3r.api.notification.repository.NotificationRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.auth.repository.UserRepository;
@@ -36,7 +36,7 @@ public class InquiryService {
   @Transactional
   public Long createInquiry(InquiryRequest inquiryRequest, Long userIdx) {
     Inquiry inquiry = new Inquiry(
-        giftboxRepository.findById(inquiryRequest.getGiftboxIdx()),
+        giftboxRepository.findByIdx(inquiryRequest.getGiftboxIdx()),
         userRepository.findByUserIdx(userIdx),
         InquiryStatus.ACTIVE,
         inquiryRequest.getTarget()
@@ -60,7 +60,7 @@ public class InquiryService {
   @Transactional
   public void createInquiryProduct(Long inquiryIdx, List<Long> productIdxList, Long giftboxIdx) {
     Inquiry inquiry = inquiryRepository.findByIdx(inquiryIdx);
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    Giftbox giftbox = giftboxRepository.findByIdx(giftboxIdx);
     for (Long productIdx : productIdxList) {
       Product product = productRepository.findById(productIdx);
       inquiryProductRepository.addProductToInquiry(inquiry, product, giftbox);

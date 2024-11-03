@@ -2,7 +2,6 @@ package clov3r.api.giftbox.controller;
 
 import static clov3r.api.common.error.errorcode.CommonErrorCode.REQUEST_ERROR;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.ALREADY_PARTICIPANT_OF_GIFTBOX;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.ALREADY_USED_INVITATION;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.DATE_BEFORE_NOW;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.GIFTBOX_NOT_FOUND;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.INVITATION_NOT_FOUND;
@@ -11,18 +10,15 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_PARTICIPANT_
 import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
 import clov3r.api.auth.config.security.Auth;
-import clov3r.api.giftbox.domain.data.GiftboxUserRole;
 import clov3r.api.giftbox.domain.dto.GiftboxDTO;
 import clov3r.api.giftbox.domain.dto.InvitationUserDTO;
 import clov3r.api.giftbox.domain.dto.ParticipantsDTO;
-import clov3r.api.giftbox.domain.status.InvitationStatus;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.GiftboxUser;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
-import clov3r.api.giftbox.repository.GiftboxRepository;
 import clov3r.api.auth.repository.UserRepository;
-import clov3r.api.giftbox.repository.GiftboxUserRepository;
+import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.giftbox.service.GiftboxService;
 import clov3r.api.common.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -94,12 +90,12 @@ public class GiftboxController {
     if (userIdx == null && giftboxIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
-    if (!giftboxRepository.existsById(giftboxIdx)) {
+    if (!giftboxRepository.existsByIdx(giftboxIdx)) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
 
     // get giftbox
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    Giftbox giftbox = giftboxRepository.findByIdx(giftboxIdx);
 
     // get participants of giftbox
     List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftboxIdx);
@@ -169,7 +165,7 @@ public class GiftboxController {
     }
 
     // delete giftbox
-    giftboxRepository.deleteById(giftboxIdx);
+    giftboxService.deleteByIdx(giftboxIdx);
 
     return ResponseEntity.ok(giftboxIdx + "번 선물 바구니가 삭제되었습니다.");
   }
@@ -202,7 +198,7 @@ public class GiftboxController {
 
     // update giftbox
     giftboxService.updateGiftbox(giftboxIdx, request);
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    Giftbox giftbox = giftboxRepository.findByIdx(giftboxIdx);
     String imageUrl = giftbox.getImageUrl();
     // upload image if exists
     if (image != null) {
@@ -241,7 +237,7 @@ public class GiftboxController {
     if (giftboxIdx == null || userIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
-    if (!giftboxRepository.existsById(giftboxIdx)) {
+    if (!giftboxRepository.existsByIdx(giftboxIdx)) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
     if (!userRepository.existsByUserIdx(userIdx)) {
@@ -276,7 +272,7 @@ public class GiftboxController {
       throw new BaseExceptionV2(INVITATION_NOT_FOUND);
     }
     GiftboxUser giftboxUser = giftboxRepository.findGiftboxByInvitationIdx(invitationIdx);
-    if (!giftboxRepository.existsById(giftboxUser.getGiftbox().getIdx())) {
+    if (!giftboxRepository.existsByIdx(giftboxUser.getGiftbox().getIdx())) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
     if (giftboxRepository.existParticipantOfGiftbox(userIdx, giftboxUser.getGiftbox().getIdx())) {
@@ -301,7 +297,7 @@ public class GiftboxController {
     if (giftboxIdx == null) {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
-    if (!giftboxRepository.existsById(giftboxIdx)) {
+    if (!giftboxRepository.existsByIdx(giftboxIdx)) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
     if (!userRepository.existsByUserIdx(userIdx)) {

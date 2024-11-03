@@ -1,4 +1,4 @@
-package clov3r.api.giftbox.repository;
+package clov3r.api.giftbox.repository.Inquiry;
 
 import static clov3r.api.giftbox.domain.entity.QEmoji.emoji;
 import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;

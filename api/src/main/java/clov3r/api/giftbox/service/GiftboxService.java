@@ -4,21 +4,16 @@ import static clov3r.api.common.error.errorcode.CommonErrorCode.DATABASE_ERROR;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
 
+import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.product.repository.KeywordRepository;
-import clov3r.api.product.service.ProductService;
 import clov3r.api.giftbox.domain.dto.GiftboxProductDTO;
-import clov3r.api.product.domain.dto.ProductSummaryDTO;
-import clov3r.api.giftbox.domain.data.GiftboxUserRole;
 import clov3r.api.giftbox.domain.status.InvitationStatus;
-import clov3r.api.common.domain.status.Status;
 import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.GiftboxProduct;
 import clov3r.api.giftbox.domain.entity.GiftboxUser;
-import clov3r.api.product.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
-import clov3r.api.giftbox.repository.GiftboxRepository;
-import clov3r.api.giftbox.repository.GiftboxUserRepository;
+import clov3r.api.giftbox.repository.GiftboxUser.GiftboxUserRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.notification.service.NotificationService;
 import java.util.List;
@@ -39,27 +34,30 @@ public class GiftboxService {
   private final NotificationService notificationService;
   private final GiftboxProductService giftboxProductService;
   private final KeywordRepository keywordRepository;
-  private final ProductService productService;
 
   public Long createGiftbox(PostGiftboxRequest request, Long userIdx) {
 
     Giftbox newGiftbox = new Giftbox(
         request.getName(),
         request.getDeadline(),
-        userIdx,
-        Status.ACTIVE
+        userIdx
     );
-    Giftbox saveGiftbox = giftboxRepository.save(newGiftbox);
+    Giftbox saveGiftbox = giftboxRepository.saveGiftbox(newGiftbox);
 
     // 생성한 유저 idx와 선물 바구니 idx를 연결
-    try {
-      giftboxRepository.createGiftboxManager(userIdx, saveGiftbox.getIdx());
-    } catch (BaseExceptionV2 exception) {
-      throw exception;
-    }
+    createGiftboxManager(userIdx, saveGiftbox.getIdx());
 
     // 방금 저장한 giftbox의 idx를 가져옴
     return saveGiftbox.getIdx();
+  }
+
+  void createGiftboxManager(Long userIdx, Long giftboxIdx) {
+    GiftboxUser giftboxUser = new GiftboxUser();
+    giftboxUser.createManager(
+        giftboxRepository.findByIdx(giftboxIdx),
+        userRepository.findByUserIdx(userIdx)
+    );
+    giftboxUserRepository.save(giftboxUser);
   }
 
   public void updateGiftboxImageUrl(Long giftboxIdx, String imageUrl) {
@@ -70,7 +68,6 @@ public class GiftboxService {
     }
   }
 
-  @Transactional
   public void updateGiftbox(Long giftboxIdx, PostGiftboxRequest request) {
     try {
       giftboxRepository.updateGiftbox(giftboxIdx, request);
@@ -89,19 +86,19 @@ public class GiftboxService {
     }
   }
 
+  // 선물바구니 초대장 생성 (userIdx가 null, invitationStatus가 PENDING)
   public Long inviteUserToGiftBox(Long giftboxIdx, Long userIdx) {
     // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
-    GiftboxUser giftboxUser = GiftboxUser.builder()
-        .giftbox(giftboxRepository.findById(giftboxIdx))
-        .sender(userRepository.findByUserIdx(userIdx))
-        .userRole(GiftboxUserRole.PARTICIPANT)
-        .invitationStatus(InvitationStatus.PENDING)
-        .build();
-    giftboxUser.createBaseEntity();
+    GiftboxUser giftboxUser = new GiftboxUser();
+    giftboxUser.createInvitation(
+        giftboxRepository.findByIdx(giftboxIdx),
+        userRepository.findByUserIdx(userIdx)
+    );
     giftboxUserRepository.save(giftboxUser);
     return giftboxUser.getIdx();
   }
 
+  // 선물바구니 초대 수락
   public void acceptInvitationToGiftBox(GiftboxUser giftboxUser, Long userIdx, Long invitationIdx) {
     if (giftboxUser.getInvitationStatus().equals(InvitationStatus.PENDING) && giftboxUser.getUser() == null) {
       // accept invitation to giftbox
@@ -109,13 +106,11 @@ public class GiftboxService {
     }
     else {
       // 새로운 참여자 row 추가
-      GiftboxUser newGiftboxUser = GiftboxUser.builder()
-          .giftbox(giftboxUser.getGiftbox())
-          .sender(giftboxUser.getSender())
-          .user(userRepository.findByUserIdx(userIdx))
-          .userRole(GiftboxUserRole.PARTICIPANT)
-          .invitationStatus(InvitationStatus.ACCEPTED)
-          .build();
+      GiftboxUser newGiftboxUser = new GiftboxUser();
+      newGiftboxUser.createAcceptInvitation(
+          giftboxUser,
+          userRepository.findByUserIdx(userIdx)
+      );
       giftboxUserRepository.save(newGiftboxUser);
     }
 
@@ -149,5 +144,10 @@ public class GiftboxService {
                     giftboxProduct.getProduct().getIdx()),
                 keywordRepository.findKeywordByProductIdx(giftboxProduct.getProduct().getIdx())
             )).toList();
+  }
+
+
+  public void deleteByIdx(Long giftboxIdx) {
+    giftboxRepository.deleteByIdx(giftboxIdx);
   }
 }

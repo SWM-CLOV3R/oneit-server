@@ -4,9 +4,9 @@ import static clov3r.api.common.error.errorcode.CommonErrorCode.*;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.*;
 
 import clov3r.api.auth.config.security.Auth;
+import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.product.service.ProductService;
 import clov3r.api.giftbox.domain.dto.GiftboxProductDTO;
-import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.domain.collection.GiftboxProductVoteId;
 import clov3r.api.giftbox.domain.dto.GiftboxProductDetailDTO;
 import clov3r.api.giftbox.domain.status.VoteStatus;
@@ -15,8 +15,7 @@ import clov3r.api.giftbox.domain.entity.GiftboxProductVote;
 import clov3r.api.product.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.VoteProductRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
-import clov3r.api.giftbox.repository.GiftboxProductRepository;
-import clov3r.api.giftbox.repository.GiftboxRepository;
+import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.giftbox.service.GiftboxProductService;
@@ -96,7 +95,7 @@ public class GiftboxProductController {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
     // check if the user is a participant of the giftbox
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    Giftbox giftbox = giftboxRepository.findByIdx(giftboxIdx);
     if (giftbox == null) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }
@@ -124,7 +123,7 @@ public class GiftboxProductController {
       throw new BaseExceptionV2(REQUEST_ERROR);
     }
     // check if the user is a participant of the giftbox
-    Giftbox giftbox = giftboxRepository.findById(giftboxIdx);
+    Giftbox giftbox = giftboxRepository.findByIdx(giftboxIdx);
     if (giftbox == null) {
       throw new BaseExceptionV2(GIFTBOX_NOT_FOUND);
     }

@@ -1,4 +1,4 @@
-package clov3r.api.giftbox.repository;
+package clov3r.api.giftbox.repository.Inquiry;
 
 import static clov3r.api.giftbox.domain.entity.QInquiryProduct.inquiryProduct;
 
@@ -11,8 +11,6 @@ import clov3r.api.product.domain.status.ProductStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
