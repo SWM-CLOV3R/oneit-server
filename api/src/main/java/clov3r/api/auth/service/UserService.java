@@ -2,7 +2,6 @@ package clov3r.api.auth.service;
 
 import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
-import clov3r.api.auth.domain.data.UserStatus;
 import clov3r.api.auth.domain.dto.UserDTO;
 import clov3r.api.auth.domain.entity.User;
 import clov3r.api.auth.domain.request.SignupRequest;
@@ -13,11 +12,9 @@ import clov3r.api.common.service.S3Service;
 import clov3r.api.friend.domain.dto.OtherUserDTO;
 import clov3r.api.friend.service.FriendService;
 import clov3r.api.giftbox.domain.status.InvitationStatus;
-import clov3r.api.giftbox.repository.GiftboxUserRepository;
+import clov3r.api.giftbox.repository.GiftboxUser.GiftboxUserRepository;
 import clov3r.api.notification.domain.status.NotiStatus;
 import clov3r.api.notification.repository.NotificationRepository;
-import clov3r.api.notification.service.NotificationService;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
     private final S3Service s3Service;
     private final FriendService friendService;
-    private final GiftboxUserRepository giftboxUserRepository;
 
     public UserDTO getUser(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
@@ -53,20 +48,6 @@ public class UserService {
     public void withdraw(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
         user.changeInactiveUser();
-        deleteUserData(user);
-    }
-
-    @Transactional
-    public void deleteUserData(User user) {
-        // delete user data
-        giftboxUserRepository.findByUser(user.getIdx()).forEach(giftboxUser -> {
-            giftboxUser.setInvitationStatus(InvitationStatus.DELETED);
-            giftboxUser.deleteBaseEntity();
-        });
-        notificationRepository.findAllByUserId(user.getIdx()).forEach(notification -> {
-            notification.setNotiStatus(NotiStatus.DELETED);
-            notification.deleteBaseEntity();
-        });
     }
 
     @Transactional
@@ -78,15 +59,14 @@ public class UserService {
         User user = userRepository.findByUserIdx(userIdx);
         // upload image if exists
         if (profileImage != null) {
-            String imageUrl = updateProfileImage(profileImage, userIdx);
+            String imageUrl = updateProfileImage(profileImage);
             user.setProfileImg(imageUrl);
         }
         user.updateUserDate(updateUserRequest, profileImage);
         return user;
     }
 
-    public String updateProfileImage(MultipartFile profileImage, Long userIdx) {
-        User user = userRepository.findByUserIdx(userIdx);
+    public String updateProfileImage(MultipartFile profileImage) {
         return s3Service.upload(profileImage, "user-profile");
     }
 
