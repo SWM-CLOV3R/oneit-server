@@ -8,6 +8,7 @@ import clov3r.api.common.domain.entity.BaseEntity;
 import clov3r.api.product.domain.status.LikeStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -34,7 +35,7 @@ public class ProductLike extends BaseEntity {
 
   @Setter
   @Column(name = "like_status")
-  @Enumerated(STRING)
+  @Enumerated(EnumType.STRING)
   private LikeStatus likeStatus;
 
 }

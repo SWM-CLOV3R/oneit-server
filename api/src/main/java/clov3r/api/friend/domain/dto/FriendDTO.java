@@ -1,12 +1,15 @@
 package clov3r.api.friend.domain.dto;
 
+import clov3r.api.auth.domain.entity.User;
+import clov3r.api.friend.domain.entity.FriendReq;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class FriendDTO {
 
@@ -16,12 +19,12 @@ public class FriendDTO {
       private String profileImg;
       private LocalDate birthDate;
 
-      public FriendDTO(Long idx, String name, String nickName, String profileImg, LocalDate birthDate) {
-        this.idx = idx;
-        this.name = name;
-        this.nickName = nickName;
-        this.profileImg = profileImg;
-        this.birthDate = birthDate;
+      public FriendDTO(User user) {
+        this.idx = user.getIdx();
+        this.name = user.getName();
+        this.nickName = user.getNickname();
+        this.profileImg = user.getProfileImg();
+        this.birthDate = user.getBirthDate();
       }
 
 }

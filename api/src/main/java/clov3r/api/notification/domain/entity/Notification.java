@@ -14,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,13 +55,17 @@ public class Notification extends BaseEntity {
   private String platformType;
 
   @Column(name = "read_at")
-  private ZonedDateTime readAt;
+  private LocalDateTime readAt;
 
   @Column(name = "sent_at")
-  private ZonedDateTime sentAt;
+  private LocalDateTime sentAt;
 
   @Column(name = "noti_status")
   @Enumerated(EnumType.STRING)
   private NotiStatus notiStatus;
 
+  public void readNotifitation() {
+    this.setReadAt(LocalDateTime.now());
+    this.setNotiStatus(NotiStatus.READ);
+  }
 }

@@ -4,8 +4,10 @@ import static jakarta.persistence.EnumType.STRING;
 
 import clov3r.api.giftbox.domain.data.EmojiName;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 
@@ -14,10 +16,12 @@ import lombok.Getter;
 public class Emoji {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idx;
-  @Enumerated(STRING)
+
+  @Enumerated(EnumType.STRING)
   private EmojiName name;
+
   private String content;
 
 }

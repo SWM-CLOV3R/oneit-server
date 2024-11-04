@@ -1,13 +1,12 @@
-package clov3r.api.giftbox.repository;
+package clov3r.api.giftbox.repository.Giftbox;
 
-import static clov3r.api.common.error.errorcode.CommonErrorCode.DATABASE_ERROR;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.DATABASE_ERROR_NOT_FOUND;
 import static clov3r.api.giftbox.domain.entity.QGiftbox.giftbox;
 import static clov3r.api.giftbox.domain.entity.QGiftboxProduct.giftboxProduct;
 import static clov3r.api.giftbox.domain.entity.QGiftboxUser.giftboxUser;
 import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;
 import static clov3r.api.product.domain.entity.QProduct.product;
 
+import clov3r.api.auth.domain.data.UserStatus;
 import clov3r.api.giftbox.domain.data.GiftboxUserRole;
 import clov3r.api.giftbox.domain.status.InvitationStatus;
 import clov3r.api.product.domain.status.ProductStatus;
@@ -16,16 +15,11 @@ import clov3r.api.giftbox.domain.entity.Giftbox;
 import clov3r.api.giftbox.domain.entity.GiftboxProduct;
 import clov3r.api.giftbox.domain.entity.GiftboxUser;
 import clov3r.api.product.domain.entity.Product;
-import clov3r.api.auth.domain.entity.User;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
-import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.auth.repository.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -33,13 +27,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class GiftboxRepository {
+public class GiftboxCustomRepositoryImpl implements GiftboxCustomRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
     private final UserRepository userRepository;
 
-    @Transactional
-    public Giftbox save(Giftbox giftbox) {
+    public Giftbox saveGiftbox(Giftbox giftbox) {
         // giftbox를 생성하고 status를 ACTIVE로 설정, createdAt을 현재 시간으로 설정
         em.persist(giftbox);
         em.flush();
@@ -47,10 +40,8 @@ public class GiftboxRepository {
 
     }
 
-    @Transactional
     public void updateImageUrl(Long idx, String imageUrl) {
         // giftbox의 imageUrl을 수정
-        // with QueryDSL
         queryFactory.update(giftbox)
                 .set(giftbox.imageUrl, imageUrl)
                 .where(giftbox.idx.eq(idx))
@@ -58,23 +49,21 @@ public class GiftboxRepository {
 
     }
 
-    @Transactional
-    public Giftbox findById(Long giftboxIdx) {
+    public Giftbox findByIdx(Long giftboxIdx) {
         // idx로 status가 ACTIVE인 row만 조회
         Giftbox result = queryFactory.select(giftbox)
                 .from(giftbox)
                 .where(giftbox.idx.eq(giftboxIdx)
-                        .and(giftbox.status.eq(Status.ACTIVE)))
+                    .and(giftbox.status.eq(Status.ACTIVE)))
                 .fetchOne();
         return result;
     }
 
-    @Transactional
-    public void deleteById(Long giftboxIdx) {
+    public void deleteByIdx(Long giftboxIdx) {
         // status가 ACTIVE인 row일 경우에만 DELETED로 변경, deletedAt을 현재 시간으로 변경
         queryFactory.update(giftbox)
                 .set(giftbox.status, Status.DELETED)
-                .set(giftbox.deletedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime())
+                .set(giftbox.deletedAt, LocalDateTime.now())
                 .where(giftbox.idx.eq(giftboxIdx),
                         giftbox.status.eq(Status.ACTIVE))
                 .execute();
@@ -91,30 +80,6 @@ public class GiftboxRepository {
                 .execute();
     }
 
-    @Transactional
-    public void createGiftboxManager(Long userIdx, Long giftIdx) {
-
-        GiftboxUser newGiftboxUser;
-        try {
-            newGiftboxUser = new GiftboxUser(
-                em.find(Giftbox.class, giftIdx),
-                em.find(User.class, userIdx),
-                GiftboxUserRole.MANAGER,
-                InvitationStatus.ACCEPTED);
-            newGiftboxUser.createBaseEntity();
-        } catch (Exception e) {
-            throw new BaseExceptionV2(DATABASE_ERROR_NOT_FOUND);
-        }
-
-        try {
-            // giftbox와 user를 연결
-            em.persist(newGiftboxUser);
-        } catch (Exception e) {
-            throw new BaseExceptionV2(DATABASE_ERROR);
-        }
-    }
-
-    @Transactional
     public void addProductToGiftbox(Long giftboxIdx, Long productIdx) {
         GiftboxProduct deletedProduct = queryFactory.select(giftboxProduct)
                 .from(giftboxProduct)
@@ -144,15 +109,6 @@ public class GiftboxRepository {
 
     }
 
-    public List<Giftbox> findAll() {
-        // status가 ACTIVE인 모든 giftbox 조회
-        List<Giftbox> giftboxList = queryFactory.select(giftbox)
-                .from(giftbox)
-                .where(giftbox.status.eq(Status.ACTIVE))
-                .fetch();
-        return giftboxList;
-    }
-
     public List<Giftbox> findGiftboxOfUser(Long userIdx) {
         // userIdx로 status가 ACTIVE인 giftbox 조회
         return queryFactory.select(giftbox)
@@ -163,7 +119,6 @@ public class GiftboxRepository {
                         giftbox.status.eq(Status.ACTIVE))
                 .fetch();
     }
-
 
     public List<Product> findProductOfGiftbox(Long giftboxIdx) {
         // giftboxIdx로 status가 ACTIVE인 product 조회
@@ -178,18 +133,17 @@ public class GiftboxRepository {
     }
 
 
-    @Transactional
     public void deleteProductOfGiftbox(Long giftboxIdx, Long productIdx) {
         queryFactory.update(giftboxProduct)
                 .set(giftboxProduct.status, Status.DELETED)
-                .set(giftboxProduct.deletedAt, ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime())
+                .set(giftboxProduct.deletedAt, LocalDateTime.now())
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                         giftboxProduct.product.idx.eq(productIdx),
                         giftboxProduct.status.eq(Status.ACTIVE))
                 .execute();
     }
 
-    public boolean existsById(Long giftboxIdx) {
+    public boolean existsByIdx(Long giftboxIdx) {
         // giftboxIdx로 status가 ACTIVE인 giftbox가 존재하는지 확인
         return queryFactory.selectOne()
                 .from(giftbox)
@@ -229,20 +183,6 @@ public class GiftboxRepository {
                 .fetchFirst() != null;
     }
 
-    @Transactional
-    public Long createPendingInvitation(Long giftboxIdx, Long userIdx) {
-        // giftboxIdx로 status가 ACTIVE인 giftboxUser를 생성하고 invitationStatus를 PENDING으로 설정
-        GiftboxUser giftboxUser = GiftboxUser.builder()
-            .giftbox(em.find(Giftbox.class, giftboxIdx))
-            .sender(userRepository.findByUserIdx(userIdx))
-            .userRole(GiftboxUserRole.PARTICIPANT)
-            .invitationStatus(InvitationStatus.PENDING)
-            .build();
-        giftboxUser.createBaseEntity();
-        em.persist(giftboxUser);
-        return giftboxUser.getIdx();
-    }
-
     public GiftboxUser findGiftboxByInvitationIdx(Long invitationIdx) {
         // invitationIdx로 status가 PENDING인 giftboxUser의 giftbox 조회
         return queryFactory.select(giftboxUser)
@@ -251,12 +191,11 @@ public class GiftboxRepository {
                 .fetchOne();
     }
 
-    @Transactional
     public void acceptInvitationToGiftBox(Long userIdx, Long invitationIdx) {
         queryFactory.update(giftboxUser)
                 .set(giftboxUser.invitationStatus, InvitationStatus.ACCEPTED)
                 .set(giftboxUser.updatedAt, LocalDateTime.now())
-                .set(giftboxUser.user, em.find(User.class, userIdx))
+                .set(giftboxUser.user, userRepository.findByUserIdx(userIdx))
                 .where(giftboxUser.idx.eq(invitationIdx),
                         giftboxUser.invitationStatus.eq(InvitationStatus.PENDING))
                 .execute();
@@ -264,10 +203,12 @@ public class GiftboxRepository {
 
     public List<GiftboxUser> findParticipantsOfGiftbox(Long giftboxIdx) {
         // giftboxIdx로 status가 ACTIVE인 giftboxUser 조회
+        // userIdx가 ACTIVE인 giftboxUser만 조회
         return queryFactory.select(giftboxUser)
                 .from(giftboxUser)
-                .where(giftboxUser.giftbox.idx.eq(giftboxIdx),
-                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                .where(giftboxUser.giftbox.idx.eq(giftboxIdx)
+                        .and(giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
+                        .and(giftboxUser.user.status.eq(UserStatus.ACTIVE)))
                 .fetch();
     }
 
@@ -300,13 +241,6 @@ public class GiftboxRepository {
                 .fetch();
     }
 
-    public List<Long> findParticipantsByGiftboxIdx(Long giftboxIdx) {
-        return queryFactory.select(giftboxUser.user.idx)
-                .from(giftboxUser)
-                .where(giftboxUser.giftbox.idx.eq(giftboxIdx),
-                        giftboxUser.invitationStatus.eq(InvitationStatus.ACCEPTED))
-                .fetch();
-    }
 
     public Giftbox findByInquiryIdx(Long inquiryIdx) {
         return queryFactory.select(giftbox)

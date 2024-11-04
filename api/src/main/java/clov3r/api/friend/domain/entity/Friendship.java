@@ -20,11 +20,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "friendship")
 public class Friendship extends BaseEntity {
 
@@ -42,4 +41,16 @@ public class Friendship extends BaseEntity {
   @Setter
   @Enumerated(EnumType.STRING)
   private Status status;
+
+  public Friendship(User user, User friend) {
+    this.user = user;
+    this.friend = friend;
+    this.status = Status.ACTIVE;
+    this.createBaseEntity();
+  }
+
+  public void deleteFriendship() {
+    this.status = Status.DELETED;
+    this.deleteBaseEntity();
+  }
 }

@@ -11,6 +11,7 @@ import clov3r.api.common.domain.entity.BaseEntity;
 import clov3r.api.product.domain.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,12 +20,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
-@Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Table(name = "giftbox_product")
 public class GiftboxProduct extends BaseEntity {
 
@@ -39,10 +41,10 @@ public class GiftboxProduct extends BaseEntity {
     @JoinColumn(name = "product_idx")
     private Product product;
 
-    @Enumerated(STRING)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Enumerated(STRING)
+    @Enumerated(EnumType.STRING)
     private PurchaseStatus purchaseStatus;
 
     @Column(name = "like_count")
@@ -51,7 +53,7 @@ public class GiftboxProduct extends BaseEntity {
     @Column(name = "dislike_count")
     private int dislikeCount;
 
-    @Enumerated(STRING)
+    @Enumerated(EnumType.STRING)
     @Column(name = "emoji_name")
     private EmojiName emojiName;
 
@@ -60,9 +62,5 @@ public class GiftboxProduct extends BaseEntity {
         this.product = product;
         this.status = status;
         this.createBaseEntity();
-    }
-
-    public GiftboxProduct() {
-
     }
 }

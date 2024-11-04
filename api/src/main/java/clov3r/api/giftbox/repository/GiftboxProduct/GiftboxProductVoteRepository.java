@@ -1,4 +1,4 @@
-package clov3r.api.giftbox.repository;
+package clov3r.api.giftbox.repository.GiftboxProduct;
 
 
 import clov3r.api.product.domain.collection.GiftboxProductVoteId;

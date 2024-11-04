@@ -24,12 +24,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
-@Setter
+@AllArgsConstructor
+@Entity
 @Table(name = "giftbox_user")
 public class GiftboxUser extends BaseEntity {
 
@@ -56,17 +53,28 @@ public class GiftboxUser extends BaseEntity {
     @Column(name = "invitation_status")
     private InvitationStatus invitationStatus;
 
-    public GiftboxUser(Giftbox giftbox, User user, GiftboxUserRole userRole, InvitationStatus invitationStatus) {
-        this.giftbox = giftbox;
-        this.user = user;
-        this.userRole = userRole;
-        this.invitationStatus = invitationStatus;
+    public GiftboxUser() {
         this.createBaseEntity();
     }
 
-    @PrePersist
-    public void createBaseEntity() {
-        super.createBaseEntity();
+    public void createInvitation(Giftbox giftbox, User user) {
+        this.giftbox = giftbox;
+        this.user = null;
+        this.sender = user;
+        this.userRole = GiftboxUserRole.PARTICIPANT;
+        this.invitationStatus = InvitationStatus.PENDING;
     }
-
+    public void createAcceptInvitation(GiftboxUser gu, User user) {
+        this.giftbox = gu.getGiftbox();
+        this.user = user;
+        this.sender = gu.getSender();
+        this.userRole = GiftboxUserRole.PARTICIPANT;
+        this.invitationStatus = InvitationStatus.ACCEPTED;
+    }
+    public void createManager(Giftbox giftbox, User user) {
+        this.giftbox = giftbox;
+        this.user = user;
+        this.userRole = GiftboxUserRole.MANAGER;
+        this.invitationStatus = InvitationStatus.ACCEPTED;
+    }
 }
