@@ -205,6 +205,10 @@ public class NotificationService {
    * @param user
    */
   public void sendSignupCompleteNotification(User user) {
+    if (!user.getIsAgreeMarketing()) {
+      return;
+    }
+
     Notification notification =  Notification.builder()
         .receiver(user)
         .build();
