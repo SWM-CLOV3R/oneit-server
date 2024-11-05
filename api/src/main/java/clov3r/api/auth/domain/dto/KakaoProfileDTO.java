@@ -58,16 +58,16 @@ public class KakaoProfileDTO {
 
     public User toDomain() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String phoneNumber = "0"+kakao_account.phone_number.substring(4, 16);
         User user = User.builder()
             .email(kakao_account.email)
             .name(kakao_account.name)
             .nickname(properties.nickname)
             .profileImg(properties.profile_image)
-            .phoneNumber(kakao_account.phone_number)
+            .phoneNumber(phoneNumber)
             .birthDate(LocalDate.parse(
                 kakao_account.birthyear + kakao_account.birthday,
                 formatter))
-            .phoneNumber(kakao_account.phone_number)
             .status(UserStatus.ACTIVE)
             .build();
         user.createBaseEntity();
