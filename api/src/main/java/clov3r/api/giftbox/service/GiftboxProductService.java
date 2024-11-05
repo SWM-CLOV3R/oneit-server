@@ -1,10 +1,10 @@
 package clov3r.api.giftbox.service;
 
 import clov3r.api.giftbox.domain.request.ProductEmoji;
-import clov3r.api.giftbox.domain.status.VoteStatus;
-import clov3r.api.giftbox.domain.entity.GiftboxProductVote;
 import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
 import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductVoteRepository;
+import clov3r.domain.domains.entity.GiftboxProductVote;
+import clov3r.domain.domains.status.VoteStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -2,15 +2,15 @@ package clov3r.api.comment.controller;
 
 import clov3r.api.common.error.errorcode.CustomErrorCode;
 import clov3r.api.common.error.exception.BaseExceptionV2;
-import clov3r.api.auth.config.security.Auth;
+import clov3r.api.auth.security.Auth;
 import clov3r.api.comment.domain.dto.CommentDTO;
-import clov3r.api.comment.domain.entity.Comment;
-import clov3r.api.giftbox.domain.entity.GiftboxProduct;
 import clov3r.api.auth.domain.request.CommentRequest;
 import clov3r.api.comment.repository.CommentRepository;
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
 import clov3r.api.comment.service.CommentService;
+import clov3r.domain.domains.entity.Comment;
+import clov3r.domain.domains.entity.GiftboxProduct;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

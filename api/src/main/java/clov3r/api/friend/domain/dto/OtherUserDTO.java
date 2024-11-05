@@ -1,6 +1,6 @@
 package clov3r.api.friend.domain.dto;
 
-import clov3r.api.auth.domain.entity.User;
+import clov3r.domain.domains.entity.User;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;

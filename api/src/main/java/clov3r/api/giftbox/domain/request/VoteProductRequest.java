@@ -1,6 +1,6 @@
 package clov3r.api.giftbox.domain.request;
 
-import clov3r.api.giftbox.domain.status.VoteStatus;
+import clov3r.domain.domains.status.VoteStatus;
 import lombok.Data;
 
 @Data

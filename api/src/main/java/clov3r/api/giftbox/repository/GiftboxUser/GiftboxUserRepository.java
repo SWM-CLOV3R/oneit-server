@@ -1,6 +1,6 @@
 package clov3r.api.giftbox.repository.GiftboxUser;
 
-import clov3r.api.giftbox.domain.entity.GiftboxUser;
+import clov3r.domain.domains.entity.GiftboxUser;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

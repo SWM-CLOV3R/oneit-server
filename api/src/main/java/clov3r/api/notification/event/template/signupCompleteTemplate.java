@@ -1,7 +1,7 @@
 package clov3r.api.notification.event.template;
 
-import clov3r.api.notification.domain.entity.Notification;
 import clov3r.api.notification.domain.dto.kakao.KakaoButton;
+import clov3r.domain.domains.entity.Notification;
 import java.util.ArrayList;
 
 public class signupCompleteTemplate extends KakaoAlarmTemplate {

@@ -1,10 +1,10 @@
 package clov3r.api.giftbox.repository.GiftboxProduct;
 
-import static clov3r.api.giftbox.domain.entity.QGiftboxProduct.giftboxProduct;
-import static clov3r.api.giftbox.domain.entity.QGiftboxProductVote.giftboxProductVote;
+import static clov3r.domain.domains.entity.QGiftboxProduct.giftboxProduct;
+import static clov3r.domain.domains.entity.QGiftboxProductVote.giftboxProductVote;
 
-import clov3r.api.giftbox.domain.status.VoteStatus;
-import clov3r.api.giftbox.domain.entity.GiftboxProductVote;
+import clov3r.domain.domains.entity.GiftboxProductVote;
+import clov3r.domain.domains.status.VoteStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,25 +18,19 @@ public class GiftboxProductCustomVoteRepositoryImpl implements GiftboxProductCus
   private final JPAQueryFactory queryFactory;
 
   public VoteStatus voteProduct(GiftboxProductVote newVote) {
-    try {
-      GiftboxProductVote result = queryFactory.select(giftboxProductVote)
-          .from(giftboxProductVote)
-          .where(giftboxProductVote.id.giftboxIdx.eq(newVote.getId().getGiftboxIdx())
-              .and(giftboxProductVote.id.productIdx.eq(newVote.getId().getProductIdx()))
-              .and(giftboxProductVote.id.userIdx.eq(newVote.getId().getUserIdx())))
-          .fetchOne();
-      VoteStatus previousVote = result == null ? null : result.getVote();
-      if (result == null) {
-        em.persist(newVote);
-      }
-      else {
-        em.merge(newVote);
-      }
-      return previousVote;
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw e;
+    GiftboxProductVote result = queryFactory.select(giftboxProductVote)
+        .from(giftboxProductVote)
+        .where(giftboxProductVote.id.giftboxIdx.eq(newVote.getId().getGiftboxIdx())
+            .and(giftboxProductVote.id.productIdx.eq(newVote.getId().getProductIdx()))
+            .and(giftboxProductVote.id.userIdx.eq(newVote.getId().getUserIdx())))
+        .fetchOne();
+    VoteStatus previousVote = result == null ? null : result.getVote();
+    if (result == null) {
+      em.persist(newVote);
+    } else {
+      em.merge(newVote);
     }
+      return previousVote;
   }
 
 

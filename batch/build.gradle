@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+
+tasks.bootJar {
+    enabled = false
+}
+
+tasks.jar {
+    enabled = true
+}
+
+
+dependencies {
+    implementation project(':api')
+    implementation project(':domain')
+
+    // slack
+    implementation 'com.slack.api:slack-api-client:1.40.0'
+}
+
+// Uncomment to use JUnit Platform for tests
+// tasks.withType(Test) {
+//     useJUnitPlatform()
+// }

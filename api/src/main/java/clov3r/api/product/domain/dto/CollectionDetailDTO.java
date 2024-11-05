@@ -1,9 +1,8 @@
 package clov3r.api.product.domain.dto;
 
-import clov3r.api.product.domain.entity.Collection;
+import clov3r.domain.domains.entity.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -2,9 +2,8 @@ package clov3r.api.auth.service;
 
 import clov3r.api.auth.domain.dto.KakaoFriendDTO;
 import clov3r.api.auth.domain.dto.KakaoProfileDTO;
-import clov3r.api.auth.domain.data.UserStatus;
-import clov3r.api.auth.domain.entity.User;
 import clov3r.api.auth.repository.UserRepository;
+import clov3r.domain.domains.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +27,7 @@ public class AuthService {
     @Transactional
     public User createUserByKakao(KakaoProfileDTO kakaoProfileDTO) {
         // 사용자 정보 저장
-        User user = new User(kakaoProfileDTO);
+        User user = kakaoProfileDTO.toDomain();
         userRepository.save(user);
         return user;
     }

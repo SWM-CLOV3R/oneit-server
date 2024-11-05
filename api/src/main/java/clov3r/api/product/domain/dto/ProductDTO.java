@@ -1,12 +1,9 @@
 package clov3r.api.product.domain.dto;
 
-import clov3r.api.common.domain.data.Gender;
 import clov3r.api.product.domain.status.LikeStatus;
-import clov3r.api.product.domain.entity.Category;
-import clov3r.api.product.domain.entity.Keyword;
-import clov3r.api.product.domain.entity.Product;
-import java.util.ArrayList;
-import java.util.List;
+import clov3r.domain.domains.entity.Category;
+import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.type.Gender;
 import lombok.Getter;
 import lombok.Setter;
 

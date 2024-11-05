@@ -1,5 +1,9 @@
 package clov3r.api.auth.domain.dto;
 
+import clov3r.domain.domains.entity.User;
+import clov3r.domain.domains.status.UserStatus;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import lombok.Data;
 import lombok.Getter;
 
@@ -50,5 +54,23 @@ public class KakaoProfileDTO {
             public Boolean is_default_image;
             public Boolean is_default_nickname;
         }
+    }
+
+    public User toDomain() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        User user = User.builder()
+            .email(kakao_account.email)
+            .name(kakao_account.name)
+            .nickname(properties.nickname)
+            .profileImg(properties.profile_image)
+            .phoneNumber(kakao_account.phone_number)
+            .birthDate(LocalDate.parse(
+                kakao_account.birthyear + kakao_account.birthday,
+                formatter))
+            .phoneNumber(kakao_account.phone_number)
+            .status(UserStatus.ACTIVE)
+            .build();
+        user.createBaseEntity();
+        return user;
     }
 }
