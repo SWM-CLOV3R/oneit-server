@@ -2,14 +2,12 @@ package clov3r.api.friend.service;
 
 import clov3r.api.friend.domain.dto.FriendDTO;
 import clov3r.api.friend.domain.dto.FriendReqDTO;
-import clov3r.api.friend.domain.data.FriendReqStatus;
-import clov3r.api.common.domain.status.Status;
-import clov3r.api.friend.domain.entity.FriendReq;
-import clov3r.api.friend.domain.entity.Friendship;
 import clov3r.api.friend.repository.FriendReqRepository;
 import clov3r.api.friend.repository.FriendshipRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.notification.service.NotificationService;
+import clov3r.domain.domains.entity.FriendReq;
+import clov3r.domain.domains.entity.Friendship;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -62,7 +60,7 @@ public class FriendService {
     );
     friendshipRepository.save(friendshipA);
     friendshipRepository.save(friendshipB);
-}
+  }
 
   @Transactional
   public void rejectFriend(Long requestIdx) {

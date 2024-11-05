@@ -1,6 +1,6 @@
 package clov3r.api.product.domain.dto;
 
-import clov3r.api.product.domain.entity.Keyword;
+import clov3r.domain.domains.entity.Keyword;
 import lombok.Data;
 
 @Data

@@ -1,11 +1,11 @@
 package clov3r.api.product.controller;
 
 import clov3r.api.product.domain.dto.CollectionDTO;
-import clov3r.api.auth.config.security.Auth;
+import clov3r.api.auth.security.Auth;
 import clov3r.api.product.domain.dto.CollectionDetailDTO;
-import clov3r.api.product.domain.entity.Collection;
 import clov3r.api.product.repository.CollectionRepository;
 import clov3r.api.product.service.CollectionService;
+import clov3r.domain.domains.entity.Collection;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

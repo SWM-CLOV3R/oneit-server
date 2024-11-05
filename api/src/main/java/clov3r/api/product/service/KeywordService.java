@@ -1,7 +1,7 @@
 package clov3r.api.product.service;
 
-import clov3r.api.product.domain.entity.Keyword;
 import clov3r.api.product.repository.KeywordRepository;
+import clov3r.domain.domains.entity.Keyword;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

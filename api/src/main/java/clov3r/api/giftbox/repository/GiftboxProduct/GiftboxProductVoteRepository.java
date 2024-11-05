@@ -1,8 +1,8 @@
 package clov3r.api.giftbox.repository.GiftboxProduct;
 
 
-import clov3r.api.product.domain.collection.GiftboxProductVoteId;
-import clov3r.api.giftbox.domain.entity.GiftboxProductVote;
+import clov3r.domain.domains.entity.GiftboxProductVote;
+import clov3r.domain.domains.entity.id.GiftboxProductVoteId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GiftboxProductVoteRepository extends

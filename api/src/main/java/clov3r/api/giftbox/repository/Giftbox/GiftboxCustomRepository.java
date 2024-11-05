@@ -1,9 +1,9 @@
 package clov3r.api.giftbox.repository.Giftbox;
-import clov3r.api.giftbox.domain.entity.Giftbox;
-import clov3r.api.giftbox.domain.entity.GiftboxProduct;
-import clov3r.api.giftbox.domain.entity.GiftboxUser;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
-import clov3r.api.product.domain.entity.Product;
+import clov3r.domain.domains.entity.Giftbox;
+import clov3r.domain.domains.entity.GiftboxProduct;
+import clov3r.domain.domains.entity.GiftboxUser;
+import clov3r.domain.domains.entity.Product;
 import java.util.List;
 
 public interface GiftboxCustomRepository {

@@ -1,8 +1,8 @@
 package clov3r.api.notification.domain.dto;
 
-import clov3r.api.notification.domain.data.ActionType;
-import clov3r.api.notification.domain.status.NotiStatus;
-import clov3r.api.notification.domain.entity.Notification;
+import clov3r.domain.domains.entity.Notification;
+import clov3r.domain.domains.status.NotiStatus;
+import clov3r.domain.domains.type.ActionType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

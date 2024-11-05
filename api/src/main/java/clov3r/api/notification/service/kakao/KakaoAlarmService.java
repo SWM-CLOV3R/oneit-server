@@ -4,7 +4,7 @@ import clov3r.api.notification.domain.dto.kakao.KakaoAlarmBodyDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoButton;
 import clov3r.api.notification.event.template.KakaoAlarmTemplate;
-import clov3r.api.notification.domain.entity.Notification;
+import clov3r.domain.domains.entity.Notification;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

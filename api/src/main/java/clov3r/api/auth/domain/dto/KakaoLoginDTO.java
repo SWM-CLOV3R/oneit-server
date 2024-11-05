@@ -12,4 +12,5 @@ public class KakaoLoginDTO {
     private Boolean isSignedUp;
     private String accessToken;
     private String refreshToken;
+
 }

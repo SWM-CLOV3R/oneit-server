@@ -1,7 +1,7 @@
 package clov3r.api.auth.domain.dto;
 
-import clov3r.api.auth.domain.entity.User;
-import clov3r.api.common.domain.data.Gender;
+import clov3r.domain.domains.entity.User;
+import clov3r.domain.domains.type.Gender;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

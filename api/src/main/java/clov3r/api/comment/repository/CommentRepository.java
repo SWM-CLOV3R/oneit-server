@@ -1,7 +1,6 @@
 package clov3r.api.comment.repository;
 
-import clov3r.api.comment.domain.entity.Comment;
-import java.util.List;
+import clov3r.domain.domains.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,13 +1,13 @@
 package clov3r.api.giftbox.repository.Inquiry;
 
-import static clov3r.api.giftbox.domain.entity.QEmoji.emoji;
-import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;
-import static clov3r.api.giftbox.domain.entity.QInquiryProduct.inquiryProduct;
+import static clov3r.domain.domains.entity.QEmoji.emoji;
+import static clov3r.domain.domains.entity.QInquiry.inquiry;
+import static clov3r.domain.domains.entity.QInquiryProduct.inquiryProduct;
 
-import clov3r.api.common.domain.status.Status;
-import clov3r.api.giftbox.domain.status.InquiryStatus;
-import clov3r.api.giftbox.domain.entity.Giftbox;
-import clov3r.api.giftbox.domain.entity.Inquiry;
+import clov3r.domain.domains.entity.Giftbox;
+import clov3r.domain.domains.entity.Inquiry;
+import clov3r.domain.domains.status.InquiryStatus;
+import clov3r.domain.domains.status.Status;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

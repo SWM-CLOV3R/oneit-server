@@ -1,6 +1,7 @@
 package clov3r.api.auth.domain.request;
 
-import clov3r.api.common.domain.data.Gender;
+import clov3r.domain.domains.entity.User;
+import clov3r.domain.domains.type.Gender;
 import java.time.LocalDate;
 import lombok.Getter;
 
@@ -11,4 +12,14 @@ public class SignupRequest {
     private LocalDate birthDate;
     private Gender gender;
     private Boolean isAgreeMarketing;
+
+    public User toDomain() {
+        return User.builder()
+            .name(name)
+            .nickname(nickname)
+            .gender(gender)
+            .birthDate(birthDate)
+            .isAgreeMarketing(isAgreeMarketing)
+            .build();
+    }
 }

@@ -1,6 +1,6 @@
 package clov3r.api.notification.repository;
 
-import clov3r.api.notification.domain.entity.Notification;
+import clov3r.domain.domains.entity.Notification;
 import java.util.List;
 
 public interface NotificationCustomRepository {

@@ -1,14 +1,14 @@
 package clov3r.api.product.repository;
 
-import static clov3r.api.product.domain.entity.QProduct.product;
+import static clov3r.domain.domains.entity.QProduct.product;
 
 import clov3r.api.product.domain.collection.MatchedProduct;
 import clov3r.api.product.domain.collection.ProductFilter;
 import clov3r.api.product.domain.collection.ProductSearch;
 import clov3r.api.product.domain.collection.QuestionCategory;
-import clov3r.api.common.domain.data.Gender;
 import clov3r.api.product.domain.status.ProductStatus;
-import clov3r.api.product.domain.entity.Product;
+import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.type.Gender;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

@@ -1,37 +1,24 @@
 plugins {
     id 'java'
     id 'java-library'
-    id 'org.springframework.boot' version '3.3.0'
-    id 'io.spring.dependency-management' version '1.1.5'
-}
-
-tasks.bootJar {
-    enabled = true
-}
-
-tasks.jar {
-    enabled = false
+    id "org.springframework.boot" version "3.3.0"
+    id "io.spring.dependency-management" version "1.1.5"
 }
 
 repositories {
     mavenCentral()
 }
 
+tasks.bootJar {
+    enabled = false
+}
+
+tasks.jar {
+    enabled = true
+}
+
 dependencies {
-    // database
-    implementation 'com.mysql:mysql-connector-j'       // from mysql ver 8.0.31
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // spring
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-    // test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation project(':domain')
 
     // lombok
     compileOnly 'org.projectlombok:lombok'

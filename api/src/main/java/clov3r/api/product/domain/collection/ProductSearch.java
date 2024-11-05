@@ -1,8 +1,6 @@
 package clov3r.api.product.domain.collection;
 
-import static jakarta.persistence.EnumType.STRING;
-
-import clov3r.api.common.domain.data.Gender;
+import clov3r.domain.domains.type.Gender;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import java.util.HashMap;

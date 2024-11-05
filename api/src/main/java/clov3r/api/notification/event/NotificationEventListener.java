@@ -1,8 +1,8 @@
 package clov3r.api.notification.event;
 
-import clov3r.api.notification.domain.entity.Notification;
 import clov3r.api.notification.domain.dto.PushNotificationRequest;
 import clov3r.api.common.service.FCMService;
+import clov3r.domain.domains.entity.Notification;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
