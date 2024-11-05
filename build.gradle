@@ -5,6 +5,10 @@ plugins {
     id "io.spring.dependency-management" version "1.1.5"
 }
 
+springBoot {
+    mainClass = 'clov3r.api.ApiApplication'
+}
+
 group = 'clov3r'
 version = '0.0.1-SNAPSHOT'
 
