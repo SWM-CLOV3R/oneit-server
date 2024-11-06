@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Repository
@@ -132,7 +133,7 @@ public class GiftboxCustomRepositoryImpl implements GiftboxCustomRepository {
                 .fetch();
     }
 
-
+    @Transactional
     public void deleteProductOfGiftbox(Long giftboxIdx, Long productIdx) {
         queryFactory.update(giftboxProduct)
                 .set(giftboxProduct.status, Status.DELETED)
