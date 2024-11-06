@@ -1,7 +1,7 @@
 package clov3r.api.giftbox.domain.dto;
 
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
-import clov3r.api.giftbox.domain.entity.Inquiry;
+import clov3r.domain.domains.entity.Inquiry;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

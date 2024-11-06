@@ -1,2 +1,4 @@
 rootProject.name = "oneit_server"
-include "api"
+include ":api"
+include ":batch"
+include ":domain"

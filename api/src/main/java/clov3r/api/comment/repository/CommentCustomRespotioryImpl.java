@@ -1,10 +1,10 @@
 package clov3r.api.comment.repository;
 
-import static clov3r.api.comment.domain.entity.QComment.comment;
+import static clov3r.domain.domains.entity.QComment.comment;
 
-import clov3r.api.auth.domain.data.UserStatus;
-import clov3r.api.comment.domain.entity.Comment;
-import clov3r.api.common.domain.status.Status;
+import clov3r.domain.domains.entity.Comment;
+import clov3r.domain.domains.status.Status;
+import clov3r.domain.domains.status.UserStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

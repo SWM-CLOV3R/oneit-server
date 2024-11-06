@@ -1,9 +1,9 @@
 package clov3r.api.notification.repository;
 
-import static clov3r.api.notification.domain.entity.QNotification.notification;
+import static clov3r.domain.domains.entity.QNotification.notification;
 
-import clov3r.api.notification.domain.entity.Notification;
-import clov3r.api.notification.domain.status.NotiStatus;
+import clov3r.domain.domains.entity.Notification;
+import clov3r.domain.domains.status.NotiStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

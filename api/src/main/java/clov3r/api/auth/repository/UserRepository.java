@@ -1,6 +1,6 @@
 package clov3r.api.auth.repository;
 
-import clov3r.api.auth.domain.entity.User;
+import clov3r.domain.domains.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

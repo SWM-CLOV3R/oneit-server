@@ -1,6 +1,6 @@
 package clov3r.api.product.repository;
 
-import clov3r.api.product.domain.entity.Keyword;
+import clov3r.domain.domains.entity.Keyword;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

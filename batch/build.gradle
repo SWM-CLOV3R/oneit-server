@@ -1,54 +1,28 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.4'
-    id 'io.spring.dependency-management' version '1.1.6'
+    id 'java-library'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 tasks.bootJar {
-    enabled = true
-}
-
-tasks.jar {
     enabled = false
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+tasks.jar {
+    enabled = true
 }
 
-repositories {
-    mavenCentral()
-}
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-batch'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    annotationProcessor 'org.projectlombok:lombok'
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.batch:spring-batch-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation project(':api')
+    implementation project(':domain')
 
-    // Google Firebase Admin
-    implementation 'com.google.firebase:firebase-admin:9.2.0'
-
-    // okhttp
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-
-    // QueryDsl
-    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
-    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    // slack
+    implementation 'com.slack.api:slack-api-client:1.40.0'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+// Uncomment to use JUnit Platform for tests
+// tasks.withType(Test) {
+//     useJUnitPlatform()
+// }

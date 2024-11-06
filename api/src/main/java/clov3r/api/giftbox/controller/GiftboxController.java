@@ -9,18 +9,18 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_MANAGER_OF_G
 import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_PARTICIPANT_OF_GIFTBOX;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
-import clov3r.api.auth.config.security.Auth;
+import clov3r.api.auth.security.Auth;
 import clov3r.api.giftbox.domain.dto.GiftboxDTO;
 import clov3r.api.giftbox.domain.dto.InvitationUserDTO;
 import clov3r.api.giftbox.domain.dto.ParticipantsDTO;
-import clov3r.api.giftbox.domain.entity.Giftbox;
-import clov3r.api.giftbox.domain.entity.GiftboxUser;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.giftbox.service.GiftboxService;
 import clov3r.api.common.service.S3Service;
+import clov3r.domain.domains.entity.Giftbox;
+import clov3r.domain.domains.entity.GiftboxUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

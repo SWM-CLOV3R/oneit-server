@@ -1,7 +1,7 @@
 package clov3r.api.giftbox.repository.GiftboxProduct;
 
-import clov3r.api.giftbox.domain.data.EmojiName;
-import clov3r.api.giftbox.domain.entity.GiftboxProduct;
+import clov3r.domain.domains.entity.GiftboxProduct;
+import clov3r.domain.domains.type.EmojiName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

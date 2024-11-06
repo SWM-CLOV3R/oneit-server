@@ -1,15 +1,14 @@
 package clov3r.api.giftbox.domain.dto;
 
-import clov3r.api.product.domain.entity.Keyword;
-import clov3r.api.giftbox.domain.data.EmojiName;
 import clov3r.api.product.domain.status.ProductStatus;
-import clov3r.api.giftbox.domain.status.PurchaseStatus;
-import clov3r.api.giftbox.domain.status.VoteStatus;
-import clov3r.api.giftbox.domain.entity.GiftboxProduct;
+import clov3r.domain.domains.entity.GiftboxProduct;
+import clov3r.domain.domains.entity.Keyword;
+import clov3r.domain.domains.status.PurchaseStatus;
+import clov3r.domain.domains.status.VoteStatus;
+import clov3r.domain.domains.type.EmojiName;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

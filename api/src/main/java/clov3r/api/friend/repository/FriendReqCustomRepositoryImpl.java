@@ -1,10 +1,10 @@
 package clov3r.api.friend.repository;
 
-import static clov3r.api.friend.domain.entity.QFriendReq.friendReq;
+import static clov3r.domain.domains.entity.QFriendReq.friendReq;
 
-import clov3r.api.auth.domain.data.UserStatus;
-import clov3r.api.friend.domain.data.FriendReqStatus;
-import clov3r.api.friend.domain.entity.FriendReq;
+import clov3r.domain.domains.entity.FriendReq;
+import clov3r.domain.domains.status.FriendReqStatus;
+import clov3r.domain.domains.status.UserStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

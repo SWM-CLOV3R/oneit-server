@@ -1,10 +1,6 @@
 package clov3r.api.giftbox.service;
 
-import clov3r.api.giftbox.domain.status.InquiryStatus;
-import clov3r.api.giftbox.domain.entity.Giftbox;
-import clov3r.api.giftbox.domain.entity.Inquiry;
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
-import clov3r.api.product.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.InquiryRequest;
 import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
 import clov3r.api.giftbox.repository.Inquiry.InquiryProductRepository;
@@ -13,6 +9,10 @@ import clov3r.api.notification.repository.NotificationRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.notification.service.NotificationService;
+import clov3r.domain.domains.entity.Giftbox;
+import clov3r.domain.domains.entity.Inquiry;
+import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.InquiryStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

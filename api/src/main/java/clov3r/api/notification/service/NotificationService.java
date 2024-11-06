@@ -1,25 +1,24 @@
 package clov3r.api.notification.service;
 
 import static clov3r.api.common.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERROR;
-
-import clov3r.api.giftbox.domain.entity.GiftboxUser;
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.notification.domain.dto.NotificationDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
-import clov3r.api.notification.domain.data.ActionType;
 import clov3r.api.notification.event.template.signupCompleteTemplate;
-import clov3r.api.notification.domain.status.NotiStatus;
-import clov3r.api.notification.domain.entity.Device;
-import clov3r.api.friend.domain.entity.FriendReq;
 import clov3r.api.notification.repository.DeviceRepository;
 import clov3r.api.notification.repository.NotificationRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.notification.service.kakao.KakaoAlarmService;
-import clov3r.api.giftbox.domain.entity.Giftbox;
-import clov3r.api.notification.domain.entity.Notification;
-import clov3r.api.auth.domain.entity.User;
 import clov3r.api.common.error.exception.KakaoException;
 import clov3r.api.giftbox.repository.GiftboxUser.GiftboxUserRepository;
+import clov3r.domain.domains.entity.Device;
+import clov3r.domain.domains.entity.FriendReq;
+import clov3r.domain.domains.entity.Giftbox;
+import clov3r.domain.domains.entity.GiftboxUser;
+import clov3r.domain.domains.entity.Notification;
+import clov3r.domain.domains.entity.User;
+import clov3r.domain.domains.status.NotiStatus;
+import clov3r.domain.domains.type.ActionType;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -206,6 +205,10 @@ public class NotificationService {
    * @param user
    */
   public void sendSignupCompleteNotification(User user) {
+    if (!user.getIsAgreeMarketing()) {
+      return;
+    }
+
     Notification notification =  Notification.builder()
         .receiver(user)
         .build();

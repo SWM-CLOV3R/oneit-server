@@ -4,7 +4,7 @@ import clov3r.api.notification.domain.dto.kakao.KakaoAlarmBodyDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoButton;
 import clov3r.api.notification.event.template.KakaoAlarmTemplate;
-import clov3r.api.notification.domain.entity.Notification;
+import clov3r.domain.domains.entity.Notification;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,6 @@ public class KakaoAlarmService {
     String uri = "https://talkapi.lgcns.com/request/kakao.json";
     List<KakaoButton> buttonList = template.getButtons();
     String message = template.makeMessage(notification, customerInquiry);
-    System.out.println("message = " + message);
     KakaoAlarmBodyDTO body = KakaoAlarmBodyDTO.builder()
         .service(serviceId)
         .message(message)
@@ -47,7 +46,6 @@ public class KakaoAlarmService {
         .template(String.valueOf(template.getTemplateCode()))
         .buttons(buttonList)
         .build();
-    System.out.println("body.toString() = " + body.toString());
     KakaoAlarmResponseDTO kakaoAlarmResponseDTO = restTemplate.exchange(
             uri,
             HttpMethod.POST,

@@ -1,22 +1,22 @@
 package clov3r.api.giftbox.repository.Giftbox;
 
-import static clov3r.api.giftbox.domain.entity.QGiftbox.giftbox;
-import static clov3r.api.giftbox.domain.entity.QGiftboxProduct.giftboxProduct;
-import static clov3r.api.giftbox.domain.entity.QGiftboxUser.giftboxUser;
-import static clov3r.api.giftbox.domain.entity.QInquiry.inquiry;
-import static clov3r.api.product.domain.entity.QProduct.product;
+import static clov3r.domain.domains.entity.QGiftbox.giftbox;
+import static clov3r.domain.domains.entity.QGiftboxProduct.giftboxProduct;
+import static clov3r.domain.domains.entity.QGiftboxUser.giftboxUser;
+import static clov3r.domain.domains.entity.QInquiry.inquiry;
+import static clov3r.domain.domains.entity.QProduct.product;
 
-import clov3r.api.auth.domain.data.UserStatus;
-import clov3r.api.giftbox.domain.data.GiftboxUserRole;
-import clov3r.api.giftbox.domain.status.InvitationStatus;
 import clov3r.api.product.domain.status.ProductStatus;
-import clov3r.api.common.domain.status.Status;
-import clov3r.api.giftbox.domain.entity.Giftbox;
-import clov3r.api.giftbox.domain.entity.GiftboxProduct;
-import clov3r.api.giftbox.domain.entity.GiftboxUser;
-import clov3r.api.product.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.auth.repository.UserRepository;
+import clov3r.domain.domains.entity.Giftbox;
+import clov3r.domain.domains.entity.GiftboxProduct;
+import clov3r.domain.domains.entity.GiftboxUser;
+import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.InvitationStatus;
+import clov3r.domain.domains.status.Status;
+import clov3r.domain.domains.status.UserStatus;
+import clov3r.domain.domains.type.GiftboxUserRole;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;

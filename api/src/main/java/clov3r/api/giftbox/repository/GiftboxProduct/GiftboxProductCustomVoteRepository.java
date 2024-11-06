@@ -1,7 +1,7 @@
 package clov3r.api.giftbox.repository.GiftboxProduct;
 
-import clov3r.api.giftbox.domain.status.VoteStatus;
-import clov3r.api.giftbox.domain.entity.GiftboxProductVote;
+import clov3r.domain.domains.entity.GiftboxProductVote;
+import clov3r.domain.domains.status.VoteStatus;
 import org.springframework.stereotype.Repository;
 
 @Repository

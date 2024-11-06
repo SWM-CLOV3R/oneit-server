@@ -1,6 +1,6 @@
 package clov3r.api.comment.domain.dto;
 
-import clov3r.api.comment.domain.entity.Comment;
+import clov3r.domain.domains.entity.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;

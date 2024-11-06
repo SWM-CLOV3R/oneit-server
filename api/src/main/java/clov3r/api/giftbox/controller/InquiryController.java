@@ -8,14 +8,11 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_EXIST_INQUIR
 import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_MANAGER_OF_GIFTBOX;
 import static clov3r.api.common.error.errorcode.CustomErrorCode.PRODUCT_NOT_FOUND;
 
-import clov3r.api.auth.config.security.Auth;
+import clov3r.api.auth.security.Auth;
 import clov3r.api.giftbox.domain.dto.InquiryDTO;
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.giftbox.domain.request.ProductEmoji;
-import clov3r.api.giftbox.domain.status.InquiryStatus;
-import clov3r.api.giftbox.domain.entity.Inquiry;
-import clov3r.api.product.domain.entity.Product;
 import clov3r.api.giftbox.domain.request.InquiryRequest;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
@@ -26,6 +23,9 @@ import clov3r.api.giftbox.service.GiftboxProductService;
 import clov3r.api.giftbox.service.InquiryProductService;
 import clov3r.api.giftbox.service.InquiryService;
 import clov3r.api.product.service.ProductService;
+import clov3r.domain.domains.entity.Inquiry;
+import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.InquiryStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

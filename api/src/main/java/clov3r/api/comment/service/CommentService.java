@@ -1,14 +1,12 @@
 package clov3r.api.comment.service;
 
 import clov3r.api.comment.domain.dto.CommentDTO;
-import clov3r.api.comment.domain.entity.Comment;
 import clov3r.api.auth.domain.request.CommentRequest;
 import clov3r.api.comment.repository.CommentRepository;
 import clov3r.api.auth.repository.UserRepository;
-import java.time.LocalDateTime;
+import clov3r.domain.domains.entity.Comment;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +22,7 @@ public class CommentService {
     Comment comment = new Comment(
         giftboxProductIdx,
         userRepository.findByUserIdx(writerIdx),
-        request);
+        request.getContent());
     commentRepository.save(comment);
     return comment;
   }

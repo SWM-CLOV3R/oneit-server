@@ -1,9 +1,9 @@
 package clov3r.api.product.domain.dto;
 
-import clov3r.api.product.domain.entity.Keyword;
 import clov3r.api.product.domain.status.LikeStatus;
-import clov3r.api.product.domain.entity.Product;
 import clov3r.api.product.domain.status.ProductStatus;
+import clov3r.domain.domains.entity.Keyword;
+import clov3r.domain.domains.entity.Product;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
