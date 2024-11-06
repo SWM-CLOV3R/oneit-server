@@ -10,10 +10,9 @@ public class UpdateUserRequest {
   private String nickName;
   private LocalDate birthDate;
 
-  public User toDomain(MultipartFile profileImage) {
-    return User.builder()
-        .nickname(nickName)
-        .birthDate(birthDate)
-        .build();
+  public User toDomain(User user, MultipartFile profileImage) {
+    user.setNickname(nickName);
+    user.setBirthDate(birthDate);
+    return user;
   }
 }

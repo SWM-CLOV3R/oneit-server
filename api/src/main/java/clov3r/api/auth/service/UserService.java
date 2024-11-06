@@ -61,7 +61,7 @@ public class UserService {
             String imageUrl = updateProfileImage(profileImage);
             user.setProfileImg(imageUrl);
         }
-        user = updateUserRequest.toDomain(profileImage);
+        user = updateUserRequest.toDomain(user, profileImage);
         return user;
     }
 
