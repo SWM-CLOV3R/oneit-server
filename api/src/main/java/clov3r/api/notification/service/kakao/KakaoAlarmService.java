@@ -39,7 +39,6 @@ public class KakaoAlarmService {
     String uri = "https://talkapi.lgcns.com/request/kakao.json";
     List<KakaoButton> buttonList = template.getButtons();
     String message = template.makeMessage(notification, customerInquiry);
-    System.out.println("message = " + message);
     KakaoAlarmBodyDTO body = KakaoAlarmBodyDTO.builder()
         .service(serviceId)
         .message(message)
@@ -47,7 +46,6 @@ public class KakaoAlarmService {
         .template(String.valueOf(template.getTemplateCode()))
         .buttons(buttonList)
         .build();
-    System.out.println("body.toString() = " + body.toString());
     KakaoAlarmResponseDTO kakaoAlarmResponseDTO = restTemplate.exchange(
             uri,
             HttpMethod.POST,
