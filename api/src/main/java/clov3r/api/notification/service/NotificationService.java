@@ -5,6 +5,7 @@ import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.notification.domain.dto.NotificationDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
 import clov3r.api.notification.event.template.GiftboxAcceptanceTemplate;
+import clov3r.api.notification.event.template.InquiryCompletedTemplate;
 import clov3r.api.notification.event.template.SignupCompleteTemplate;
 import clov3r.api.notification.repository.DeviceRepository;
 import clov3r.api.notification.repository.NotificationRepository;
@@ -171,6 +172,9 @@ public class NotificationService {
         .build();
     notification.createBaseEntity();
     applicationEventPublisher.publishEvent(notification);
+    if (!notification.getReceiver().getIsAgreeMarketing()) {
+      return notification;
+    }
     GiftboxAcceptanceTemplate giftboxAcceptanceTemplate = new GiftboxAcceptanceTemplate();
     KakaoAlarmResponseDTO kakaoAlarmResponseDTO =
         kakaoAlarmService.sendKakaoAlarmTalk(
@@ -193,14 +197,15 @@ public class NotificationService {
    * @param inquiryIdx
    */
   public void sendInquiryCompleteNotification(Long inquiryIdx) {
+
     System.out.println("NotificationService.sendInquiryCompleteNotification");
     Giftbox giftbox = giftboxRepository.findByInquiryIdx(inquiryIdx);
     List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftbox.getIdx());
     // 선물바구니 참여자들에게 전송
     List<Notification> notificationList =  participants.stream().map(participant -> {
       return Notification.builder()
-          .receiver(userRepository.findByUserIdx(participant.getIdx()))
-          .device(deviceRepository.findByUserId(participant.getIdx()))
+          .receiver(userRepository.findByUserIdx(participant.getUser().getIdx()))
+          .device(deviceRepository.findByUserId(participant.getUser().getIdx()))
           .title("선물바구니 ["+giftbox.getName()+"] 물어보기 완료")
           .body("선물바구니 ["+giftbox.getName()+"] 에서 받고 싶은 선물 물어보기가 완료되었습니다.")
           .actionType(ActionType.GIFT_ASK_COMPLETE)
@@ -211,6 +216,20 @@ public class NotificationService {
     for (Notification notification : notificationList) {
       notification.createBaseEntity();
       applicationEventPublisher.publishEvent(notification);
+      if (!notification.getReceiver().getIsAgreeMarketing()) {
+        continue;
+      }
+      KakaoAlarmResponseDTO kakaoAlarmResponseDTO =
+          kakaoAlarmService.sendKakaoAlarmTalk(
+              notification,
+              new InquiryCompletedTemplate(),
+              new HashMap<>() {{
+                put("GIFTBOX_NAME", giftbox.getName());
+              }}
+          );
+      if (!kakaoAlarmResponseDTO.getStatus().equals("OK")) {
+        throw new KakaoException(KAKAO_ALARM_ERROR);
+      }
       notificationRepository.save(notification);
     }
   }
