@@ -183,8 +183,8 @@ public class NotificationService {
     // 선물바구니 참여자들에게 전송
     List<Notification> notificationList =  participants.stream().map(participant -> {
       return Notification.builder()
-          .receiver(userRepository.findByUserIdx(participant.getIdx()))
-          .device(deviceRepository.findByUserId(participant.getIdx()))
+          .receiver(userRepository.findByUserIdx(participant.getUser().getIdx()))
+          .device(deviceRepository.findByUserId(participant.getUser().getIdx()))
           .title("선물바구니 ["+giftbox.getName()+"] 물어보기 완료")
           .body("선물바구니 ["+giftbox.getName()+"] 에서 받고 싶은 선물 물어보기가 완료되었습니다.")
           .actionType(ActionType.GIFT_ASK_COMPLETE)
