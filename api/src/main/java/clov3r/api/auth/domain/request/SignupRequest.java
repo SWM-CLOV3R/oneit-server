@@ -13,13 +13,13 @@ public class SignupRequest {
     private Gender gender;
     private Boolean isAgreeMarketing;
 
-    public User toDomain() {
-        return User.builder()
-            .name(name)
-            .nickname(nickname)
-            .gender(gender)
-            .birthDate(birthDate)
-            .isAgreeMarketing(isAgreeMarketing)
-            .build();
+    public User update(User user) {
+        user.setName(name);
+        user.setNickname(nickname);
+        user.setGender(gender);
+        user.setBirthDate(birthDate);
+        user.setIsAgreeMarketing(isAgreeMarketing);
+        return user;
     }
+
 }

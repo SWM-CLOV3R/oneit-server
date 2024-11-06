@@ -208,7 +208,6 @@ public class NotificationService {
     if (!user.getIsAgreeMarketing()) {
       return;
     }
-
     Notification notification =  Notification.builder()
         .receiver(user)
         .build();

@@ -26,7 +26,10 @@ public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
+
+    @Setter
     private String name;
+    @Setter
     private String nickname;
     private String email;
 
@@ -38,9 +41,11 @@ public class User extends BaseEntity {
     @Column(name = "profile_img")
     private String profileImg;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private Gender gender;  //  product gender enum 과 다름
 
+    @Setter
     @Column(name = "birth_date")
     private LocalDate birthDate;
 

@@ -37,8 +37,8 @@ public class UserService {
         if (user == null) {
             throw new BaseExceptionV2(USER_NOT_FOUND);
         }
+        user = signupRequest.update(user);
         notificationService.sendSignupCompleteNotification(user);
-        user = signupRequest.toDomain();
         userRepository.save(user);
         return user;
     }
