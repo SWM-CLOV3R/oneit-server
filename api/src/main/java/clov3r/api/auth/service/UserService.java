@@ -10,6 +10,7 @@ import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.common.service.S3Service;
 import clov3r.api.friend.domain.dto.OtherUserDTO;
 import clov3r.api.friend.service.FriendService;
+import clov3r.api.notification.service.NotificationService;
 import clov3r.domain.domains.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
     private final FriendService friendService;
+    private final NotificationService notificationService;
 
     public UserDTO getUser(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
@@ -35,6 +37,7 @@ public class UserService {
         if (user == null) {
             throw new BaseExceptionV2(USER_NOT_FOUND);
         }
+        notificationService.sendSignupCompleteNotification(user);
         user = signupRequest.toDomain();
         userRepository.save(user);
         return user;
