@@ -4,6 +4,7 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERRO
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.notification.domain.dto.NotificationDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
+import clov3r.api.notification.event.template.FriendAcceptanceTemplate;
 import clov3r.api.notification.event.template.GiftboxAcceptanceTemplate;
 import clov3r.api.notification.event.template.InquiryCompletedTemplate;
 import clov3r.api.notification.event.template.SignupCompleteTemplate;
@@ -127,7 +128,18 @@ public class NotificationService {
         .notiStatus(NotiStatus.CREATED)
         .build();
     notification.createBaseEntity();
+    if (!notification.getReceiver().getIsAgreeMarketing()) {
+      return notification;
+    }
     applicationEventPublisher.publishEvent(notification);
+    KakaoAlarmResponseDTO kakaoAlarmResponseDTO =
+        kakaoAlarmService.sendKakaoAlarmTalk(
+            notification,
+            new FriendAcceptanceTemplate(),
+            new HashMap<>() {{
+              put("FRIEND", friendReq.getTo().getNickname());
+            }}
+        );
     notificationRepository.save(notification);
     return notification;
   }
@@ -141,7 +153,6 @@ public class NotificationService {
    * @return
    */
   public Notification sendGiftboxInvitationAcceptanceNotification(Long invitationIdx, Long giftboxIdx, Long userIdx) {
-    System.out.println("NotificationService.sendGiftboxInvitationAcceptanceNotification");
 //    List<Long> participants = giftboxRepository.findParticipantsByGiftboxIdx(giftboxIdx);
     Giftbox giftbox = giftboxRepository.findByIdx(giftboxIdx);
     // 선물바구니 참여자들에게 전송
@@ -198,7 +209,6 @@ public class NotificationService {
    */
   public void sendInquiryCompleteNotification(Long inquiryIdx) {
 
-    System.out.println("NotificationService.sendInquiryCompleteNotification");
     Giftbox giftbox = giftboxRepository.findByInquiryIdx(inquiryIdx);
     List<GiftboxUser> participants = giftboxRepository.findParticipantsOfGiftbox(giftbox.getIdx());
     // 선물바구니 참여자들에게 전송
