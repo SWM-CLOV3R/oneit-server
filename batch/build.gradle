@@ -18,6 +18,8 @@ dependencies {
     implementation project(':api')
     implementation project(':domain')
 
+    // spring batch
+
     // lombok
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -27,7 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
 
     // QueryDsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -41,6 +43,10 @@ dependencies {
 
     // slack
     implementation 'com.slack.api:slack-api-client:1.40.0'
+
+
+    // Google Firebase Admin
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 // Uncomment to use JUnit Platform for tests
