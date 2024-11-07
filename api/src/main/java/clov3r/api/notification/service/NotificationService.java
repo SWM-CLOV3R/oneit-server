@@ -138,7 +138,7 @@ public class NotificationService {
         new FriendAcceptanceTemplate(
             notification,
             new HashMap<>() {{
-              put("FRIEND", friendReq.getFrom().getNickname());
+              put("FRIEND", friendReq.getTo().getNickname());
             }}
         ));
     notificationRepository.save(notification);
