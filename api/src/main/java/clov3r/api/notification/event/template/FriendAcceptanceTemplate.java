@@ -3,9 +3,10 @@ package clov3r.api.notification.event.template;
 import clov3r.api.notification.domain.dto.kakao.KakaoButton;
 import clov3r.domain.domains.entity.Notification;
 import java.util.HashMap;
+import org.aspectj.weaver.ast.Not;
 
 public class FriendAcceptanceTemplate extends KakaoAlarmTemplate {
-  public FriendAcceptanceTemplate() {
+  public FriendAcceptanceTemplate(Notification notification, HashMap<String, String> args) {
     this.templateCode = "10008";
     this.templateName = "친구 초대 수락 알림";
     KakaoButton friendListButton = KakaoButton.builder()
@@ -15,6 +16,9 @@ public class FriendAcceptanceTemplate extends KakaoAlarmTemplate {
         .url_mobile("https://www.oneit.gift/friends")
         .build();
     this.buttons.add(friendListButton);
+
+    this.notification = notification;
+    this.args = args;
   }
 
   @Override

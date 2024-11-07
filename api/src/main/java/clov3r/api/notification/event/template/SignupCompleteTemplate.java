@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SignupCompleteTemplate extends KakaoAlarmTemplate {
-  public SignupCompleteTemplate() {
+  public SignupCompleteTemplate(Notification notification, HashMap<String, String> args) {
     this.templateCode = "10007";
     this.templateName = "회원가입 완료";
     KakaoButton button1 = KakaoButton.builder()
@@ -24,6 +24,9 @@ public class SignupCompleteTemplate extends KakaoAlarmTemplate {
     this.buttons = new ArrayList<>();
     this.buttons.add(button1);
     this.buttons.add(button2);
+
+    this.notification = notification;
+    this.args = args;
   }
 
   @Override

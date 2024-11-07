@@ -26,10 +26,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
@@ -132,14 +134,13 @@ public class NotificationService {
       return notification;
     }
     applicationEventPublisher.publishEvent(notification);
-    KakaoAlarmResponseDTO kakaoAlarmResponseDTO =
-        kakaoAlarmService.sendKakaoAlarmTalk(
+    applicationEventPublisher.publishEvent(
+        new FriendAcceptanceTemplate(
             notification,
-            new FriendAcceptanceTemplate(),
             new HashMap<>() {{
-              put("FRIEND", friendReq.getTo().getNickname());
+              put("FRIEND", friendReq.getFrom().getNickname());
             }}
-        );
+        ));
     notificationRepository.save(notification);
     return notification;
   }
@@ -183,21 +184,13 @@ public class NotificationService {
         .build();
     notification.createBaseEntity();
     applicationEventPublisher.publishEvent(notification);
-    if (!notification.getReceiver().getIsAgreeMarketing()) {
-      return notification;
-    }
-    GiftboxAcceptanceTemplate giftboxAcceptanceTemplate = new GiftboxAcceptanceTemplate();
-    KakaoAlarmResponseDTO kakaoAlarmResponseDTO =
-        kakaoAlarmService.sendKakaoAlarmTalk(
+    applicationEventPublisher.publishEvent(
+        new GiftboxAcceptanceTemplate(
             notification,
-            giftboxAcceptanceTemplate,
             new HashMap<>() {{
               put("GIFTBOX_NAME", giftbox.getName());
             }}
-        );
-    if (!kakaoAlarmResponseDTO.getStatus().equals("OK")) {
-      throw new KakaoException(KAKAO_ALARM_ERROR);
-    }
+        ));
     notificationRepository.save(notification);
     return notification;
   }
@@ -226,20 +219,13 @@ public class NotificationService {
     for (Notification notification : notificationList) {
       notification.createBaseEntity();
       applicationEventPublisher.publishEvent(notification);
-      if (!notification.getReceiver().getIsAgreeMarketing()) {
-        continue;
-      }
-      KakaoAlarmResponseDTO kakaoAlarmResponseDTO =
-          kakaoAlarmService.sendKakaoAlarmTalk(
+      applicationEventPublisher.publishEvent(
+          new InquiryCompletedTemplate(
               notification,
-              new InquiryCompletedTemplate(),
               new HashMap<>() {{
                 put("GIFTBOX_NAME", giftbox.getName());
               }}
-          );
-      if (!kakaoAlarmResponseDTO.getStatus().equals("OK")) {
-        throw new KakaoException(KAKAO_ALARM_ERROR);
-      }
+          ));
       notificationRepository.save(notification);
     }
   }
@@ -257,18 +243,14 @@ public class NotificationService {
         .receiver(user)
         .build();
 
-    SignupCompleteTemplate signupComplete = new SignupCompleteTemplate();
-    KakaoAlarmResponseDTO kakaoAlarmResponseDTO =
-        kakaoAlarmService.sendKakaoAlarmTalk(
-          notification,
-          signupComplete,
-          new HashMap<>() {{
-            put("USER_NAME", user.getNickname());
-          }}
-        );
-    if (!kakaoAlarmResponseDTO.getStatus().equals("OK")) {
-      throw new KakaoException(KAKAO_ALARM_ERROR);
-    }
+    applicationEventPublisher.publishEvent(
+        new SignupCompleteTemplate(
+            notification,
+            new HashMap<>() {{
+              put("USER_NAME", user.getNickname());
+            }}
+        )
+    );
     notificationRepository.save(notification);
   }
 

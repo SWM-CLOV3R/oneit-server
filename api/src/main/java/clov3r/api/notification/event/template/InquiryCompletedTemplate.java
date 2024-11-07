@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class InquiryCompletedTemplate extends KakaoAlarmTemplate {
 
-  public InquiryCompletedTemplate() {
+  public InquiryCompletedTemplate(Notification notification, HashMap<String, String> args) {
     this.templateCode = "10010";
     this.templateName = "물어보기 완료 알림";
     KakaoButton giftboxButton = KakaoButton.builder()
@@ -16,6 +16,9 @@ public class InquiryCompletedTemplate extends KakaoAlarmTemplate {
         .url_mobile("https://www.oneit.gift/basket")
         .build();
     this.buttons.add(giftboxButton);
+
+    this.notification = notification;
+    this.args = args;
   }
 
   @Override
