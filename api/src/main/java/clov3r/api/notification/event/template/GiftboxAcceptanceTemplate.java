@@ -5,7 +5,7 @@ import clov3r.domain.domains.entity.Notification;
 import java.util.HashMap;
 
 public class GiftboxAcceptanceTemplate extends KakaoAlarmTemplate {
-  public GiftboxAcceptanceTemplate() {
+  public GiftboxAcceptanceTemplate(Notification notification, HashMap<String, String> args) {
     this.templateCode = "10009";
     this.templateName = "선물바구니 초대 수락 알림";
     KakaoButton giftboxButton = KakaoButton.builder()
@@ -15,6 +15,9 @@ public class GiftboxAcceptanceTemplate extends KakaoAlarmTemplate {
         .url_mobile("https://www.oneit.gift/basket")
         .build();
     this.buttons.add(giftboxButton);
+
+    this.notification = notification;
+    this.args = args;
   }
 
   @Override

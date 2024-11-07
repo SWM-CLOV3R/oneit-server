@@ -19,6 +19,9 @@ public class KakaoAlarmTemplate {
   String message;
   List<KakaoButton> buttons = new ArrayList<>();
 
+  Notification notification;
+  HashMap<String, String> args;
+
   public String makeMessage(Notification notification, HashMap<String, String> args) {
     return this.message;
   }

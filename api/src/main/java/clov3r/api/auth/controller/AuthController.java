@@ -67,7 +67,7 @@ public class AuthController {
             user = authService.createUserByKakao(kakaoProfileDTO);
         } else {
             // 1. 자체 회원가입 필수 정보(이름, 닉네임, 성별, 생일, 전화번호)가 있는지 확인
-            if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null && user.getPhoneNumber()!=null) {
+            if (user.getName()!=null && user.getNickname()!=null && user.getGender()!=null && user.getBirthDate()!=null && user.getPhoneNumber()!=null && user.getIsAgreeMarketing()!=null) {
                 isSignedUp = true;
             }
             // 2. 카카오 프로필 정보로 업데이트
