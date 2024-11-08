@@ -3,9 +3,10 @@ package clov3r.api.notification.event.template;
 import clov3r.api.notification.domain.dto.kakao.KakaoButton;
 import clov3r.domain.domains.entity.Notification;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class signupCompleteTemplate extends KakaoAlarmTemplate {
-  public signupCompleteTemplate() {
+public class SignupCompleteTemplate extends KakaoAlarmTemplate {
+  public SignupCompleteTemplate(Notification notification, HashMap<String, String> args) {
     this.templateCode = "10007";
     this.templateName = "회원가입 완료";
     KakaoButton button1 = KakaoButton.builder()
@@ -23,10 +24,13 @@ public class signupCompleteTemplate extends KakaoAlarmTemplate {
     this.buttons = new ArrayList<>();
     this.buttons.add(button1);
     this.buttons.add(button2);
+
+    this.notification = notification;
+    this.args = args;
   }
 
   @Override
-  public String makeMessage(Notification notification, String customerInquiry) {
+  public String makeMessage(Notification notification, HashMap<String, String> args) {
     this.message = "[ONEIT] 회원가입 완료\nWANNA GIFT IT, ONE IT \uD83C\uDF89\n안녕하세요. "+notification.getReceiver().getNickname()+"님!\n\n선물을 원하는 당신을 위한 단 하나의 행동 패턴\nONEIT 회원가입이 완료되었습니다!\n친구에게 줄 선물 추천도 받아보고 \uD83C\uDF81\n선물바구니를 만들어 선물 비교도 한 눈에 해보세요! \uD83D\uDD0D";
     return this.message;
   }

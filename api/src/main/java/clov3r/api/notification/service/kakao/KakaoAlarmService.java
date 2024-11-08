@@ -5,6 +5,7 @@ import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
 import clov3r.api.notification.domain.dto.kakao.KakaoButton;
 import clov3r.api.notification.event.template.KakaoAlarmTemplate;
 import clov3r.domain.domains.entity.Notification;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,10 +27,8 @@ public class KakaoAlarmService {
   String serverName;
   @Value("${kakao.talk-dream.service-id}")
   long serviceId;
-  @Value("${kakao.talk-dream.customer-inquiry}")
-  String customerInquiry;
 
-  public KakaoAlarmResponseDTO sendKakaoAlarmTalk(Notification notification, KakaoAlarmTemplate template) {
+  public KakaoAlarmResponseDTO sendKakaoAlarmTalk(Notification notification, KakaoAlarmTemplate template, HashMap<String, String> args) {
     HttpHeaders headers = new HttpHeaders();
     headers.add("authToken", authToken);
     headers.add("serverName", serverName);
@@ -38,7 +37,7 @@ public class KakaoAlarmService {
     // kakao api server end point URI
     String uri = "https://talkapi.lgcns.com/request/kakao.json";
     List<KakaoButton> buttonList = template.getButtons();
-    String message = template.makeMessage(notification, customerInquiry);
+    String message = template.makeMessage(notification, args);
     KakaoAlarmBodyDTO body = KakaoAlarmBodyDTO.builder()
         .service(serviceId)
         .message(message)
