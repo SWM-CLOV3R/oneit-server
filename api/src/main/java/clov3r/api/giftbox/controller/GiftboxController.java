@@ -1,20 +1,20 @@
 package clov3r.api.giftbox.controller;
 
-import static clov3r.api.common.error.errorcode.CommonErrorCode.REQUEST_ERROR;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.ALREADY_PARTICIPANT_OF_GIFTBOX;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.DATE_BEFORE_NOW;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.GIFTBOX_NOT_FOUND;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.INVITATION_NOT_FOUND;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_MANAGER_OF_GIFTBOX;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_PARTICIPANT_OF_GIFTBOX;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
+import static clov3r.domain.error.errorcode.CommonErrorCode.REQUEST_ERROR;
+import static clov3r.domain.error.errorcode.CustomErrorCode.ALREADY_PARTICIPANT_OF_GIFTBOX;
+import static clov3r.domain.error.errorcode.CustomErrorCode.DATE_BEFORE_NOW;
+import static clov3r.domain.error.errorcode.CustomErrorCode.GIFTBOX_NOT_FOUND;
+import static clov3r.domain.error.errorcode.CustomErrorCode.INVITATION_NOT_FOUND;
+import static clov3r.domain.error.errorcode.CustomErrorCode.NOT_MANAGER_OF_GIFTBOX;
+import static clov3r.domain.error.errorcode.CustomErrorCode.NOT_PARTICIPANT_OF_GIFTBOX;
+import static clov3r.domain.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
 import clov3r.api.auth.security.Auth;
 import clov3r.api.giftbox.domain.dto.GiftboxDTO;
 import clov3r.api.giftbox.domain.dto.InvitationUserDTO;
 import clov3r.api.giftbox.domain.dto.ParticipantsDTO;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
-import clov3r.api.common.error.exception.BaseExceptionV2;
+import clov3r.domain.error.exception.BaseExceptionV2;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.giftbox.service.GiftboxService;

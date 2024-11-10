@@ -1,12 +1,12 @@
 package clov3r.api.giftbox.controller;
 
-import static clov3r.api.common.error.errorcode.CommonErrorCode.REQUEST_ERROR;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.ALREADY_USED_INQUIRY;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.GIFTBOX_NOT_FOUND;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_EXIST_INQUIRY;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_EXIST_INQUIRY_PRODUCT;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.NOT_MANAGER_OF_GIFTBOX;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.PRODUCT_NOT_FOUND;
+import static clov3r.domain.error.errorcode.CommonErrorCode.REQUEST_ERROR;
+import static clov3r.domain.error.errorcode.CustomErrorCode.ALREADY_USED_INQUIRY;
+import static clov3r.domain.error.errorcode.CustomErrorCode.GIFTBOX_NOT_FOUND;
+import static clov3r.domain.error.errorcode.CustomErrorCode.NOT_EXIST_INQUIRY;
+import static clov3r.domain.error.errorcode.CustomErrorCode.NOT_EXIST_INQUIRY_PRODUCT;
+import static clov3r.domain.error.errorcode.CustomErrorCode.NOT_MANAGER_OF_GIFTBOX;
+import static clov3r.domain.error.errorcode.CustomErrorCode.PRODUCT_NOT_FOUND;
 
 import clov3r.api.auth.security.Auth;
 import clov3r.api.giftbox.domain.dto.InquiryDTO;
@@ -14,7 +14,7 @@ import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.giftbox.domain.request.ProductEmoji;
 import clov3r.api.giftbox.domain.request.InquiryRequest;
-import clov3r.api.common.error.exception.BaseExceptionV2;
+import clov3r.domain.error.exception.BaseExceptionV2;
 import clov3r.api.giftbox.repository.GiftboxProduct.GiftboxProductRepository;
 import clov3r.api.giftbox.repository.Inquiry.InquiryProductRepository;
 import clov3r.api.giftbox.repository.Inquiry.InquiryRepository;

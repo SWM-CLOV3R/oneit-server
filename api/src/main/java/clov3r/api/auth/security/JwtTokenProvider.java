@@ -1,9 +1,9 @@
 package clov3r.api.auth.security;
 
-import static clov3r.api.common.error.errorcode.CustomErrorCode.INVALID_TOKEN;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.TOKEN_EXPIRED;
+import static clov3r.domain.error.errorcode.CustomErrorCode.INVALID_TOKEN;
+import static clov3r.domain.error.errorcode.CustomErrorCode.TOKEN_EXPIRED;
 
-import clov3r.api.common.error.exception.AuthExceptionV2;
+import clov3r.domain.error.exception.AuthExceptionV2;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

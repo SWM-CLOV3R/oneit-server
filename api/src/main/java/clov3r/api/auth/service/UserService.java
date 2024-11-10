@@ -1,11 +1,11 @@
 package clov3r.api.auth.service;
 
-import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
+import static clov3r.domain.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
 import clov3r.api.auth.domain.dto.UserDTO;
 import clov3r.api.auth.domain.request.SignupRequest;
 import clov3r.api.auth.domain.request.UpdateUserRequest;
-import clov3r.api.common.error.exception.BaseExceptionV2;
+import clov3r.domain.error.exception.BaseExceptionV2;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.common.service.S3Service;
 import clov3r.api.friend.domain.dto.OtherUserDTO;

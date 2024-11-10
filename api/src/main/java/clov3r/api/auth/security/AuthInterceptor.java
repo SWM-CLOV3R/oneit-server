@@ -1,9 +1,9 @@
 package clov3r.api.auth.security;
 
-import static clov3r.api.common.error.errorcode.CustomErrorCode.INVALID_TOKEN;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.NO_AUTHORIZATION_HEADER;
+import static clov3r.domain.error.errorcode.CustomErrorCode.INVALID_TOKEN;
+import static clov3r.domain.error.errorcode.CustomErrorCode.NO_AUTHORIZATION_HEADER;
 
-import clov3r.api.common.error.exception.AuthExceptionV2;
+import clov3r.domain.error.exception.AuthExceptionV2;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;

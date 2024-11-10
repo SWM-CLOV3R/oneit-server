@@ -1,14 +1,14 @@
 package clov3r.api.giftbox.service;
 
-import static clov3r.api.common.error.errorcode.CommonErrorCode.DATABASE_ERROR;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX;
-import static clov3r.api.common.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
+import static clov3r.domain.error.errorcode.CommonErrorCode.DATABASE_ERROR;
+import static clov3r.domain.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX;
+import static clov3r.domain.error.errorcode.CustomErrorCode.FAIL_TO_UPDATE_GIFTBOX_IMAGE_URL;
 
 import clov3r.api.giftbox.repository.Giftbox.GiftboxRepository;
 import clov3r.api.product.repository.KeywordRepository;
 import clov3r.api.giftbox.domain.dto.GiftboxProductDTO;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
-import clov3r.api.common.error.exception.BaseExceptionV2;
+import clov3r.domain.error.exception.BaseExceptionV2;
 import clov3r.api.giftbox.repository.GiftboxUser.GiftboxUserRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.notification.service.NotificationService;

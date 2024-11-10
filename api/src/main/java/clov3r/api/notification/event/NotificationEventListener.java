@@ -1,8 +1,8 @@
 package clov3r.api.notification.event;
 
-import static clov3r.api.common.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERROR;
+import static clov3r.domain.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERROR;
 
-import clov3r.api.common.error.exception.KakaoException;
+import clov3r.domain.error.exception.KakaoException;
 import clov3r.api.notification.domain.dto.PushNotificationRequest;
 import clov3r.api.common.service.FCMService;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;
@@ -10,7 +10,6 @@ import clov3r.api.notification.event.template.KakaoAlarmTemplate;
 import clov3r.api.notification.service.kakao.KakaoAlarmService;
 import clov3r.domain.domains.entity.Notification;
 import java.io.IOException;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
