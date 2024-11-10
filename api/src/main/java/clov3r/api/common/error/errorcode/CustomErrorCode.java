@@ -62,6 +62,7 @@ public enum CustomErrorCode implements ErrorCode {
   GIFTBOX_PRODUCT_NOT_FOUND(NOT_FOUND, "선물바구니 상품을 찾을 수 없습니다."),
   DEVICE_TOKEN_NOT_FOUND(NOT_FOUND, "디바이스 토큰을 찾을 수 없습니다."),
   NOTIFICATION_NOT_FOUND(NOT_FOUND, "알림을 찾을 수 없습니다."),
+  NOT_FOUND_FRIENDSHIP(NOT_FOUND, "친구 관계가 존재하지 않습니다."),
 
   /**
    * FORBIDDEN

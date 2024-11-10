@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TimeAttackService {
   private final FriendshipRepository friendshipRepository;
 
-  public Boolean toggleTimeAttackAlarm(Long friendIdx, Long userIdx) {
-    Friendship friendship = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friendIdx);
+  public Boolean toggleTimeAttackAlarm(Friendship friendship) {
     friendship.changeTimeAttackAlarm();
     return friendship.getTimeAttackAlarm();
   }
