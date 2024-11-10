@@ -35,6 +35,7 @@ public enum CustomErrorCode implements ErrorCode {
   DUPLICATE_NICKNAME(BAD_REQUEST, "중복된 닉네임입니다."),
   SEARCH_KEYWORD_ERROR(BAD_REQUEST, "검색 키워드 입력값은 2글자 이상이어야 합니다."),
   CANNOT_DELETE_OTHERS_COMMENT(BAD_REQUEST, "다른 사용자의 댓글은 삭제할 수 없습니다."),
+  TIME_ATTACK_ALARM_OFF(BAD_REQUEST, "타임어택 알람이 꺼져있습니다."),
 
   /**
    * token 오류
@@ -88,7 +89,8 @@ public enum CustomErrorCode implements ErrorCode {
   SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버와의 연결에 실패하였습니다."),
   DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 연결에 실패하였습니다."),
   DATABASE_ERROR_QUERY(INTERNAL_SERVER_ERROR, "데이터베이스 쿼리 실행이 실패하였습니다."),
-  KAKAO_ALARM_ERROR(INTERNAL_SERVER_ERROR, "카카오 알람 전송에 실패하였습니다."),;
+  KAKAO_ALARM_ERROR(INTERNAL_SERVER_ERROR, "카카오 알람 전송에 실패하였습니다."),
+  ;
 
   private final HttpStatus httpStatus;
   private final String message;

@@ -7,9 +7,13 @@ import clov3r.api.common.error.errorcode.CustomErrorCode;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.friend.repository.FriendshipRepository;
 import clov3r.api.friend.service.FriendService;
+import clov3r.api.product.domain.dto.ProductSummaryDTO;
+import clov3r.api.product.service.ProductService;
 import clov3r.api.timeattack.service.TimeAttackService;
 import clov3r.domain.domains.entity.Friendship;
+import clov3r.domain.domains.entity.Product;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TimeAttackControllerImpl implements TimeAttackController {
   private final TimeAttackService timeAttackService;
-  private final FriendService friendService;
   private final FriendshipRepository friendshipRepository;
+  private final ProductService productService;
 
   @Override
   public ResponseEntity<String> toggleTimeAttackAlarm(
@@ -33,5 +37,26 @@ public class TimeAttackControllerImpl implements TimeAttackController {
     }
     Boolean timeAttackAlarm = timeAttackService.toggleTimeAttackAlarm(friendship);
     return ResponseEntity.ok(userIdx + "의 친구 " + friendIdx + "의 타임어택 알람 여부 :" + timeAttackAlarm);
+  }
+
+  @Override
+  public ResponseEntity<List<ProductSummaryDTO>> getFriendWishList(
+      @PathVariable Long friendIdx,
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    Friendship friendship = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friendIdx);
+    if (friendship == null) {
+      throw new BaseExceptionV2(NOT_FOUND_FRIENDSHIP);
+    }
+    if (!friendship.getTimeAttackAlarm()) {
+      throw new BaseExceptionV2(TIME_ATTACK_ALARM_OFF);
+    }
+    List<Product> friendWishList = timeAttackService.getFriendWishList(friendIdx);
+    List<ProductSummaryDTO> productSummaryDTOList = friendWishList.stream()
+        .map(product -> new ProductSummaryDTO(
+            product,
+            productService.getLikeStatus(product.getIdx(), userIdx)
+        )).toList();
+    return ResponseEntity.ok(productSummaryDTOList);
   }
 }
