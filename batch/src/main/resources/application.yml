@@ -1,0 +1,28 @@
+spring:
+  main:
+    web-application-type: none
+  application:
+    name: batch
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_ENDPOINT}/${DATABASE_NAME}?serverTimezone=Asia/Seoul
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      schema: classpath:org/springframework/batch/core/schema-mysql.sql
+      initialize-schema: never
+  flyway:
+    enabled: false
+
+kakao:
+  talk-dream:
+    auth-token: ${KAKAO_ALARM_AUTH_TOKEN}
+    server-name: ${KAKAO_ALARM_SERVER_NAME}
+    service-id: ${KAKAO_ALARM_SERVICE_ID}
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure.logging: ERROR
