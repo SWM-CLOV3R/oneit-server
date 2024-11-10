@@ -52,7 +52,8 @@ public class CollectionRepository {
     return queryFactory.select(collectionProduct)
         .from(collectionProduct)
         .where(collectionProduct.collection.idx.eq(collectionIdx)
-            .and(collectionProduct.status.eq(Status.ACTIVE)))
+            .and(collectionProduct.status.eq(Status.ACTIVE))
+            .and(collectionProduct.product.status.eq(ProductStatus.ACTIVE)))
         .fetch();
   }
 
