@@ -59,4 +59,27 @@ public class TimeAttackControllerImpl implements TimeAttackController {
         )).toList();
     return ResponseEntity.ok(productSummaryDTOList);
   }
+
+  @Override
+  public ResponseEntity<ProductSummaryDTO> getFriendWishListRandomProduct(
+      @PathVariable Long friendIdx,
+      @Parameter(hidden = true) @Auth Long userIdx,
+      @Parameter(description = "제외할 제품 ID") Long excludeProductId
+  ) {
+    Friendship friendship = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friendIdx);
+    if (friendship == null) {
+      throw new BaseExceptionV2(NOT_FOUND_FRIENDSHIP);
+    }
+    if (!friendship.getTimeAttackAlarm()) {
+      throw new BaseExceptionV2(TIME_ATTACK_ALARM_OFF);
+    }
+    List<Product> friendWishList = timeAttackService.getFriendWishList(friendIdx);
+    // Get random product from friend's wish list
+    Product randomProduct = productService.getRandomProduct(friendWishList, excludeProductId);
+    ProductSummaryDTO productSummaryDTO = new ProductSummaryDTO(
+        randomProduct,
+        productService.getLikeStatus(randomProduct.getIdx(), userIdx)
+    );
+    return ResponseEntity.ok(productSummaryDTO);
+  }
 }

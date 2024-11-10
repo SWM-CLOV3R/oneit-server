@@ -150,4 +150,16 @@ public class ProductService {
     return detailImageList;
   }
 
+  public Product getRandomProduct(List<Product> friendWishList, Long excludeProductId) {
+    Product randomProduct = null;
+    while (randomProduct == null) {
+      int randomIndex = (int) (Math.random() * friendWishList.size());
+      randomProduct = friendWishList.get(randomIndex);
+      if (randomProduct.getIdx().equals(excludeProductId)) {
+        randomProduct = null;
+      }
+    }
+    return randomProduct;
+  }
+
 }
