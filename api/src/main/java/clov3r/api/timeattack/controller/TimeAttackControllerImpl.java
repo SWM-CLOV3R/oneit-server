@@ -5,6 +5,7 @@ import static clov3r.api.common.error.errorcode.CustomErrorCode.*;
 import clov3r.api.auth.security.Auth;
 import clov3r.api.common.error.errorcode.CustomErrorCode;
 import clov3r.api.common.error.exception.BaseExceptionV2;
+import clov3r.api.friend.domain.dto.FriendDTO;
 import clov3r.api.friend.repository.FriendshipRepository;
 import clov3r.api.friend.service.FriendService;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
@@ -81,5 +82,13 @@ public class TimeAttackControllerImpl implements TimeAttackController {
         productService.getLikeStatus(randomProduct.getIdx(), userIdx)
     );
     return ResponseEntity.ok(productSummaryDTO);
+  }
+
+  @Override
+  public ResponseEntity<List<FriendDTO>> getBirthdayFriends(
+      @Parameter(hidden = true) @Auth Long userIdx
+  ) {
+    List<FriendDTO> birthdayFriends = timeAttackService.getBirthdayFriends(userIdx);
+    return ResponseEntity.ok(birthdayFriends);
   }
 }
