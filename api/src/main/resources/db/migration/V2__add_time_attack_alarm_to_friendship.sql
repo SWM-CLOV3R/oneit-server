@@ -1,0 +1,1 @@
+ALTER TABLE friendship ADD COLUMN time_attack_alarm BOOLEAN NOT NULL DEFAULT FALSE;
