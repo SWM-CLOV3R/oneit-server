@@ -1,6 +1,6 @@
 package clov3r.api.auth.controller;
 
-import static clov3r.domain.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
 
 import clov3r.api.auth.domain.request.UpdateUserRequest;
 import clov3r.api.auth.security.Auth;
@@ -17,7 +17,7 @@ import clov3r.api.auth.repository.AuthRepository;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.auth.service.AuthService;
 import clov3r.api.auth.service.UserService;
-import clov3r.domain.error.exception.BaseExceptionV2;
+import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.domain.domains.entity.User;
 import clov3r.domain.domains.status.UserStatus;
 import io.swagger.v3.oas.annotations.Operation;

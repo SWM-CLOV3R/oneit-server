@@ -1,14 +1,14 @@
 package clov3r.api.common.service;
 
-import static clov3r.domain.error.errorcode.CustomErrorCode.S3_DELETE_OBJECT_ERROR;
-import static clov3r.domain.error.errorcode.CustomErrorCode.S3_ERROR;
-import static clov3r.domain.error.errorcode.CustomErrorCode.S3_FILE_EXTENSION_ERROR;
-import static clov3r.domain.error.errorcode.CustomErrorCode.S3_PUT_OBJECT_ERROR;
-import static clov3r.domain.error.errorcode.CustomErrorCode.S3_REQUEST_ERROR;
-import static clov3r.domain.error.errorcode.CustomErrorCode.S3_UPLOAD_ERROR;
-import static clov3r.domain.error.errorcode.CustomErrorCode.S3_URL_DECODING_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.S3_DELETE_OBJECT_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.S3_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.S3_FILE_EXTENSION_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.S3_PUT_OBJECT_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.S3_REQUEST_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.S3_UPLOAD_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.S3_URL_DECODING_ERROR;
 
-import clov3r.domain.error.exception.BaseExceptionV2;
+import clov3r.api.common.error.exception.BaseExceptionV2;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;

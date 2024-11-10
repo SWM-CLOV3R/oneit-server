@@ -1,4 +1,4 @@
-package clov3r.domain.error.response;
+package clov3r.api.common.error.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

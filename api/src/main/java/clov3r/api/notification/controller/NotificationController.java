@@ -2,8 +2,8 @@ package clov3r.api.notification.controller;
 
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.auth.service.UserService;
-import clov3r.domain.error.errorcode.CustomErrorCode;
-import clov3r.domain.error.exception.BaseExceptionV2;
+import clov3r.api.common.error.errorcode.CustomErrorCode;
+import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.notification.domain.dto.NotificationDTO;
 import clov3r.api.notification.domain.request.SaveDeviceTokenRequest;
 import clov3r.api.auth.security.Auth;

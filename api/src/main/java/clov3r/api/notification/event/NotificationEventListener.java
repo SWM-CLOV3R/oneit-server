@@ -1,8 +1,8 @@
 package clov3r.api.notification.event;
 
-import static clov3r.domain.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERROR;
+import static clov3r.api.common.error.errorcode.CustomErrorCode.KAKAO_ALARM_ERROR;
 
-import clov3r.domain.error.exception.KakaoException;
+import clov3r.api.common.error.exception.KakaoException;
 import clov3r.api.notification.domain.dto.PushNotificationRequest;
 import clov3r.api.common.service.FCMService;
 import clov3r.api.notification.domain.dto.kakao.KakaoAlarmResponseDTO;

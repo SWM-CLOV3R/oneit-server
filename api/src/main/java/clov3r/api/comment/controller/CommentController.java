@@ -1,7 +1,7 @@
 package clov3r.api.comment.controller;
 
-import clov3r.domain.error.errorcode.CustomErrorCode;
-import clov3r.domain.error.exception.BaseExceptionV2;
+import clov3r.api.common.error.errorcode.CustomErrorCode;
+import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.auth.security.Auth;
 import clov3r.api.comment.domain.dto.CommentDTO;
 import clov3r.api.auth.domain.request.CommentRequest;

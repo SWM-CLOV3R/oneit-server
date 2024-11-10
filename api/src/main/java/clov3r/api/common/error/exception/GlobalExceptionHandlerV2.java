@@ -1,9 +1,9 @@
-package clov3r.domain.error.exception;
+package clov3r.api.common.error.exception;
 
-import clov3r.domain.error.errorcode.CommonErrorCode;
-import clov3r.domain.error.errorcode.ErrorCode;
-import clov3r.domain.error.response.ErrorResponse;
-import clov3r.domain.service.SlackService;
+import clov3r.api.common.error.errorcode.ErrorCode;
+import clov3r.api.common.error.response.ErrorResponse;
+import clov3r.api.common.error.errorcode.CommonErrorCode;
+import clov3r.api.common.service.SlackService;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

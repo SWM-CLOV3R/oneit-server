@@ -1,6 +1,6 @@
-package clov3r.domain.error.exception;
+package clov3r.api.common.error.exception;
 
-import clov3r.domain.error.errorcode.ErrorCode;
+import clov3r.api.common.error.errorcode.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package clov3r.domain.error.errorcode;
+package clov3r.api.common.error.errorcode;
 
 import org.springframework.http.HttpStatus;
 
