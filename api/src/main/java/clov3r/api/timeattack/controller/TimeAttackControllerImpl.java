@@ -65,7 +65,7 @@ public class TimeAttackControllerImpl implements TimeAttackController {
   public ResponseEntity<ProductSummaryDTO> getFriendWishListRandomProduct(
       @PathVariable Long friendIdx,
       @Parameter(hidden = true) @Auth Long userIdx,
-      @Parameter(description = "제외할 제품 ID") Long excludeProductId
+      @Parameter(description = "제외할 제품 IDX") Long excludeProductIdx
   ) {
     Friendship friendship = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friendIdx);
     if (friendship == null) {
@@ -76,7 +76,7 @@ public class TimeAttackControllerImpl implements TimeAttackController {
     }
     List<Product> friendWishList = timeAttackService.getFriendWishList(friendIdx);
     // Get random product from friend's wish list
-    Product randomProduct = productService.getRandomProduct(friendWishList, excludeProductId);
+    Product randomProduct = productService.getRandomProduct(friendWishList, excludeProductIdx);
     ProductSummaryDTO productSummaryDTO = new ProductSummaryDTO(
         randomProduct,
         productService.getLikeStatus(randomProduct.getIdx(), userIdx)

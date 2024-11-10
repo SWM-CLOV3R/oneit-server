@@ -36,7 +36,7 @@ public interface TimeAttackController {
   ResponseEntity<ProductSummaryDTO> getFriendWishListRandomProduct(
       @PathVariable Long friendIdx,
       @Parameter(hidden = true) @Auth Long userIdx,
-      @Parameter(description = "제외할 제품 ID") @RequestParam(required = false) Long excludeProductId
+      @Parameter(description = "제외할 제품 IDX") @RequestParam(required = false) Long excludeProductId
   );
 
   @Operation(summary = "7일 이내 생일인 친구 조회", description = "7일 이내 생일인 친구를 조회합니다.")
