@@ -18,8 +18,8 @@ public class BirthdayNotifyScheduler {
   private final JobLauncher jobLauncher;
   private final Job birthdayNotificationJob;
 
-//  // 1분마다 실행
-  @Scheduled(cron = "0 0/1 * * * ?")
+  // 매일 오전 9시에 실행
+  @Scheduled(cron = "0 9 * * * ?")
   public void runBirthdayNotificationJob() {
     try {
       // JobParameter 객체 생성
