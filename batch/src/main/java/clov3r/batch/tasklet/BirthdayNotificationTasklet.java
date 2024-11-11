@@ -3,7 +3,7 @@ package clov3r.batch.tasklet;
 
 import clov3r.batch.config.kakao.KakaoAlarmResponseDTO;
 import clov3r.batch.config.kakao.KakaoAlarmService;
-import clov3r.batch.config.kakao.template.FriendAcceptanceTemplate;
+import clov3r.batch.config.kakao.template.TimeAttackTemplate;
 import clov3r.batch.repository.BatchRepository;
 import clov3r.domain.domains.entity.Friendship;
 import clov3r.domain.domains.entity.Notification;
@@ -58,7 +58,7 @@ public class BirthdayNotificationTasklet implements Tasklet {
             .notiStatus(NotiStatus.CREATED)
             .build();
         // 알림 메시지 전송
-        FriendAcceptanceTemplate timeAttackTemplate = new FriendAcceptanceTemplate(
+        TimeAttackTemplate timeAttackTemplate = new TimeAttackTemplate(
             notification,
             new HashMap<>() {{
               put("FRIEND", notification.getSender().getNickname());
