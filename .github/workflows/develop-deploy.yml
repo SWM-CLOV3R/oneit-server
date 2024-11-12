@@ -157,7 +157,7 @@ jobs:
       - name: Set up SSH key and known hosts
         run: |
           mkdir -p ~/.ssh
-          echo "$BATCH_EC2_HOST_KEY" > ~/.ssh/known_hosts
+          echo "${{ BATCH_EC2_HOST_KEY }}" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: Copy .env file to EC2
