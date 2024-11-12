@@ -156,7 +156,9 @@ jobs:
 
       - name: Copy .env file to EC2
         run: |
-          scp -i ${{ secrets.BATCH_EC2_PRIVATE_KEY }} .env ${{ secrets.BATCH_EC2_USER }}@${{ secrets.BATCH_EC2_HOST }}:~/.env
+          echo "${{ secrets.BATCH_EC2_PRIVATE_KEY }}" > batch_ec2_private_key.pem
+          chmod 600 batch_ec2_private_key.pem
+          scp -i batch_ec2_private_key.pem .env ${{ secrets.BATCH_EC2_USER }}@${{ secrets.BATCH_EC2_HOST }}:~/.env
 
       - name: Deploy Docker container to EC2
         uses: appleboy/ssh-action@master
