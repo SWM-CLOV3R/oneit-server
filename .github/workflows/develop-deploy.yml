@@ -183,7 +183,7 @@ jobs:
           key: ${{ secrets.BATCH_EC2_PRIVATE_KEY }}
           port: 22
           script: |
-            CONTAINER_ID=$(docker ps -q -f "ancestor=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}")
+            CONTAINER_ID=$(docker ps -q -f "name=oneit-batch")
             if [ -n "$CONTAINER_ID" ]; then
               echo "Stopping existing container with ID: $CONTAINER_ID"
               docker stop $CONTAINER_ID
@@ -194,5 +194,5 @@ jobs:
             
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
             docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
-            docker run -d -p 9000:9000 --env-file ~/.env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+            docker run --name oneit-batch -d -p 9000:9000 --env-file ~/.env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
           debug: true
