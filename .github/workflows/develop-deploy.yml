@@ -151,6 +151,7 @@ jobs:
       - name: Log in to Infisical
         run: |
           infisical login --method=universal-auth --client-id ${{ secrets.INFISICAL_CLIENT_ID }} --client-secret ${{ secrets.INFISICAL_CLIENT_SECRET }} --silent --plain
+          infisical init --projectId ${{ secrets.INFISICAL_PROJECT_ID }} --env=dev --silent
       - name: Fetch environment variables from Infisical
         run: |
           infisical secrets --projectId ${{ secrets.INFISICAL_PROJECT_ID }} --env=dev --recursive > secrets_raw.txt
