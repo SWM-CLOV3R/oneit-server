@@ -157,7 +157,6 @@ jobs:
       - name: Set up SSH key and known hosts
         run: |
           mkdir -p ~/.ssh
-          # EC2 인스턴스의 호스트 키를 받아와 known_hosts에 저장
           ssh-keyscan -H ${{ secrets.BATCH_EC2_HOST }} >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
@@ -170,6 +169,14 @@ jobs:
       - name: Clean up private key file
         run: rm batch_ec2_private_key.pem
 
+      # Set up AWS CLI
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Deploy Docker container to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -178,6 +185,7 @@ jobs:
           key: ${{ secrets.BATCH_EC2_PRIVATE_KEY }}
           port: 22
           script: |
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
             docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
             docker run -d -p 9000:9000 --env-file ~/.env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
           debug: true
