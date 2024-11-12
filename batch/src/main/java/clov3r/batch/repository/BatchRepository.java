@@ -1,13 +1,11 @@
 package clov3r.batch.repository;
 
 import static clov3r.domain.domains.entity.QFriendship.friendship;
-import static clov3r.domain.domains.entity.QProductLike.productLike;
 import static clov3r.domain.domains.entity.QUser.user;
 
 import clov3r.domain.domains.entity.Friendship;
 import clov3r.domain.domains.entity.Notification;
 import clov3r.domain.domains.entity.User;
-import clov3r.domain.domains.status.LikeStatus;
 import clov3r.domain.domains.status.Status;
 import clov3r.domain.domains.status.UserStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
