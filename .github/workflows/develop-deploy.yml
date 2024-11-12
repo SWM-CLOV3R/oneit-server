@@ -157,7 +157,8 @@ jobs:
       - name: Set up SSH key and known hosts
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.BATCH_EC2_HOST_KEY }}" > ~/.ssh/known_hosts
+          # EC2 인스턴스의 호스트 키를 받아와 known_hosts에 저장
+          ssh-keyscan -H ${{ secrets.BATCH_EC2_HOST }} >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: Copy .env file to EC2
