@@ -162,6 +162,7 @@ jobs:
           key: ${{ secrets.BATCH_EC2_PRIVATE_KEY }}
           port: 22
           script: |
+            cat .env
             docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
             docker run -d -p 9000:9000 --env-file .env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
           debug: true
