@@ -42,7 +42,12 @@ public class TimeAttackService {
       return Integer.compare(Math.abs(aDiff), Math.abs(bDiff));
     });
     return birthdayFriends.stream()
-        .map(FriendDTO::new)
+        .map(friend -> {
+          Friendship friendship = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friend.getIdx());
+          FriendDTO friendDTO = new FriendDTO(friend);
+          friendDTO.setTimeAttackAlarm(friendship.getTimeAttackAlarm());
+          return friendDTO;
+        })
         .toList();
   }
 
