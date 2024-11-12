@@ -66,4 +66,9 @@ public class Notification extends BaseEntity {
     this.setReadAt(LocalDateTime.now());
     this.setNotiStatus(NotiStatus.READ);
   }
+
+  public void sent() {
+    this.setSentAt(LocalDateTime.now());
+    this.setNotiStatus(NotiStatus.SENT);
+  }
 }

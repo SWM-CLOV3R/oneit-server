@@ -6,22 +6,21 @@ plugins {
 }
 
 tasks.bootJar {
-    enabled = false
+    enabled = true
 }
 
 tasks.jar {
-    enabled = true
+    enabled = false
 }
 
 
 dependencies {
-    implementation project(':api')
     implementation project(':domain')
 
-    // slack
-    implementation 'com.slack.api:slack-api-client:1.40.0'
+    // batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
-
 // Uncomment to use JUnit Platform for tests
 // tasks.withType(Test) {
 //     useJUnitPlatform()
