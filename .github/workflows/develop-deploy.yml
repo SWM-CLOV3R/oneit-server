@@ -150,7 +150,7 @@ jobs:
           sudo apt-get update && sudo apt-get install infisical
       - name: Log in to Infisical and Fetch environment variables from Infisical
         run: |
-          infisical login --method=universal-auth --client-id ${{ secrets.INFISICAL_CLIENT_ID }} --client-secret ${{ secrets.INFISICAL_CLIENT_SECRET }} --silent --plain
+          export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id ${{ secrets.INFISICAL_CLIENT_ID }} --client-secret ${{ secrets.INFISICAL_CLIENT_SECRET }} --silent --plain)
           infisical secrets --projectId ${{ secrets.INFISICAL_PROJECT_ID }} --env=dev --recursive > secrets_raw.txt
           awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if ($2 && $3) print $2 "=" $3}' secrets_raw.txt > .env
 
