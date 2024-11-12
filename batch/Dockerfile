@@ -2,7 +2,7 @@
 FROM public.ecr.aws/lambda/java:17 AS build
 
 # 빌드할 JAR 파일 경로 설정
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=batch/build/libs/*.jar
 COPY ${JAR_FILE} /oneit/app.jar
 
 # 2. AWS Lambda Web Adapter를 위한 빌드 단계
