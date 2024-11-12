@@ -107,7 +107,11 @@ public class FriendService {
   public List<FriendDTO> getFriends(Long userIdx) {
     List<Friendship> friendshipsList = friendshipRepository.findByUserIdx(userIdx);
     return friendshipsList.stream()
-        .map(friendship -> new FriendDTO(friendship.getFriend()))
+        .map(friendship -> {
+          FriendDTO friendDTO = new FriendDTO(friendship.getFriend());
+          friendDTO.setTimeAttackAlarm(friendship.getTimeAttackAlarm());
+          return friendDTO;
+          })
         .toList();
   }
 }
