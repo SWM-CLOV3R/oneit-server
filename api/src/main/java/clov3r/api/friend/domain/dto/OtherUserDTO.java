@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,6 +15,8 @@ public class OtherUserDTO {
   private String profileImg;
   private LocalDate birthDate;
   private Boolean isFriend;
+  @Setter
+  private boolean timeAttackAlarm;
 
   public OtherUserDTO(User user, Boolean isFriend) {
     this.idx = user.getIdx();
