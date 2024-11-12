@@ -11,13 +11,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductLikeRepository extends JpaRepository<ProductLike, Long> {
 
-  @Query("SELECT pl FROM ProductLike pl WHERE pl.productIdx = :productIdx AND pl.userIdx = :userIdx")
+  @Query("SELECT pl FROM ProductLike pl WHERE pl.product.idx = :productIdx AND pl.user.idx = :userIdx")
   ProductLike findProductLike(Long productIdx, Long userIdx);
 
-  @Query("SELECT COUNT(pl) FROM ProductLike pl WHERE pl.productIdx = :productIdx AND pl.likeStatus = :likeStatus")
+  @Query("SELECT COUNT(pl) FROM ProductLike pl WHERE pl.product.idx = :productIdx AND pl.likeStatus = :likeStatus")
   int countByProductIdxAndLikeStatus(Long productIdx, LikeStatus likeStatus);
 
-  @Query("SELECT p FROM Product p JOIN ProductLike pl ON p.idx = pl.productIdx WHERE pl.userIdx = :userIdx AND pl.likeStatus = :likeStatus")
+  @Query("SELECT p FROM Product p JOIN ProductLike pl ON p.idx = pl.product.idx WHERE pl.user.idx = :userIdx AND pl.likeStatus = :likeStatus")
   List<Product> findLikeProductList(Long userIdx, LikeStatus likeStatus);
 
 }

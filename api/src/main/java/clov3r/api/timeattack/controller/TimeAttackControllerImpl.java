@@ -10,6 +10,7 @@ import clov3r.api.friend.repository.FriendshipRepository;
 import clov3r.api.friend.service.FriendService;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.service.ProductService;
+import clov3r.api.timeattack.dto.BirthdayFriendDTO;
 import clov3r.api.timeattack.service.TimeAttackService;
 import clov3r.domain.domains.entity.Friendship;
 import clov3r.domain.domains.entity.Product;
@@ -85,10 +86,10 @@ public class TimeAttackControllerImpl implements TimeAttackController {
   }
 
   @Override
-  public ResponseEntity<List<FriendDTO>> getBirthdayFriends(
+  public ResponseEntity<List<BirthdayFriendDTO>> getBirthdayFriends(
       @Parameter(hidden = true) @Auth Long userIdx
   ) {
-    List<FriendDTO> birthdayFriends = timeAttackService.getBirthdayFriends(userIdx);
+    List<BirthdayFriendDTO> birthdayFriends = timeAttackService.getBirthdayFriends(userIdx);
     return ResponseEntity.ok(birthdayFriends);
   }
 }

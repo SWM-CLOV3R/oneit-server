@@ -1,5 +1,9 @@
 package clov3r.api.product.service;
 
+import static clov3r.domain.domains.entity.QProduct.product;
+import static net.sf.jsqlparser.util.validation.metadata.NamedObject.user;
+
+import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.domain.collection.ProductFilter;
 import clov3r.api.product.domain.collection.ProductSearch;
@@ -23,6 +27,7 @@ public class ProductService {
   private final ProductRepository productRepository;
   private final KeywordRepository keywordRepository;
   private final ProductLikeRepository productLikeRepository;
+  private final UserRepository userRepository;
 
 
   public List<ProductSummaryDTO> filterProducts(ProductFilter productFilter, Long userIdx) {
@@ -102,8 +107,8 @@ public class ProductService {
       }
     } else {
       ProductLike newProductLike = ProductLike.builder()
-          .productIdx(productIdx)
-          .userIdx(userIdx)
+          .product(productRepository.findById(productIdx))
+          .user(userRepository.findByUserIdx(userIdx))
           .likeStatus(LikeStatus.LIKE)
           .build();
       newProductLike.createBaseEntity();

@@ -8,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,10 +27,14 @@ import lombok.Setter;
 public class ProductLike extends BaseEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idx;
-  @Column(name = "user_idx")
-  private Long userIdx;
-  @Column(name = "product_idx")
-  private Long productIdx;
+
+  @ManyToOne
+  @JoinColumn(name = "user_idx")
+  private User user;
+
+  @ManyToOne
+  @JoinColumn(name = "product_idx")
+  private Product product;
 
   @Setter
   @Column(name = "like_status")

@@ -5,7 +5,9 @@ import clov3r.api.friend.repository.FriendshipRepository;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.api.product.repository.ProductLikeRepository;
+import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.product.service.ProductService;
+import clov3r.api.timeattack.dto.BirthdayFriendDTO;
 import clov3r.domain.domains.entity.Friendship;
 import clov3r.domain.domains.entity.Product;
 import clov3r.domain.domains.entity.User;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TimeAttackService {
   private final ProductLikeRepository productLikeRepository;
   private final FriendshipRepository friendshipRepository;
+  private final ProductRepository productRepository;
 
   public Boolean toggleTimeAttackAlarm(Friendship friendship) {
     friendship.changeTimeAttackAlarm();
@@ -32,7 +35,7 @@ public class TimeAttackService {
     return productLikeRepository.findLikeProductList(friendIdx, LikeStatus.LIKE);
   }
 
-  public List<FriendDTO> getBirthdayFriends(Long userIdx) {
+  public List<BirthdayFriendDTO> getBirthdayFriends(Long userIdx) {
     int days = 7;
     List<User> birthdayFriends = friendshipRepository.findBirthdayFriends(userIdx, days);
     // sort by closest birthday
@@ -42,7 +45,14 @@ public class TimeAttackService {
       return Integer.compare(Math.abs(aDiff), Math.abs(bDiff));
     });
     return birthdayFriends.stream()
-        .map(FriendDTO::new)
+        .map(friend -> {
+          Friendship friendship = friendshipRepository.findByUserIdxAndFriendIdx(userIdx, friend.getIdx());
+          boolean haveWishList = productRepository.existsProductLike(friend.getIdx());
+          BirthdayFriendDTO birthdayFriendDTO = new BirthdayFriendDTO(friend);
+          birthdayFriendDTO.setTimeAttackAlarm(friendship.getTimeAttackAlarm());
+          birthdayFriendDTO.setHaveWishList(haveWishList);
+          return birthdayFriendDTO;
+        })
         .toList();
   }
 

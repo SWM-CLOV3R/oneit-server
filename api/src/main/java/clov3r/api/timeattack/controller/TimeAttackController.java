@@ -3,6 +3,7 @@ package clov3r.api.timeattack.controller;
 import clov3r.api.auth.security.Auth;
 import clov3r.api.friend.domain.dto.FriendDTO;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
+import clov3r.api.timeattack.dto.BirthdayFriendDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +42,7 @@ public interface TimeAttackController {
 
   @Operation(summary = "7일 이내 생일인 친구 조회", description = "7일 이내 생일인 친구를 조회합니다.")
   @GetMapping("/api/v2/friends/birthday")
-  ResponseEntity<List<FriendDTO>> getBirthdayFriends(
+  ResponseEntity<List<BirthdayFriendDTO>> getBirthdayFriends(
       @Parameter(hidden = true) @Auth Long userIdx
   );
 }
