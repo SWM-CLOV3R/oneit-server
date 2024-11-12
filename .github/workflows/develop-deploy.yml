@@ -154,11 +154,20 @@ jobs:
           infisical secrets --projectId ${{ secrets.INFISICAL_PROJECT_ID }} --env=dev --recursive > secrets_raw.txt
           awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if ($2 && $3) print $2 "=" $3}' secrets_raw.txt > .env
 
+      - name: Set up SSH key and known hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "$BATCH_EC2_HOST_KEY" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
       - name: Copy .env file to EC2
         run: |
           echo "${{ secrets.BATCH_EC2_PRIVATE_KEY }}" > batch_ec2_private_key.pem
           chmod 600 batch_ec2_private_key.pem
           scp -i batch_ec2_private_key.pem .env ${{ secrets.BATCH_EC2_USER }}@${{ secrets.BATCH_EC2_HOST }}:~/.env
+
+      - name: Clean up private key file
+        run: rm batch_ec2_private_key.pem
 
       - name: Deploy Docker container to EC2
         uses: appleboy/ssh-action@master
