@@ -47,6 +47,10 @@ public class BirthdayNotificationTasklet implements Tasklet {
     // 생일인 사용자의 친구들에게 알림 메시지 전송
     for (User user : usersWithUpcomingBirthdays) {
       List<Friendship> friendsOfBirthdayUser = batchRepository.findByUserIdx(user.getIdx());
+      // TODO: 생일자 위시리스트가 없으면 패스
+//      if (batchRepository.existsProductLike(user.getIdx())) {
+//        continue;
+//      }
       for (Friendship friend : friendsOfBirthdayUser) {
         Notification notification = Notification.builder()
             .receiver(friend.getFriend())
