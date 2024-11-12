@@ -130,11 +130,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA -f batch/Dockerfile .
+          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }} -f batch/Dockerfile .
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
   
 
   deploy-batch:
@@ -185,11 +185,13 @@ jobs:
           run: |
             echo "ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}"
             echo "ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}"
-            echo "GITHUB_SHA: $GITHUB_SHA"
+            echo "GITHUB_SHA: ${{ github.sha }}"
           script: |
+            export GITHUB_SHA=${{ github.sha }}  # GITHUB_SHA 값을 환경 변수로 설정
+            echo "Using GITHUB_SHA: $GITHUB_SHA"
             chmod 644 ~/.env
             ls -la ~/.env
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
             docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
-            docker run -d -p 9000:9000 --env-file ~/.env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+            docker run -d -p 9000:9000 ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
           debug: true
