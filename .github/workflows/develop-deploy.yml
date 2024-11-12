@@ -153,8 +153,8 @@ jobs:
           infisical login --method=universal-auth --client-id ${{ secrets.INFISICAL_CLIENT_ID }} --client-secret ${{ secrets.INFISICAL_CLIENT_SECRET }} --silent --plain
       - name: Fetch environment variables from Infisical
         run: |
-          infisical secrets --projectId ${{ secrets.INFISICAL_PROJECT_ID }} --env=dev --recursive > ~/oneit/secrets_raw.txt
-          awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if ($2 && $3) print $2 "=" $3}' ~/oneit/secrets_raw.txt > ~/oneit/.env
+          infisical secrets --projectId ${{ secrets.INFISICAL_PROJECT_ID }} --env=dev --recursive > secrets_raw.txt
+          awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if ($2 && $3) print $2 "=" $3}' secrets_raw.txt > .env
 
       - name: Deploy Docker container to EC2
         uses: appleboy/ssh-action@master
@@ -164,4 +164,4 @@ jobs:
           key: ${{ secrets.BATCH_EC2_PRIVATE_KEY }}
           script: |
             docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
-            docker run -d -p 9000:9000 --env-file ~/oneit/.env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+            docker run -d -p 9000:9000 --env-file .env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
