@@ -185,7 +185,7 @@ jobs:
           script: |
             export GITHUB_SHA=${{ github.sha }}
             
-            CONTAINER_ID=$(docker ps -q -f "ancestor=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${GITHUB_SHA }}")
+            CONTAINER_ID=$(docker ps -q -f "ancestor=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${GITHUB_SHA}}")
             if [ -n "$CONTAINER_ID" ]; then
               echo "Stopping existing container with ID: $CONTAINER_ID"
               docker stop $CONTAINER_ID
