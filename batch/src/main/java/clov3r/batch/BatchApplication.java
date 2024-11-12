@@ -9,13 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {
-    "clov3r.batch",
-    "clov3r.api.auth.repository",
-    "clov3r.api.notification.service.kakao",
-    "clov3r.api.friend.repository",
-    "clov3r.api.notification.service.kakao",
-})
 @EntityScan(basePackages = {"clov3r.domain.domains.entity"})
 @EnableScheduling
 public class BatchApplication {
