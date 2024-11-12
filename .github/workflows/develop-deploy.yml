@@ -116,9 +116,7 @@ jobs:
 
       # gradle 빌드
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2.6.0
-        with:
-          arguments: build
+        run: ./gradlew :batch:build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -184,7 +182,13 @@ jobs:
           username: ${{ secrets.BATCH_EC2_USER }}
           key: ${{ secrets.BATCH_EC2_PRIVATE_KEY }}
           port: 22
+          run: |
+            echo "ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}"
+            echo "ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}"
+            echo "GITHUB_SHA: $GITHUB_SHA"
           script: |
+            chmod 644 ~/.env
+            ls -la ~/.env
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
             docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
             docker run -d -p 9000:9000 --env-file ~/.env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
