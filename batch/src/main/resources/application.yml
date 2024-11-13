@@ -13,7 +13,7 @@ spring:
       enabled: false
     jdbc:
       schema: classpath:org/springframework/batch/core/schema-mysql.sql
-      initialize-schema: never
+      initialize-schema: always
   flyway:
     enabled: false
 
