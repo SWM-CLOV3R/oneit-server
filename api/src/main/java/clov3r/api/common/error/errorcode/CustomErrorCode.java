@@ -37,6 +37,7 @@ public enum CustomErrorCode implements ErrorCode {
   CANNOT_DELETE_OTHERS_COMMENT(BAD_REQUEST, "다른 사용자의 댓글은 삭제할 수 없습니다."),
   TIME_ATTACK_ALARM_OFF(BAD_REQUEST, "타임어택 알람이 꺼져있습니다."),
 
+
   /**
    * token 오류
    */
@@ -64,6 +65,7 @@ public enum CustomErrorCode implements ErrorCode {
   DEVICE_TOKEN_NOT_FOUND(NOT_FOUND, "디바이스 토큰을 찾을 수 없습니다."),
   NOTIFICATION_NOT_FOUND(NOT_FOUND, "알림을 찾을 수 없습니다."),
   NOT_FOUND_FRIENDSHIP(NOT_FOUND, "친구 관계가 존재하지 않습니다."),
+  NO_MORE_PRODUCTS(NOT_FOUND, "더 이상 상품이 없습니다."),
 
   /**
    * FORBIDDEN

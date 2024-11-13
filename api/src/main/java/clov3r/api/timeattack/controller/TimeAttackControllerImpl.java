@@ -16,6 +16,7 @@ import clov3r.domain.domains.entity.Friendship;
 import clov3r.domain.domains.entity.Product;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class TimeAttackControllerImpl implements TimeAttackController {
+
   private final TimeAttackService timeAttackService;
   private final FriendshipRepository friendshipRepository;
   private final ProductService productService;
@@ -76,6 +78,10 @@ public class TimeAttackControllerImpl implements TimeAttackController {
       throw new BaseExceptionV2(TIME_ATTACK_ALARM_OFF);
     }
     List<Product> friendWishList = timeAttackService.getFriendWishList(friendIdx);
+    if (friendWishList.size() == 1 && Objects.equals(excludeProductIdx,
+        friendWishList.get(0).getIdx())) {
+      throw new BaseExceptionV2(CustomErrorCode.NO_MORE_PRODUCTS);
+    }
     // Get random product from friend's wish list
     Product randomProduct = productService.getRandomProduct(friendWishList, excludeProductIdx);
     ProductSummaryDTO productSummaryDTO = new ProductSummaryDTO(

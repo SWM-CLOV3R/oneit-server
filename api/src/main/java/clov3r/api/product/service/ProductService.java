@@ -157,6 +157,9 @@ public class ProductService {
 
   public Product getRandomProduct(List<Product> friendWishList, Long excludeProductIdx) {
     Product randomProduct = null;
+    if (friendWishList.size() == 1) {
+      return friendWishList.get(0);
+    }
     while (randomProduct == null) {
       int randomIndex = (int) (Math.random() * friendWishList.size());
       randomProduct = friendWishList.get(randomIndex);
