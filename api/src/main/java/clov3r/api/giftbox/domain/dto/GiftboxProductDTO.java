@@ -1,5 +1,6 @@
 package clov3r.api.giftbox.domain.dto;
 
+import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.domain.status.ProductStatus;
 import clov3r.domain.domains.entity.GiftboxProduct;
 import clov3r.domain.domains.entity.Keyword;
@@ -17,17 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GiftboxProductDTO {
-  private Long idx;
-  private String name;
-  private String description;
-  private int originalPrice;
-//  private int currentPrice;
-//  private int discountRate;
-  private String thumbnailUrl;
-  private ProductStatus productStatus;
-  private List<Keyword> keywords = new ArrayList<>();
-
+public class GiftboxProductDTO extends ProductSummaryDTO {
   // information in giftbox
   private int likeCountInGiftbox;
   private VoteStatus voteStatus;
@@ -36,13 +27,7 @@ public class GiftboxProductDTO {
 
 
   public GiftboxProductDTO(GiftboxProduct giftboxProduct, VoteStatus voteStatus, List<Keyword> keywords) {
-    this.idx = giftboxProduct.getProduct().getIdx();
-    this.name = giftboxProduct.getProduct().getName();
-    this.description = giftboxProduct.getProduct().getDescription();
-    this.originalPrice = giftboxProduct.getProduct().getOriginalPrice();
-    this.thumbnailUrl = giftboxProduct.getProduct().getThumbnailUrl();
-    this.productStatus = giftboxProduct.getProduct().getStatus();
-    this.keywords.addAll(keywords);
+    super(giftboxProduct.getProduct(), null);
     this.likeCountInGiftbox = giftboxProduct.getLikeCount();
     this.voteStatus = voteStatus;
     this.purchaseStatus = giftboxProduct.getPurchaseStatus();

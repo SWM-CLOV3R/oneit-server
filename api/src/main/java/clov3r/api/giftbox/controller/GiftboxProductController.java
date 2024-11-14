@@ -152,7 +152,6 @@ public class GiftboxProductController {
             giftboxProductService.getVoteStatusOfUser(
                 userIdx, giftboxIdx, productIdx
             ),
-            productService.getLikeStatus(productIdx, userIdx),
             productService.getDetailImages(productIdx)
         );
 
