@@ -24,6 +24,7 @@ public class ProductSummaryDTO {
     private String thumbnailUrl;
     private ProductStatus productStatus;
     private List<Keyword> keywords = new ArrayList<>();
+    private List<String> displayTags = new ArrayList<>();
 
     private int likeCount;
     private LikeStatus likeStatus;
@@ -39,6 +40,7 @@ public class ProductSummaryDTO {
         this.thumbnailUrl = product.getThumbnailUrl();
         this.productStatus = product.getStatus();
         this.keywords = product.getKeyword();
+        this.displayTags = product.getDisplayTags();
 
         this.likeCount = product.getLikeCount();
         this.likeStatus = likeStatus;
