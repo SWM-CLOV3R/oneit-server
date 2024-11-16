@@ -4,10 +4,10 @@ import static clov3r.domain.domains.entity.QCollection.collection;
 import static clov3r.domain.domains.entity.QCollectionProduct.collectionProduct;
 import static clov3r.domain.domains.entity.QProduct.product;
 
-import clov3r.api.product.domain.status.ProductStatus;
 import clov3r.domain.domains.entity.Collection;
 import clov3r.domain.domains.entity.CollectionProduct;
 import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.ProductStatus;
 import clov3r.domain.domains.status.Status;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

@@ -1,6 +1,6 @@
 package clov3r.domain.domains.entity;
 
-import clov3r.api.product.domain.status.ProductStatus;
+import clov3r.domain.domains.status.ProductStatus;
 import clov3r.domain.domains.type.Gender;
 import clov3r.domain.domains.type.JsonNodeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,7 +20,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
