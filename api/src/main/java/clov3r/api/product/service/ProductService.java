@@ -167,4 +167,8 @@ public class ProductService {
     return randomProduct;
   }
 
+  public List<Product> getRelatedProducts(ProductSearch productSearch) {
+    return productRepository.findProductListPagination(10L, 10);
+  }
+
 }
