@@ -1,4 +1,4 @@
-package clov3r.api.product.domain.status;
+package clov3r.domain.domains.status;
 
 public enum LikeStatus {
   LIKE,

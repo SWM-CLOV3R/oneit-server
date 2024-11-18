@@ -1,6 +1,6 @@
 package clov3r.domain.domains.entity;
 
-import clov3r.api.product.domain.status.LikeStatus;
+import clov3r.domain.domains.status.LikeStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

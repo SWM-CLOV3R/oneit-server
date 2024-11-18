@@ -1,7 +1,6 @@
 package clov3r.api.giftbox.domain.dto;
 
 import clov3r.api.product.domain.dto.ProductDetailDTO;
-import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.domain.domains.entity.GiftboxProduct;
 import clov3r.domain.domains.entity.Product;
 import clov3r.domain.domains.status.PurchaseStatus;

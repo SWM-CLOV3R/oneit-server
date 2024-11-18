@@ -1,8 +1,8 @@
 package clov3r.api.product.repository;
 
-import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.domain.domains.entity.Product;
 import clov3r.domain.domains.entity.ProductLike;
+import clov3r.domain.domains.status.LikeStatus;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

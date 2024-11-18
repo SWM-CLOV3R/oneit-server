@@ -1,18 +1,14 @@
 package clov3r.api.timeattack.service;
 
-import clov3r.api.friend.domain.dto.FriendDTO;
 import clov3r.api.friend.repository.FriendshipRepository;
-import clov3r.api.product.domain.dto.ProductSummaryDTO;
-import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.api.product.repository.ProductLikeRepository;
 import clov3r.api.product.repository.ProductRepository;
-import clov3r.api.product.service.ProductService;
 import clov3r.api.timeattack.dto.BirthdayFriendDTO;
 import clov3r.domain.domains.entity.Friendship;
 import clov3r.domain.domains.entity.Product;
 import clov3r.domain.domains.entity.User;
+import clov3r.domain.domains.status.LikeStatus;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

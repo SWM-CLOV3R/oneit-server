@@ -1,18 +1,15 @@
 package clov3r.api.product.service;
 
-import static clov3r.domain.domains.entity.QProduct.product;
-import static net.sf.jsqlparser.util.validation.metadata.NamedObject.user;
-
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.domain.collection.ProductFilter;
 import clov3r.api.product.domain.collection.ProductSearch;
-import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.api.product.repository.KeywordRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.product.repository.ProductLikeRepository;
 import clov3r.domain.domains.entity.Product;
 import clov3r.domain.domains.entity.ProductLike;
+import clov3r.domain.domains.status.LikeStatus;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
