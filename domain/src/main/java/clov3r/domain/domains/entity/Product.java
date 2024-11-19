@@ -98,6 +98,9 @@ public class Product extends BaseEntity {
     @Convert(converter = JsonNodeConverter.class)
     private JsonNode options;
 
+    @Column(name = "related_product")
+    private String relatedProduct;
+
     public List<String> getDisplayTags() {
         // '#'기준으로 문자열 쪼개기
         if (displayTags == null) {

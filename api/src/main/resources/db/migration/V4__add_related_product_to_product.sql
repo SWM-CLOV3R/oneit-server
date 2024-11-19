@@ -1,0 +1,1 @@
+ALTER TABLE product ADD COLUMN related_product TEXT DEFAULT NULL;
