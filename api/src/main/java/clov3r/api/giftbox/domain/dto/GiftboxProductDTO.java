@@ -8,11 +8,9 @@ import clov3r.domain.domains.status.VoteStatus;
 import clov3r.domain.domains.type.EmojiName;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
