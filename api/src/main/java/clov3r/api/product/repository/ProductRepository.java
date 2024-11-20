@@ -1,13 +1,15 @@
 package clov3r.api.product.repository;
 
 import static clov3r.domain.domains.entity.QProduct.product;
+import static clov3r.domain.domains.entity.QProductLike.productLike;
 
 import clov3r.api.product.domain.collection.MatchedProduct;
 import clov3r.api.product.domain.collection.ProductFilter;
 import clov3r.api.product.domain.collection.ProductSearch;
 import clov3r.api.product.domain.collection.QuestionCategory;
-import clov3r.api.product.domain.status.ProductStatus;
 import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.LikeStatus;
+import clov3r.domain.domains.status.ProductStatus;
 import clov3r.domain.domains.type.Gender;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -296,7 +298,9 @@ public class ProductRepository {
     public List<Product> searchProduct(String searchKeyword) {
         return queryFactory.selectFrom(product)
                 .where(product.name.contains(searchKeyword)
-                        .or(product.brandName.contains(searchKeyword)))
+                        .or(product.brandName.contains(searchKeyword))
+                        .or(product.displayTags.contains(searchKeyword))
+                        .or(product.description.contains(searchKeyword)))
                 .where(product.status.eq(ProductStatus.ACTIVE))
                 .fetch();
     }
@@ -307,5 +311,14 @@ public class ProductRepository {
                 .where(product.idx.eq(productIdx))
                 .execute();
     }
+
+    public boolean existsProductLike(Long userIdx) {
+        return queryFactory.select(productLike)
+            .from(productLike)
+            .where(productLike.user.idx.eq(userIdx)
+                .and(productLike.likeStatus.eq(LikeStatus.LIKE)))
+            .fetchFirst() != null;
+    }
+
 }
 

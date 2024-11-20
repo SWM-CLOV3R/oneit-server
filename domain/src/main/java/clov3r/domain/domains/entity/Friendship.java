@@ -1,9 +1,11 @@
 package clov3r.domain.domains.entity;
 
 import clov3r.domain.domains.status.Status;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,13 +28,16 @@ public class Friendship extends BaseEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idx;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_idx")
   private User user;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "friend_idx")
   private User friend;
+
+  @Column(name = "time_attack_alarm")
+  private Boolean timeAttackAlarm;
 
   @Setter
   @Enumerated(EnumType.STRING)
@@ -48,5 +53,9 @@ public class Friendship extends BaseEntity {
   public void deleteFriendship() {
     this.status = Status.DELETED;
     this.deleteBaseEntity();
+  }
+
+  public void changeTimeAttackAlarm() {
+    this.timeAttackAlarm = !this.timeAttackAlarm;
   }
 }

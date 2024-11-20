@@ -6,7 +6,6 @@ import static clov3r.domain.domains.entity.QGiftboxUser.giftboxUser;
 import static clov3r.domain.domains.entity.QInquiry.inquiry;
 import static clov3r.domain.domains.entity.QProduct.product;
 
-import clov3r.api.product.domain.status.ProductStatus;
 import clov3r.api.giftbox.domain.request.PostGiftboxRequest;
 import clov3r.api.auth.repository.UserRepository;
 import clov3r.domain.domains.entity.Giftbox;
@@ -14,6 +13,7 @@ import clov3r.domain.domains.entity.GiftboxProduct;
 import clov3r.domain.domains.entity.GiftboxUser;
 import clov3r.domain.domains.entity.Product;
 import clov3r.domain.domains.status.InvitationStatus;
+import clov3r.domain.domains.status.ProductStatus;
 import clov3r.domain.domains.status.Status;
 import clov3r.domain.domains.status.UserStatus;
 import clov3r.domain.domains.type.GiftboxUserRole;
@@ -255,8 +255,11 @@ public class GiftboxCustomRepositoryImpl implements GiftboxCustomRepository {
         return queryFactory.select(giftboxProduct)
                 .from(giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
-                    giftboxProduct.product.name.contains(searchKeyword),
                     giftboxProduct.status.eq(Status.ACTIVE))
+                .where(giftboxProduct.product.name.contains(searchKeyword)
+                        .or(giftboxProduct.product.brandName.contains(searchKeyword))
+                        .or(giftboxProduct.product.displayTags.contains(searchKeyword))
+                        .or(giftboxProduct.product.description.contains(searchKeyword)))
                 .where(giftboxProduct.product.status.eq(ProductStatus.ACTIVE)
                     .or(giftboxProduct.product.status.eq(ProductStatus.INVALID)))
                 .fetch();

@@ -1,14 +1,15 @@
 package clov3r.api.product.service;
 
+import clov3r.api.auth.repository.UserRepository;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.domain.collection.ProductFilter;
 import clov3r.api.product.domain.collection.ProductSearch;
-import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.api.product.repository.KeywordRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.product.repository.ProductLikeRepository;
 import clov3r.domain.domains.entity.Product;
 import clov3r.domain.domains.entity.ProductLike;
+import clov3r.domain.domains.status.LikeStatus;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class ProductService {
   private final ProductRepository productRepository;
   private final KeywordRepository keywordRepository;
   private final ProductLikeRepository productLikeRepository;
+  private final UserRepository userRepository;
 
 
   public List<ProductSummaryDTO> filterProducts(ProductFilter productFilter, Long userIdx) {
@@ -102,8 +104,8 @@ public class ProductService {
       }
     } else {
       ProductLike newProductLike = ProductLike.builder()
-          .productIdx(productIdx)
-          .userIdx(userIdx)
+          .product(productRepository.findById(productIdx))
+          .user(userRepository.findByUserIdx(userIdx))
           .likeStatus(LikeStatus.LIKE)
           .build();
       newProductLike.createBaseEntity();
@@ -150,4 +152,44 @@ public class ProductService {
     return detailImageList;
   }
 
+  public Product getRandomProduct(List<Product> friendWishList, Long excludeProductIdx) {
+    Product randomProduct = null;
+    if (friendWishList.size() == 1) {
+      return friendWishList.get(0);
+    }
+    while (randomProduct == null) {
+      int randomIndex = (int) (Math.random() * friendWishList.size());
+      randomProduct = friendWishList.get(randomIndex);
+      if (randomProduct.getIdx().equals(excludeProductIdx)) {
+        randomProduct = null;
+      }
+    }
+    return randomProduct;
+  }
+
+  public List<Product> getRelatedProducts(List<Product> products) {
+    List<Long> relatedProductsList = new ArrayList<>();
+    for (Product product : products) {
+      List<Long> relatedProductIdxList = product.getRelatedProduct();
+      relatedProductsList.addAll(relatedProductIdxList);
+    }
+    relatedProductsList = relatedProductsList.stream().distinct().toList();
+    // 랜덤으로 10개만
+    if (relatedProductsList.size() > 10) {
+      List<Long> randomRelatedProductsList = new ArrayList<>();
+      while (randomRelatedProductsList.size() < 10) {
+        int randomIndex = (int) (Math.random() * relatedProductsList.size());
+        randomRelatedProductsList.add(relatedProductsList.get(randomIndex));
+      }
+      relatedProductsList = randomRelatedProductsList;
+    }
+    List<Product> relatedProductsUnion = new ArrayList<>();
+    for (Long relatedProductIdx : relatedProductsList) {
+      Product relatedProduct = productRepository.findById(relatedProductIdx);
+      if (relatedProduct != null) {
+        relatedProductsUnion.add(relatedProduct);
+      }
+    }
+    return relatedProductsUnion;
+  }
 }

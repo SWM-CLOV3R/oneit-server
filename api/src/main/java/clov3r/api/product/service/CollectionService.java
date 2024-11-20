@@ -21,11 +21,8 @@ public class CollectionService {
     List<CollectionProductDTO> collectionProductDTOList = collectionProductList.stream().map(
         collectionProduct ->
         new CollectionProductDTO(
-            collectionProduct.getProduct().getIdx(),
-            collectionProduct.getProduct().getName(),
-            collectionProduct.getProduct().getKeyword(),
-            collectionProduct.getDetailImg(),
-            collectionProduct.getProduct().getStatus()
+            collectionProduct.getProduct(),
+            collectionProduct.getDetailImg()
         )).toList();
     return new CollectionDetailDTO(
         collection,

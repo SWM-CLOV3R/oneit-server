@@ -1,8 +1,9 @@
 package clov3r.api.product.domain.dto;
 
-import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.domain.domains.entity.Category;
 import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.LikeStatus;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class ProductDetailDTO extends ProductSummaryDTO {
     private String categoryDisplayName;
     private Category category;
     private List<String> detailImages = new ArrayList<>();
+    private JsonNode options;
 
 
     // 상세 조회시 사용
@@ -31,6 +33,7 @@ public class ProductDetailDTO extends ProductSummaryDTO {
         this.categoryName = product.getCategory().getName();
         this.categoryDisplayName = product.getCategoryDisplayName();
         this.detailImages = detailImages;
+        this.options = product.getOptions();
     }
 
 }

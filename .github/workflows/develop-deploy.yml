@@ -87,3 +87,112 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
           --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$GITHUB_SHA.zip
+
+
+  build-batch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # gradle 실행 권한 부여
+      - name: Grant execute permission for gradlew
+        run: |
+          chmod +x gradlew
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # gradle 빌드
+      - name: Build with Gradle
+        run: ./gradlew :batch:build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY_ID }}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }} -f batch/Dockerfile .
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+  
+
+  deploy-batch:
+    needs: build-batch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Infisical CLI
+        run: |
+          curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash
+          sudo apt-get update && sudo apt-get install infisical
+      - name: Log in to Infisical and Fetch environment variables from Infisical
+        run: |
+          export INFISICAL_TOKEN=$(infisical login --method=universal-auth --client-id ${{ secrets.INFISICAL_CLIENT_ID }} --client-secret ${{ secrets.INFISICAL_CLIENT_SECRET }} --silent --plain)
+          infisical secrets --projectId ${{ secrets.INFISICAL_PROJECT_ID }} --env=dev --recursive > secrets_raw.txt
+          awk 'BEGIN {FS="│"} NR>2 {gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3); if ($2 && $3) print $2 "=" $3}' secrets_raw.txt > .env
+
+      - name: Set up SSH key and known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.BATCH_EC2_HOST }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Copy .env file to EC2
+        run: |
+          echo "${{ secrets.BATCH_EC2_PRIVATE_KEY }}" > batch_ec2_private_key.pem
+          chmod 600 batch_ec2_private_key.pem
+          scp -i batch_ec2_private_key.pem .env ${{ secrets.BATCH_EC2_USER }}@${{ secrets.BATCH_EC2_HOST }}:~/.env
+
+      - name: Clean up private key file
+        run: rm batch_ec2_private_key.pem
+
+      # Set up AWS CLI
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY_ID }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy Docker container to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.BATCH_EC2_HOST }}
+          username: ${{ secrets.BATCH_EC2_USER }}
+          key: ${{ secrets.BATCH_EC2_PRIVATE_KEY }}
+          port: 22
+          script: |
+            CONTAINER_ID=$(docker ps -q -f "name=oneit-batch")
+            if [ -n "$CONTAINER_ID" ]; then
+              echo "Stopping existing container with ID: $CONTAINER_ID"
+              docker stop $CONTAINER_ID
+              docker rm $CONTAINER_ID
+            else
+              echo "No existing container found"
+            fi
+            
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+            docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+            docker run --name oneit-batch -d -p 9000:9000 --env-file ~/.env ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+          debug: true

@@ -10,7 +10,6 @@ import clov3r.api.notification.event.template.KakaoAlarmTemplate;
 import clov3r.api.notification.service.kakao.KakaoAlarmService;
 import clov3r.domain.domains.entity.Notification;
 import java.io.IOException;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;

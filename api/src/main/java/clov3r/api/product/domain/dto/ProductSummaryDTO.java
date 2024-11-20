@@ -1,9 +1,9 @@
 package clov3r.api.product.domain.dto;
 
-import clov3r.api.product.domain.status.LikeStatus;
-import clov3r.api.product.domain.status.ProductStatus;
 import clov3r.domain.domains.entity.Keyword;
 import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.LikeStatus;
+import clov3r.domain.domains.status.ProductStatus;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -24,6 +24,7 @@ public class ProductSummaryDTO {
     private String thumbnailUrl;
     private ProductStatus productStatus;
     private List<Keyword> keywords = new ArrayList<>();
+    private List<String> displayTags = new ArrayList<>();
 
     private int likeCount;
     private LikeStatus likeStatus;
@@ -39,6 +40,7 @@ public class ProductSummaryDTO {
         this.thumbnailUrl = product.getThumbnailUrl();
         this.productStatus = product.getStatus();
         this.keywords = product.getKeyword();
+        this.displayTags = product.getDisplayTags();
 
         this.likeCount = product.getLikeCount();
         this.likeStatus = likeStatus;

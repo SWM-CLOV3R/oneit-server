@@ -6,16 +6,17 @@ import clov3r.api.common.error.errorcode.CustomErrorCode;
 import clov3r.api.common.error.exception.BaseExceptionV2;
 import clov3r.api.auth.security.Auth;
 import clov3r.api.product.domain.dto.ProductDetailDTO;
+import clov3r.api.product.domain.dto.ProductRecommandDTO;
 import clov3r.api.product.domain.dto.ProductSummaryDTO;
 import clov3r.api.product.domain.collection.ProductFilter;
 import clov3r.api.product.domain.collection.ProductSearch;
-import clov3r.api.product.domain.status.LikeStatus;
 import clov3r.api.product.repository.ProductLikeRepository;
 import clov3r.api.product.repository.ProductRepository;
 import clov3r.api.product.service.CategoryService;
 import clov3r.api.product.service.KeywordService;
 import clov3r.api.product.service.ProductService;
 import clov3r.domain.domains.entity.Product;
+import clov3r.domain.domains.status.LikeStatus;
 import clov3r.domain.domains.type.Gender;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,7 +64,7 @@ public class ProductControllerV2 {
             throw new BaseExceptionV2(CustomErrorCode.REQUEST_GENDER_ERROR);
         }
         // check price
-        if (productSearch.getMinPrice() <0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
+        if (productSearch.getMinPrice() < 0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
             throw new BaseExceptionV2(CustomErrorCode.REQUEST_PRICE_ERROR);
         }
         // check keywords
@@ -92,6 +94,77 @@ public class ProductControllerV2 {
 
         return ResponseEntity.ok(productDTOs);
     }
+
+//    @GetMapping("/api/v2/product/recommand/result")
+//    public ResponseEntity<ProductRecommandDTO> recommandProductsWithCategory(
+//        @ModelAttribute ProductSearch productSearch,
+//        @Parameter(hidden = true) @Auth(required = false) Long userIdx
+//    ) {
+//    }
+
+    @Tag(name = "선물 추천 API", description = "선물 추천 API 목록")
+    @Operation(
+        summary = "성별, 가격, 키워드, 카테고리 반영한 필터링 API + 관련 상품 조회",
+        description = "성별, 가격에 해당하는 상품 리스트 중에서 " +
+            "각 질문에 해당하는 카테고리의 제품 중 키워드를 만족시키는 상품들을 모두 가져온 뒤, " +
+            "그 중 키워드 일치 개수가 많은 순서대로 출력되며 키워드 매칭 개수가 0인 경우 제외됩니다. " +
+            "개수가 5개 미만인 경우 그대로 출력됩니다. ")
+    @PostMapping("/api/v2/product/recommand/result")
+    public ResponseEntity<ProductRecommandDTO> recommandProductsWithCategory(
+        @RequestBody ProductSearch productSearch,
+        @Parameter(hidden = true) @Auth(required = false) Long userIdx
+    ) {
+        // check gender
+        if (!Gender.isValid(productSearch.getGender())) {
+            log.info(CustomErrorCode.REQUEST_GENDER_ERROR.getMessage());
+            throw new BaseExceptionV2(CustomErrorCode.REQUEST_GENDER_ERROR);
+        }
+        // check price
+        if (productSearch.getMinPrice() < 0 || productSearch.getMaxPrice() < 0 || productSearch.getMinPrice() > productSearch.getMaxPrice()) {
+            throw new BaseExceptionV2(CustomErrorCode.REQUEST_PRICE_ERROR);
+        }
+        // check keywords
+        if (productSearch.getKeywords() == null) {
+            throw new BaseExceptionV2(CommonErrorCode.REQUEST_ERROR);
+        }
+        if (!keywordService.existsByKeyword(productSearch.getKeywords().values().stream().toList())) {
+            throw new BaseExceptionV2(CommonErrorCode.DATABASE_ERROR_NOT_FOUND);
+        }
+
+        List<Product> products = productService.filterProductsWithCategory(productSearch);
+        // max 5 products
+        if (products.size() > 5) {
+            products = products.subList(0, 5);
+        }
+        List<ProductDTO> productDTOs = products.stream()
+            .map(product ->
+                new ProductDTO(
+                    product,
+                    productService.getLikeStatus(product.getIdx(), userIdx)
+                ))
+            .toList();
+
+        if (productDTOs.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<Product> relatedProducts = productService.getRelatedProducts(products);
+        List<ProductDTO> relatedProductDTOs = relatedProducts.stream()
+            .map(product ->
+                new ProductDTO(
+                    product,
+                    productService.getLikeStatus(product.getIdx(), userIdx)
+                ))
+            .toList();
+        ProductRecommandDTO productRecommandDTO = new ProductRecommandDTO(
+            productDTOs,
+            relatedProductDTOs
+        );
+
+        return ResponseEntity.ok(productRecommandDTO);
+    }
+
+
 
 
     @Tag(name = "상품 API", description = "상품 관련 API 목록")

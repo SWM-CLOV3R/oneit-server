@@ -1,22 +1,28 @@
 spring:
+  main:
+    web-application-type: none
   application:
     name: batch
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/${LOCAL_DATABASE}?
-    username: ${LOCAL_USER}
-    password: ${LOCAL_PASSWORD}
+    url: jdbc:mysql://${DB_ENDPOINT}/${DATABASE_NAME}?serverTimezone=Asia/Seoul
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   batch:
-    datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/test_batch_meta?
-      username: ${LOCAL_USER}
-      password: ${LOCAL_PASSWORD}
+    job:
+      enabled: false
     jdbc:
+      schema: classpath:org/springframework/batch/core/schema-mysql.sql
       initialize-schema: always
+  flyway:
+    enabled: false
 
-fcm:
-  base-url: https://fcm.googleapis.com/v1/projects/oneit-gpt/messages:send
-  auth-url: https://www.googleapis.com/auth/cloud-platform
-  config:
-    path: firebase-admin-sdk.json
+kakao:
+  talk-dream:
+    auth-token: ${KAKAO_ALARM_AUTH_TOKEN}
+    server-name: ${KAKAO_ALARM_SERVER_NAME}
+    service-id: ${KAKAO_ALARM_SERVICE_ID}
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure.logging: ERROR

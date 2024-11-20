@@ -1,10 +1,13 @@
 package clov3r.domain.domains.entity;
 
-import clov3r.api.product.domain.status.ProductStatus;
+import clov3r.domain.domains.status.ProductStatus;
 import clov3r.domain.domains.type.Gender;
+import clov3r.domain.domains.type.JsonNodeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -87,5 +90,40 @@ public class Product extends BaseEntity {
 
     @Column(name = "detail_urls")
     private String detailImages;
+
+    @Column(name = "display_tags")
+    private String displayTags;
+
+    @Column(columnDefinition = "TEXT")
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode options;
+
+    @Column(name = "related_product")
+    private String relatedProduct;
+
+    public List<String> getDisplayTags() {
+        // '#'기준으로 문자열 쪼개기
+        if (displayTags == null) {
+            return new ArrayList<>();
+        }
+        List<String> split = List.of(displayTags.split("#"));
+        List<String> list = new ArrayList<>(split.stream().map(tag -> {
+          tag = tag.trim();
+          return "#" + tag;
+        }).toList());
+        list.remove(0);
+        return new ArrayList<>(list);
+    }
+
+    public List<Long> getRelatedProduct() {
+        if (relatedProduct == null) {
+            return new ArrayList<>();
+        }
+        relatedProduct = relatedProduct.substring(1, relatedProduct.length() - 1);
+        List<String> split = List.of(relatedProduct.split(","));
+        List<Long> list = new ArrayList<>(split.stream().map(
+            s -> Long.parseLong(s.trim())).toList());
+        return new ArrayList<>(list);
+    }
 
 }
