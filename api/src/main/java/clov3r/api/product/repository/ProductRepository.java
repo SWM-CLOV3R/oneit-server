@@ -298,7 +298,9 @@ public class ProductRepository {
     public List<Product> searchProduct(String searchKeyword) {
         return queryFactory.selectFrom(product)
                 .where(product.name.contains(searchKeyword)
-                        .or(product.brandName.contains(searchKeyword)))
+                        .or(product.brandName.contains(searchKeyword))
+                        .or(product.displayTags.contains(searchKeyword))
+                        .or(product.description.contains(searchKeyword)))
                 .where(product.status.eq(ProductStatus.ACTIVE))
                 .fetch();
     }

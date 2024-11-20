@@ -255,8 +255,11 @@ public class GiftboxCustomRepositoryImpl implements GiftboxCustomRepository {
         return queryFactory.select(giftboxProduct)
                 .from(giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
-                    giftboxProduct.product.name.contains(searchKeyword),
                     giftboxProduct.status.eq(Status.ACTIVE))
+                .where(giftboxProduct.product.name.contains(searchKeyword)
+                        .or(giftboxProduct.product.brandName.contains(searchKeyword))
+                        .or(giftboxProduct.product.displayTags.contains(searchKeyword))
+                        .or(giftboxProduct.product.description.contains(searchKeyword)))
                 .where(giftboxProduct.product.status.eq(ProductStatus.ACTIVE)
                     .or(giftboxProduct.product.status.eq(ProductStatus.INVALID)))
                 .fetch();

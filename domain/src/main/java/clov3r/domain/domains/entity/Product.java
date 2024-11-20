@@ -115,4 +115,15 @@ public class Product extends BaseEntity {
         return new ArrayList<>(list);
     }
 
+    public List<Long> getRelatedProduct() {
+        if (relatedProduct == null) {
+            return new ArrayList<>();
+        }
+        relatedProduct = relatedProduct.substring(1, relatedProduct.length() - 1);
+        List<String> split = List.of(relatedProduct.split(","));
+        List<Long> list = new ArrayList<>(split.stream().map(
+            s -> Long.parseLong(s.trim())).toList());
+        return new ArrayList<>(list);
+    }
+
 }
