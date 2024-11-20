@@ -256,6 +256,8 @@ public class GiftboxCustomRepositoryImpl implements GiftboxCustomRepository {
                 .from(giftboxProduct)
                 .where(giftboxProduct.giftbox.idx.eq(giftboxIdx),
                     giftboxProduct.product.name.contains(searchKeyword),
+                    giftboxProduct.product.brandName.contains(searchKeyword),
+                    giftboxProduct.product.displayTags.contains(searchKeyword),
                     giftboxProduct.status.eq(Status.ACTIVE))
                 .where(giftboxProduct.product.status.eq(ProductStatus.ACTIVE)
                     .or(giftboxProduct.product.status.eq(ProductStatus.INVALID)))
