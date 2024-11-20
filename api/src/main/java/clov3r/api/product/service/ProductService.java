@@ -167,8 +167,29 @@ public class ProductService {
     return randomProduct;
   }
 
-  public List<Product> getRelatedProducts(ProductSearch productSearch) {
-    return productRepository.findProductListPagination(10L, 10);
+  public List<Product> getRelatedProducts(List<Product> products) {
+    List<Long> relatedProductsList = new ArrayList<>();
+    for (Product product : products) {
+      List<Long> relatedProductIdxList = product.getRelatedProduct();
+      relatedProductsList.addAll(relatedProductIdxList);
+    }
+    relatedProductsList = relatedProductsList.stream().distinct().toList();
+    // 랜덤으로 10개만
+    if (relatedProductsList.size() > 10) {
+      List<Long> randomRelatedProductsList = new ArrayList<>();
+      while (randomRelatedProductsList.size() < 10) {
+        int randomIndex = (int) (Math.random() * relatedProductsList.size());
+        randomRelatedProductsList.add(relatedProductsList.get(randomIndex));
+      }
+      relatedProductsList = randomRelatedProductsList;
+    }
+    List<Product> relatedProductsUnion = new ArrayList<>();
+    for (Long relatedProductIdx : relatedProductsList) {
+      Product relatedProduct = productRepository.findById(relatedProductIdx);
+      if (relatedProduct != null) {
+        relatedProductsUnion.add(relatedProduct);
+      }
+    }
+    return relatedProductsUnion;
   }
-
 }

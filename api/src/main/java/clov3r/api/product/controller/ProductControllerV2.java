@@ -148,7 +148,7 @@ public class ProductControllerV2 {
             return ResponseEntity.noContent().build();
         }
 
-        List<Product> relatedProducts = productService.getRelatedProducts(productSearch);
+        List<Product> relatedProducts = productService.getRelatedProducts(products);
         List<ProductDTO> relatedProductDTOs = relatedProducts.stream()
             .map(product ->
                 new ProductDTO(
