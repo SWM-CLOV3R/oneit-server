@@ -34,6 +34,8 @@
 - [Data](https://github.com/SWM-CLOV3R/oneit-dataset), [Backend](https://github.com/SWM-CLOV3R/oneit-server) : 전세연
 - [Backend](https://github.com/SWM-CLOV3R/oneit-server) :최성연
 
+
+
 ## ⭐️ What we did
 - 상대방의 정보를 입력하면 적절한 선물을 추천
   - 성격 유형 테스트 형식으로 초반 사용자 유입 요소로 홍보
@@ -54,6 +56,10 @@
 - dev
   - 개발 전용 브랜치
   - 기능 개발이 완료된 브랜치를 병합하여 테스트를 진행
+- 이슈 기반 브랜치
+  - feature/{브랜치명}: 신규 기능 개발
+  - fix/{브랜치명}: 리팩토링, 수정 작업
+  - hotfix/{브랜치명}: 빠르게 수정해야 하는 버그 조치 시
 
 
 
@@ -63,7 +69,6 @@
 - fix : 버그 잡기
 - test : 테스트 코드
 - refactor : 코드 구조 개선
-- style : CSS
 - build : 빌드 관련 작업 (ex. build.gradle)
 - ci : 배포 자동화 관련 작업
 - docs : 문서 작업 (ex. README.md)
