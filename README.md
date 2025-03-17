@@ -15,7 +15,7 @@
   🍀 Team CLOV3R 🍀
 </div>
 
-## 📌 Overview
+## 💝 Overview
 | 선물 추천 및 함께 고르기 플랫폼
 - 프로젝트 배경
   - 온라인 선물하기의 등장으로 선물 구매 및 배송의 편리성이 크게 증가했습니다.
@@ -29,7 +29,7 @@
   - (24.11 기준) 누적 사용자 3000, 최대 DAU 200
   - [공식 인스타그램 운영](https://www.instagram.com/oneit.gift/)
 
-## 👭 Team
+## 🍀 Team
 - Frontend : 신혜준 
 - Data, Backend : 전세연
 - Backend :최성연
@@ -71,7 +71,7 @@
 
 
 
-### 📌 Architecture
+## 📌 Architecture
 ### 1️⃣ System Architecture
 ![image](https://github.com/user-attachments/assets/fee3ec7c-4ca6-413e-980f-ebf01912a4e1)
 
