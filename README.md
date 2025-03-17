@@ -30,9 +30,9 @@
   - [공식 인스타그램 운영](https://www.instagram.com/oneit.gift/)
 
 ## 🍀 Team
-- Frontend : 신혜준 
-- Data, Backend : 전세연
-- Backend :최성연
+- [Frontend](https://github.com/SWM-CLOV3R/oneit-client) : 신혜준 
+- [Data](https://github.com/SWM-CLOV3R/oneit-dataset), [Backend](https://github.com/SWM-CLOV3R/oneit-server) : 전세연
+- [Backend](https://github.com/SWM-CLOV3R/oneit-server) :최성연
 
 ## ⭐️ What we did
 - 상대방의 정보를 입력하면 적절한 선물을 추천
