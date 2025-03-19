@@ -31,7 +31,7 @@
 
 ## 🍀 Team
 - [Frontend](https://github.com/SWM-CLOV3R/oneit-client) : 신혜준 
-- [Data](https://github.com/SWM-CLOV3R/oneit-dataset), [Backend](https://github.com/SWM-CLOV3R/oneit-server) : 전세연
+- [Data](https://github.com/SWM-CLOV3R/oneit-dataset), [Backend](https://github.com/SWM-CLOV3R/oneit-server) : 정세연
 - [Backend](https://github.com/SWM-CLOV3R/oneit-server) :최성연
 
 
