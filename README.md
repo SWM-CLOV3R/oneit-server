@@ -77,11 +77,11 @@
 
 
 ## 📌 Architecture
-### 1️⃣ System Architecture
-![image](https://github.com/user-attachments/assets/fee3ec7c-4ca6-413e-980f-ebf01912a4e1)
+### 1️⃣ Infrastructure Architecture
+![image](https://github.com/user-attachments/assets/923c60c8-e4ef-4f94-b53b-fd72dc18cb22)
 
-### 2️⃣ Infrastructure Architecture
-![image](https://github.com/user-attachments/assets/e8f4f345-f453-40a1-998a-5b661a59bb4b)
+### 2️⃣ System Architecture
+![image](https://github.com/user-attachments/assets/fee3ec7c-4ca6-413e-980f-ebf01912a4e1)
 
 ### 3️⃣ CI/CD Archtecture
 ![image](https://github.com/user-attachments/assets/a11b31a6-2f2b-4371-b92d-6bdf37aa6841)
